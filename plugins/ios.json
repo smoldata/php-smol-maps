@@ -9,6 +9,9 @@
     "installed_plugins": {
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "org.smoldata.cordova.smol"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "org.smoldata.cordova.smol"
         }
     },
     "dependent_plugins": {}
