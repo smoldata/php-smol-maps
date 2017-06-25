@@ -1,0 +1,19 @@
+{
+    "name": "org.smoldata.cordova.smol",
+    "version": "0.0.1",
+    "displayName": "smol",
+    "cordova": {
+        "platforms": [
+            "android",
+            "ios"
+        ],
+        "plugins": {
+            "cordova-plugin-whitelist": {}
+        }
+    },
+    "dependencies": {
+        "cordova-ios": "~4.4.0",
+        "cordova-plugin-whitelist": "1",
+        "cordova-android": "~6.2.3"
+    }
+}
