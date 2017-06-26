@@ -14,5 +14,29 @@
         },
         "is_top_level": true,
         "variables": {}
+    },
+    "cordova-labs-local-webserver": {
+        "source": {
+            "type": "registry",
+            "id": "local-webserver"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cocoon-cordova-labs-local-webserver": {
+        "source": {
+            "type": "registry",
+            "id": "cocoon-cordova-labs-local-webserver"
+        },
+        "is_top_level": true,
+        "variables": {}
+    },
+    "cordova-plugin-httpd": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-httpd"
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }

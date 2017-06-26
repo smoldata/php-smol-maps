@@ -1,0 +1,98 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "cordova-plugin-httpd",
+        "scope": null,
+        "escapedName": "cordova-plugin-httpd",
+        "name": "cordova-plugin-httpd",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "/Users/dphiffer/Documents/smol/node_modules"
+    ]
+  ],
+  "_from": "cordova-plugin-httpd@latest",
+  "_id": "cordova-plugin-httpd@0.9.3",
+  "_inCache": true,
+  "_location": "/cordova-plugin-httpd",
+  "_nodeVersion": "4.2.1",
+  "_npmOperationalInternal": {
+    "host": "packages-13-west.internal.npmjs.com",
+    "tmp": "tmp/cordova-plugin-httpd-0.9.3.tgz_1458715145981_0.5222378561738878"
+  },
+  "_npmUser": {
+    "name": "floatinghotpot",
+    "email": "rjfun.mobile@gmail.com"
+  },
+  "_npmVersion": "2.14.7",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "cordova-plugin-httpd",
+    "scope": null,
+    "escapedName": "cordova-plugin-httpd",
+    "name": "cordova-plugin-httpd",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-plugin-httpd/-/cordova-plugin-httpd-0.9.3.tgz",
+  "_shasum": "7cd658d83a661c76210db2b3e07f7044dea0599e",
+  "_shrinkwrap": null,
+  "_spec": "cordova-plugin-httpd",
+  "_where": "/Users/dphiffer/Documents/smol/node_modules",
+  "author": {
+    "name": "Raymond Xie",
+    "email": "rjfun.mobile@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/floatinghotpot/cordova-httpd/issues"
+  },
+  "cordova": {
+    "id": "cordova-plugin-httpd",
+    "platforms": [
+      "android",
+      "ios"
+    ]
+  },
+  "dependencies": {},
+  "description": "Cordova Plugin to embed httpd (web server) into Cordova App",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "7cd658d83a661c76210db2b3e07f7044dea0599e",
+    "tarball": "https://registry.npmjs.org/cordova-plugin-httpd/-/cordova-plugin-httpd-0.9.3.tgz"
+  },
+  "gitHead": "913e4205debc2e3b9614cb73e703a8b4eb3c1b75",
+  "homepage": "https://github.com/floatinghotpot/cordova-httpd#readme",
+  "keywords": [
+    "cordova",
+    "ecosystem:cordova",
+    "http",
+    "httpd",
+    "web",
+    "server",
+    "rjfun"
+  ],
+  "license": "MIT",
+  "maintainers": [
+    {
+      "name": "floatinghotpot",
+      "email": "rjfun.mobile@gmail.com"
+    }
+  ],
+  "name": "cordova-plugin-httpd",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/floatinghotpot/cordova-httpd.git"
+  },
+  "scripts": {},
+  "version": "0.9.3"
+}

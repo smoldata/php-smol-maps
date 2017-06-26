@@ -1,6 +1,7 @@
 html {
 	box-sizing: border-box;
 }
+
 *, *:before, *:after {
 	box-sizing: inherit;
 }
@@ -20,4 +21,12 @@ body {
 
 #app.ready {
 	background-color: #fff;
+}
+
+#map {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
 }

@@ -1,0 +1,19 @@
+{
+  "name": "smol",
+  "description": "your data on your phone",
+  "main": "www/js/smol.js",
+  "authors": [
+    "Dan Phiffer <dan@phiffer.org>"
+  ],
+  "license": "Apache",
+  "homepage": "https://github.com/dphiffer/smol.app",
+  "moduleType": [],
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

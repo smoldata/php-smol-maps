@@ -12,6 +12,9 @@
         },
         "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "org.smoldata.cordova.smol"
+        },
+        "cordova-plugin-httpd": {
+            "PACKAGE_NAME": "org.smoldata.cordova.smol"
         }
     },
     "dependent_plugins": {}

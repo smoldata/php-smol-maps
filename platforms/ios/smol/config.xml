@@ -19,6 +19,9 @@
         <param name="ios-package" value="CDVSplashScreen" />
         <param name="onload" value="true" />
     </feature>
+    <feature name="CorHttpd">
+        <param name="ios-package" value="CorHttpd" />
+    </feature>
     <name>smol</name>
     <description>your data on your phone</description>
     <author email="dan@phiffer.org" href="https://phiffer.org/">Dan Phiffer</author>
