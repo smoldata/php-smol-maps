@@ -21,6 +21,9 @@
     <splash src="res/screen/ios/Default@2x~universal~anyany.png" />
     <engine name="android" spec="~6.2.3" />
     <engine name="ios" spec="~4.4.0" />
+    <plugin name="cordova-plugin-geolocation" spec="^2.4.3">
+        <variable name="GEOLOCATION_USAGE_DESCRIPTION" value=" " />
+    </plugin>
     <plugin name="cordova-plugin-httpd" spec="^0.9.3" />
     <plugin name="cordova-plugin-splashscreen" spec="^4.0.3" />
     <plugin name="cordova-plugin-whitelist" spec="1" />

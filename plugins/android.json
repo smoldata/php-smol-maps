@@ -15,7 +15,14 @@
         },
         "cordova-plugin-httpd": {
             "PACKAGE_NAME": "org.smoldata.cordova.smol"
+        },
+        "cordova-plugin-geolocation": {
+            "PACKAGE_NAME": "org.smoldata.cordova.smol"
         }
     },
-    "dependent_plugins": {}
+    "dependent_plugins": {
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "org.smoldata.cordova.smol"
+        }
+    }
 }

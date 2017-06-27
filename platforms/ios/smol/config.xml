@@ -22,6 +22,9 @@
     <feature name="CorHttpd">
         <param name="ios-package" value="CorHttpd" />
     </feature>
+    <feature name="Geolocation">
+        <param name="ios-package" value="CDVLocation" />
+    </feature>
     <name>smol</name>
     <description>your data on your phone</description>
     <author email="dan@phiffer.org" href="https://phiffer.org/">Dan Phiffer</author>

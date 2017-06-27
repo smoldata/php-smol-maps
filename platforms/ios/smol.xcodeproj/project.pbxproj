@@ -48,6 +48,8 @@
 		162834E063804525BD1B9CEC /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 168B53B9AC534CDD987FDB70 /* CFNetwork.framework */; };
 		1DB71ACC07D24132A6BAB8D7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18E74D8917884A1F946BB2A7 /* Foundation.framework */; };
 		2548D1B8C73B4BE2AC535866 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62AD13F1E8EC425A8538B11A /* Security.framework */; };
+		C9571778B163437EA26C5CE7 /* CDVLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = 9CF1CD1250964BF6BDB1D5C9 /* CDVLocation.m */; };
+		D408DFA9A2D34676A5E4A058 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E24222D044446B9847F511E /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -148,6 +150,9 @@
 		168B53B9AC534CDD987FDB70 /* CFNetwork.framework */ = {isa = PBXFileReference; name = "CFNetwork.framework"; path = "System/Library/Frameworks/CFNetwork.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
 		18E74D8917884A1F946BB2A7 /* Foundation.framework */ = {isa = PBXFileReference; name = "Foundation.framework"; path = "System/Library/Frameworks/Foundation.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
 		62AD13F1E8EC425A8538B11A /* Security.framework */ = {isa = PBXFileReference; name = "Security.framework"; path = "System/Library/Frameworks/Security.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
+		9CF1CD1250964BF6BDB1D5C9 /* CDVLocation.m */ = {isa = PBXFileReference; name = "CDVLocation.m"; path = "cordova-plugin-geolocation/CDVLocation.m"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; explicitFileType = undefined; includeInIndex = 0; };
+		34EF619B82E6490A89FE0F1C /* CDVLocation.h */ = {isa = PBXFileReference; name = "CDVLocation.h"; path = "cordova-plugin-geolocation/CDVLocation.h"; sourceTree = "<group>"; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; explicitFileType = undefined; includeInIndex = 0; };
+		6E24222D044446B9847F511E /* CoreLocation.framework */ = {isa = PBXFileReference; name = "CoreLocation.framework"; path = "System/Library/Frameworks/CoreLocation.framework"; sourceTree = SDKROOT; fileEncoding = undefined; lastKnownFileType = wrapper.framework; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +164,7 @@
 				162834E063804525BD1B9CEC /* CFNetwork.framework in Frameworks */,
 				1DB71ACC07D24132A6BAB8D7 /* Foundation.framework in Frameworks */,
 				2548D1B8C73B4BE2AC535866 /* Security.framework in Frameworks */,
+				D408DFA9A2D34676A5E4A058 /* CoreLocation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -232,6 +238,7 @@
 				168B53B9AC534CDD987FDB70 /* CFNetwork.framework */,
 				18E74D8917884A1F946BB2A7 /* Foundation.framework */,
 				62AD13F1E8EC425A8538B11A /* Security.framework */,
+				6E24222D044446B9847F511E /* CoreLocation.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -314,6 +321,8 @@
 				5D51F1A293764559B46BF814 /* DDLog.h */,
 				31A0F9015EA14E8AA86A9E38 /* ContextFilterLogFormatter.h */,
 				B835EB9D16C24AAF918F525A /* DispatchQueueLogFormatter.h */,
+				9CF1CD1250964BF6BDB1D5C9 /* CDVLocation.m */,
+				34EF619B82E6490A89FE0F1C /* CDVLocation.h */,
 			);
 			name = Plugins;
 			path = "smol/Plugins";
@@ -455,6 +464,7 @@
 				7F08C22056B14D5F8DB78393 /* DDLog.m in Sources */,
 				4D1F24E2F0684DC2B26A6235 /* ContextFilterLogFormatter.m in Sources */,
 				6940FAF8A935403EB992FD32 /* DispatchQueueLogFormatter.m in Sources */,
+				C9571778B163437EA26C5CE7 /* CDVLocation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

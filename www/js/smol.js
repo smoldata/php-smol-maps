@@ -34,12 +34,14 @@ var app = {
 			zoomControl: false
 		});
 
-		var layer = Tangram.leafletLayer({
+		Tangram.leafletLayer({
 			scene: 'http://localhost:8080/refill/refill-style.yaml',
 			attribution: '<a href="https://mapzen.com/tangram" target="_blank">Tangram</a> | &copy; OSM contributors | <a href="https://mapzen.com/" target="_blank">Mapzen</a>'
-		});
+		}).addTo(map);
 
-		layer.addTo(map);
+		L.control.locate({
+			position: 'bottomleft'
+		}).addTo(map);
 
 		map.setView([37.5670374, 127.007694], 15);
 	}
