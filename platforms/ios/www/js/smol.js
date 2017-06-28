@@ -3,7 +3,7 @@ var app = {
 	httpd: null,
 
 	setup: function() {
-		if (cordova) {
+		if (typeof cordova == 'object') {
 			document.addEventListener('deviceready', app.ready, false);
 		} else {
 			app.ready();
@@ -21,7 +21,7 @@ var app = {
 	},
 
 	setup_httpd: function() {
-		httpd = ( cordova && cordova.plugins && cordova.plugins.CorHttpd ) ? cordova.plugins.CorHttpd : null;
+		httpd = ( typeof cordova == 'object' && cordova.plugins && cordova.plugins.CorHttpd ) ? cordova.plugins.CorHttpd : null;
 		if (httpd) {
 			httpd.startServer({
 				www_root: '.',
@@ -46,6 +46,10 @@ var app = {
 
 		L.control.locate({
 			position: 'bottomleft'
+		}).addTo(map);
+
+		L.control.geocoder('mapzen-byN58rS', {
+			expanded: true
 		}).addTo(map);
 
 		map.setView([37.5670374, 127.007694], 15);

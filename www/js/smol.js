@@ -48,6 +48,10 @@ var app = {
 			position: 'bottomleft'
 		}).addTo(map);
 
+		L.control.geocoder('mapzen-byN58rS', {
+			expanded: true
+		}).addTo(map);
+
 		map.setView([37.5670374, 127.007694], 15);
 	}
 
