@@ -37,11 +37,13 @@ body {
 }
 
 .leaflet-pelias-input {
-	border-radius: 0;
+	background: #444;
+	color: #fff;
 }
 
+.leaflet-bar, .leaflet-control-layers,
 .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
-	border-width: 1px;
+	border: none;
 	border-radius: 0;
 }
 
@@ -78,8 +80,12 @@ body {
 }
 
 .leaflet-pelias-search-icon .fa-bars {
-	color: #444;
+	color: #fff;
 	line-height: 44px;
+}
+
+.leaflet-bar a, .leaflet-bar a:hover {
+	background-color: rgba(255, 255, 255, 0.25);
 }
 
 .leaflet-pelias-input {

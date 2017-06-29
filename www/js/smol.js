@@ -58,8 +58,8 @@ var app = {
 		// Seoul
 		//map.setView([37.5670374, 127.007694], 15);
 
-		// Brooklyn
-		map.setView([44.061007, -64.636001], 15);
+		// Flatbush
+		map.setView([-73.959986, 40.641849], 10);
 
 		$('.leaflet-control-attribution')
 			.closest('.leaflet-right')
