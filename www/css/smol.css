@@ -172,6 +172,38 @@ body {
 	cursor: pointer;
 }
 
+.leaflet-popup-content-wrapper {
+	color: #fff;
+	background-color: rgba(23, 10, 38, 0.8);
+	border-radius: 4px;
+	box-shadow: none;
+}
+
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+	background-color: rgba(23, 10, 38, 0.8);
+	box-shadow: none;
+}
+
+.leaflet-popup-content {
+	margin: 13px 19px 13px 13px;
+}
+
+.emoji {
+	background: #fff;
+	font-size: 20px;
+	padding: 0;
+	width: 30px;
+	height: 30px;
+	border-radius: 15px;
+	display: inline-block;
+	text-align: center;
+	margin-right: 5px;
+}
+
+.leaflet-container a.leaflet-popup-close-button:hover {
+	color: #fff;
+}
+
 @media (min-width: 321px) {
 	.leaflet-touch .leaflet-control-locate a,
 	.leaflet-control-locate a,

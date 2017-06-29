@@ -75,7 +75,9 @@
 		},
 
 		_onClick: function() {
-			console.log('hey');
+			if (this.options.click) {
+				this.options.click();
+			}
 		},
 
 		_unload: function() {

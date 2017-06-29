@@ -2,6 +2,15 @@ var app = {
 
 	httpd: null,
 
+	default_style: {
+		color: '#136AEC',
+		fillColor: '#2A93EE',
+		fillOpacity: 0.7,
+		weight: 2,
+		opacity: 0.9,
+		radius: 5
+	},
+
 	init: function() {
 		if (typeof cordova == 'object') {
 			document.addEventListener('deviceready', app.ready, false);
@@ -41,13 +50,15 @@ var app = {
 		var map = L.map('map', {
 			zoomControl: false
 		});
+		app.map = map;
 
 		L.control.locate({
 			position: 'bottomleft'
 		}).addTo(map);
 
 		L.control.addVenue({
-			position: 'bottomright'
+			position: 'bottomright',
+			click: app.add_venue
 		}).addTo(map);
 
 		L.control.geocoder('mapzen-byN58rS', {
@@ -88,13 +99,22 @@ var app = {
 		$('#menu .close').click(app.hide_menu);
 	},
 
+	add_venue: function() {
+		var ll = app.map.getCenter();
+		var marker = new L.CircleMarker(ll, app.default_style).addTo(app.map);
+		var html = '<span class="emoji">📍</span> ' + ll.lat.toFixed(6) + ', ' + ll.lng.toFixed(6);
+		marker.bindPopup(html).openPopup();
+	},
+
 	show_menu: function() {
 		$('#menu').addClass('active');
 	},
 
 	hide_menu: function() {
 		$('#menu').removeClass('active');
-	}
+	},
+
+
 
 };
 app.setup();
