@@ -37,21 +37,30 @@ body {
 	color: #fff;
 }
 
-.leaflet-bar, .leaflet-control-layers,
-.leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
+.leaflet-bar,
+.leaflet-control-layers,
+.leaflet-touch .leaflet-control-layers,
+.leaflet-touch .leaflet-bar {
 	border: none;
 	border-radius: 0;
+	box-shadow: none;
 }
 
-.leaflet-touch .leaflet-control-locate,
-.leaflet-control-locate {
+.leaflet-control-locate
+.leaflet-touch .leaflet-control-locate {
 	border: none;
 }
 
 .leaflet-touch .leaflet-control-locate a,
 .leaflet-control-locate a,
 .leaflet-touch .leaflet-control-add-venue a,
-.leaflet-control-add-venue a {
+.leaflet-control-add-venue a,
+.leaflet-control-locate a:hover,
+.leaflet-control-add-venue a:hover,
+.leaflet-control-locate a:first-child,
+.leaflet-control-add-venue a:first-child
+.leaflet-control-locate a:last-child,
+.leaflet-control-add-venue a:last-child {
 	width: 40px;
 	height: 40px;
 	line-height: 40px;
@@ -63,25 +72,16 @@ body {
 	cursor: pointer;
 }
 
-@media (min-width: 321px) {
-	.leaflet-touch .leaflet-control-locate a,
-	.leaflet-control-locate a,
-	.leaflet-touch .leaflet-control-add-venue a,
-	.leaflet-control-add-venue a {
-		width: 60px;
-		height: 60px;
-		border-radius: 30px;
-		line-height: 60px;
-		font-size: 28px;
-	}
-}
-
-.leaflet-touch .leaflet-control-locate a:hover,
 .leaflet-control-locate a:hover,
-.leaflet-touch .leaflet-control-add-venue a:hover,
 .leaflet-control-add-venue a:hover {
 	opacity: 1.0;
 	background: #170A26;
+}
+
+.leaflet-touch .leaflet-control-locate a:hover,
+.leaflet-touch .leaflet-control-add-venue a:hover {
+	opacity: inherit;
+	background: inherit;
 }
 
 .leaflet-control-attribution {
@@ -103,11 +103,16 @@ body {
 	line-height: 44px;
 }
 
-.leaflet-bar .leaflet-pelias-search-icon:hover,
-.leaflet-touch .leaflet-bar .leaflet-pelias-search-icon:hover {
+.leaflet-bar .leaflet-pelias-search-icon:hover {
 	background-color: rgba(255, 255, 255, 0.25);
 }
 
+.leaflet-touch .leaflet-bar .leaflet-pelias-search-icon:hover {
+	background-color: inherit;
+}
+.leaflet-bar .leaflet-pelias-search-icon,
+.leaflet-bar .leaflet-pelias-search-icon:hover,
+.leaflet-pelias-input .leaflet-pelias-search-icon,
 .leaflet-touch .leaflet-pelias-control .leaflet-pelias-search-icon {
 	width: 40px;
 }
@@ -133,11 +138,12 @@ body {
 	border: none;
 }
 
-.leaflet-touch .leaflet-pelias-results,
-.leaflet-pelias-results {
+.leaflet-pelias-results,
+.leaflet-touch .leaflet-pelias-results {
 	box-shadow: none;
 }
 
+.leaflet-pelias-results.leaflet-bar,
 .leaflet-touch .leaflet-pelias-results.leaflet-bar {
 	border-radius: 4px;
 }
@@ -164,4 +170,21 @@ body {
 	color: #170A26;
 	padding: 10px;
 	cursor: pointer;
+}
+
+@media (min-width: 321px) {
+	.leaflet-touch .leaflet-control-locate a,
+	.leaflet-control-locate a,
+	.leaflet-touch .leaflet-control-add-venue a,
+	.leaflet-control-add-venue a,
+	.leaflet-control-locate a:first-child,
+	.leaflet-control-add-venue a:first-child,
+	.leaflet-control-locate a:last-child,
+	.leaflet-control-add-venue a:last-child {
+		width: 60px;
+		height: 60px;
+		border-radius: 30px;
+		line-height: 60px;
+		font-size: 28px;
+	}
 }
