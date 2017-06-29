@@ -8,12 +8,12 @@ html {
 
 body {
 	font-family: sans-serif;
-	background: #222;
+	background: #170A26;
 	margin: 0;
 }
 
 #app {
-	background-color: #222;
+	background-color: #170A26;
 	transition: background-color 0.5s ease-out;
 	width: 100vw;
 	height: 100vh;
@@ -32,7 +32,8 @@ body {
 }
 
 .leaflet-pelias-input {
-	background: #444;
+	background: #170A26;
+	opacity: 0.8;
 	color: #fff;
 }
 
@@ -51,13 +52,36 @@ body {
 .leaflet-control-locate a,
 .leaflet-touch .leaflet-control-add-venue a,
 .leaflet-control-add-venue a {
-	width: 50px;
-	height: 50px;
-	line-height: 50px;
-	font-size: 24px;
-	border-radius: 25px;
-	background: #444;
+	width: 40px;
+	height: 40px;
+	line-height: 40px;
+	font-size: 20px;
+	border-radius: 20px;
+	background: #170A26;
+	opacity: 0.8;
 	color: #fff;
+	cursor: pointer;
+}
+
+@media (min-width: 321px) {
+	.leaflet-touch .leaflet-control-locate a,
+	.leaflet-control-locate a,
+	.leaflet-touch .leaflet-control-add-venue a,
+	.leaflet-control-add-venue a {
+		width: 60px;
+		height: 60px;
+		border-radius: 30px;
+		line-height: 60px;
+		font-size: 28px;
+	}
+}
+
+.leaflet-touch .leaflet-control-locate a:hover,
+.leaflet-control-locate a:hover,
+.leaflet-touch .leaflet-control-add-venue a:hover,
+.leaflet-control-add-venue a:hover {
+	opacity: 1.0;
+	background: #170A26;
 }
 
 .leaflet-control-attribution {
@@ -72,27 +96,50 @@ body {
 	color: #999;
 }
 
-.leaflet-pelias-search-icon {
+.leaflet-pelias-search-icon,
+.leaflet-pelias-search-icon.leaflet-pelias-loading {
 	background-image: none;
 	font-size: 18px;
 	line-height: 44px;
+}
+
+.leaflet-bar .leaflet-pelias-search-icon:hover,
+.leaflet-touch .leaflet-bar .leaflet-pelias-search-icon:hover {
+	background-color: rgba(255, 255, 255, 0.25);
 }
 
 .leaflet-touch .leaflet-pelias-control .leaflet-pelias-search-icon {
 	width: 40px;
 }
 
-.leaflet-pelias-search-icon .fa-bars {
+.leaflet-pelias-search-icon .fa {
 	color: #fff;
 	line-height: 44px;
 }
 
-.leaflet-bar a, .leaflet-bar a:hover {
-	background-color: rgba(255, 255, 255, 0.25);
-}
-
 .leaflet-pelias-input {
 	padding-left: 35px;
+}
+
+.leaflet-pelias-close,
+.leaflet-pelias-expanded .leaflet-pelias-close {
+	background: transparent;
+	color: #fff;
+}
+
+.leaflet-pelias-message {
+	color: #fff;
+	background-color: rgba(23, 10, 38, 0.8);
+	border: none;
+}
+
+.leaflet-touch .leaflet-pelias-results,
+.leaflet-pelias-results {
+	box-shadow: none;
+}
+
+.leaflet-touch .leaflet-pelias-results.leaflet-bar {
+	border-radius: 4px;
 }
 
 #menu {
@@ -114,7 +161,7 @@ body {
 	top: 0;
 	right: 0;
 	font-size: 24px;
-	color: #444;
+	color: #170A26;
 	padding: 10px;
 	cursor: pointer;
 }

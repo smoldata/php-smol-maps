@@ -63,12 +63,24 @@ var app = {
 		//map.setView([37.5670374, 127.007694], 15);
 
 		// Flatbush
-		map.setView([-73.959986, 40.641849], 10);
+		map.setView([40.641849, -73.959986], 15);
 
 		$('.leaflet-pelias-search-icon').html('<span class="fa fa-bars"></span>');
 
 		$('.leaflet-pelias-search-icon').click(function() {
 			app.show_menu();
+		});
+
+		$('.leaflet-pelias-control').addClass('show-menu-icon');
+
+		$('.leaflet-pelias-input').focus(function() {
+			$('.leaflet-pelias-search-icon .fa').removeClass('fa-bars');
+			$('.leaflet-pelias-search-icon .fa').addClass('fa-search');
+		});
+
+		$('.leaflet-pelias-input').blur(function() {
+			$('.leaflet-pelias-search-icon .fa').removeClass('fa-search');
+			$('.leaflet-pelias-search-icon .fa').addClass('fa-bars');
 		});
 	},
 
