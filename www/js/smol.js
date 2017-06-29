@@ -2,34 +2,37 @@ var app = {
 
 	httpd: null,
 
-	setup: function() {
+	init: function() {
 		if (typeof cordova == 'object') {
 			document.addEventListener('deviceready', app.ready, false);
 		} else {
 			app.ready();
-			app.setup_map();
+			app.setup();
 		}
 	},
 
 	ready: function() {
 		$('#app').addClass('ready');
-		app.setup_httpd();
+		app.start_httpd();
+	},
+
+	setup: function() {
+		app.setup_map();
+		app.setup_menu();
 	},
 
 	error: function(msg) {
 		console.error(msg);
 	},
 
-	setup_httpd: function() {
+	start_httpd: function() {
 		httpd = ( typeof cordova == 'object' && cordova.plugins && cordova.plugins.CorHttpd ) ? cordova.plugins.CorHttpd : null;
 		if (httpd) {
 			httpd.startServer({
 				www_root: '.',
 				port: 8080,
 				localhost_only: false
-			}, app.setup_map, function(error) {
-				app.error('error setting up httpd: ' + error);
-			});
+			}, app.setup, app.error);
 		}
 	},
 
@@ -39,20 +42,47 @@ var app = {
 			zoomControl: false
 		});
 
-		Tangram.leafletLayer({
-			scene: 'http://localhost:8080/lib/refill/refill-style.yaml',
-			attribution: '<a href="https://mapzen.com/tangram" target="_blank">Tangram</a> | &copy; OSM contributors | <a href="https://mapzen.com/" target="_blank">Mapzen</a>'
-		}).addTo(map);
-
 		L.control.locate({
 			position: 'bottomleft'
 		}).addTo(map);
 
 		L.control.geocoder('mapzen-byN58rS', {
-			expanded: true
+			expanded: true,
+			attribution: '<a href="https://mapzen.com/" target="_blank">Mapzen</a> | <a href="https://openstreetmap.org/">OSM</a>'
 		}).addTo(map);
 
-		map.setView([37.5670374, 127.007694], 15);
+		Tangram.leafletLayer({
+			scene: '/lib/refill/refill-style.yaml'
+		}).addTo(map);
+
+		// Seoul
+		//map.setView([37.5670374, 127.007694], 15);
+
+		// Brooklyn
+		map.setView([44.061007, -64.636001], 15);
+
+		$('.leaflet-control-attribution')
+			.closest('.leaflet-right')
+			.removeClass('leaflet-right')
+			.addClass('leaflet-center');
+
+		$('.leaflet-pelias-search-icon').html('<span class="fa fa-bars"></span>');
+
+		$('.leaflet-pelias-search-icon').click(function() {
+			app.show_menu();
+		});
+	},
+
+	setup_menu: function() {
+		$('#menu .close').click(app.hide_menu);
+	},
+
+	show_menu: function() {
+		$('#menu').addClass('active');
+	},
+
+	hide_menu: function() {
+		$('#menu').removeClass('active');
 	}
 
 };

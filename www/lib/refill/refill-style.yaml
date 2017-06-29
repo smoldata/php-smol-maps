@@ -709,9 +709,10 @@ textures:
 sources:
     mapzen:
         type: TopoJSON #GeoJSON, MVT, TopoJSON
-        url:  https://tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
-        url_params:
-            api_key: global.sdk_mapzen_api_key
+        #url:  https://tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
+        url: http://192.168.1.100:8080/all/{z}/{x}/{y}.topojson
+        #url_params:
+        #    api_key: global.sdk_mapzen_api_key
         #url:  https://tile.dev.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
         # url:  //localhost:8080/vector/all/{z}/{x}/{y}.topojson
         max_zoom: 16

@@ -30,3 +30,82 @@ body {
 	bottom: 0;
 	left: 0;
 }
+
+.leaflet-center {
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.leaflet-pelias-input {
+	border-radius: 0;
+}
+
+.leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar {
+	border-width: 1px;
+	border-radius: 0;
+}
+
+.leaflet-touch .leaflet-control-locate {
+	border: none;
+}
+
+.leaflet-touch .leaflet-control-locate a {
+	width: 50px;
+	height: 50px;
+	line-height: 50px;
+	font-size: 24px;
+	border-radius: 25px;
+	background: #444;
+	color: #fff;
+}
+
+.leaflet-control-attribution {
+	color: #ccc;
+}
+
+.leaflet-control-attribution a {
+	color: #999;
+}
+
+.leaflet-pelias-search-icon {
+	background-image: none;
+	font-size: 18px;
+	line-height: 44px;
+}
+
+.leaflet-touch .leaflet-pelias-control .leaflet-pelias-search-icon {
+	width: 40px;
+}
+
+.leaflet-pelias-search-icon .fa-bars {
+	color: #444;
+	line-height: 44px;
+}
+
+.leaflet-pelias-input {
+	padding-left: 35px;
+}
+
+#menu {
+	position: fixed;
+	top: -100vh;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	background: #eee;
+	transition: top 0.25s ease-out;
+}
+
+#menu.active {
+	top: 0;
+}
+
+#menu .close {
+	position: absolute;
+	top: 0;
+	right: 0;
+	font-size: 24px;
+	color: #444;
+	padding: 10px;
+	cursor: pointer;
+}
