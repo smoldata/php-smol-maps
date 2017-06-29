@@ -1,0 +1,11 @@
+machine:
+  node:
+    version: 6.10.2
+
+dependencies:
+  post:
+    - npm install leaflet@^1.0.0
+
+general:
+  artifacts:
+    - "./coverage"

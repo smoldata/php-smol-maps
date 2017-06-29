@@ -46,6 +46,10 @@ var app = {
 			position: 'bottomleft'
 		}).addTo(map);
 
+		L.control.addVenue({
+			position: 'bottomright'
+		}).addTo(map);
+
 		L.control.geocoder('mapzen-byN58rS', {
 			expanded: true,
 			attribution: '<a href="https://mapzen.com/" target="_blank">Mapzen</a> | <a href="https://openstreetmap.org/">OSM</a>'
@@ -60,11 +64,6 @@ var app = {
 
 		// Flatbush
 		map.setView([-73.959986, 40.641849], 10);
-
-		$('.leaflet-control-attribution')
-			.closest('.leaflet-right')
-			.removeClass('leaflet-right')
-			.addClass('leaflet-center');
 
 		$('.leaflet-pelias-search-icon').html('<span class="fa fa-bars"></span>');
 
