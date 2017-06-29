@@ -93,6 +93,8 @@ var app = {
 			$('.leaflet-pelias-search-icon .fa').removeClass('fa-search');
 			$('.leaflet-pelias-search-icon .fa').addClass('fa-bars');
 		});
+
+		slippymap.crosshairs.init(map);
 	},
 
 	setup_menu: function() {
