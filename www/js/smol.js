@@ -1,15 +1,18 @@
 var app = {
 
 	httpd: null,
+	venues: [],
 
 	default_style: {
-		color: '#136AEC',
-		fillColor: '#2A93EE',
+		color: '#8442D5',
+		fillColor: '#8442D5',
 		fillOpacity: 0.7,
 		weight: 2,
 		opacity: 0.9,
 		radius: 5
 	},
+
+	default_emoji: 'round_pushpin',
 
 	init: function() {
 		if (typeof cordova == 'object') {
@@ -95,6 +98,8 @@ var app = {
 		});
 
 		slippymap.crosshairs.init(map);
+
+		localforage.getItem('venues').then(app.show_venues);
 	},
 
 	setup_menu: function() {
@@ -103,9 +108,36 @@ var app = {
 
 	add_venue: function() {
 		var ll = app.map.getCenter();
-		var marker = new L.CircleMarker(ll, app.default_style).addTo(app.map);
-		var html = '<span class="emoji">📍</span> ' + ll.lat.toFixed(6) + ', ' + ll.lng.toFixed(6);
-		marker.bindPopup(html).openPopup();
+		var name = ll.lat.toFixed(6) + ', ' + ll.lng.toFixed(6);
+		var venue = {
+			name: name,
+			lat: ll.lat,
+			lng: ll.lng,
+			emoji: app.default_emoji,
+			style: app.default_style,
+		};
+		app.venues.push(venue);
+		localforage.setItem('venues', app.venues);
+		var marker = app.add_marker(venue);
+		marker.openPopup();
+	},
+
+	add_marker: function(venue) {
+		var ll = [venue.lat, venue.lng];
+		var marker = new L.CircleMarker(ll, venue.style).addTo(app.map);
+		var html = '<span class="emoji">📍</span> ' + '<span class="name">' + venue.name + '</span>';
+		marker.bindPopup(html);
+		return marker;
+	},
+
+	show_venues: function(venues) {
+		if (! venues) {
+			return;
+		}
+		app.venues = venues;
+		for (var i = 0; i < venues.length; i++) {
+			app.add_marker(venues[i]);
+		}
 	},
 
 	show_menu: function() {
@@ -114,9 +146,7 @@ var app = {
 
 	hide_menu: function() {
 		$('#menu').removeClass('active');
-	},
-
-
+	}
 
 };
 app.setup();

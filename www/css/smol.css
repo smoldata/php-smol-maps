@@ -204,6 +204,10 @@ body {
 	color: #fff;
 }
 
+.leaflet-popup-pane {
+	z-index: 10001; /* why does this not work?? */
+}
+
 @media (min-width: 321px) {
 	.leaflet-touch .leaflet-control-locate a,
 	.leaflet-control-locate a,
