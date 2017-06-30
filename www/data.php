@@ -233,6 +233,7 @@ function method_update_map() {
 }
 
 function method_add_venue() {
+
 	global $db, $defaults;
 
 	$required = array('map_id', 'latitude', 'longitude', 'color', 'icon');
@@ -290,6 +291,50 @@ function method_add_venue() {
 	json_output(array(
 		'venue' => $venue
 	));
+}
+
+function method_update_venue() {
+
+	global $db;
+
+	$required = array('id');
+
+	foreach ($required as $req) {
+		if (! isset($_POST[$req])) {
+			json_output(array(
+				'error' => "include an '$req' arg"
+			));
+		}
+	}
+
+	$id = intval($_POST['id']);
+	$_POST['updated'] = date('Y-m-d H:i:s');
+	unset($_POST['method']);
+
+	$assign = array();
+	$values = array();
+	foreach ($_POST as $key => $value) {
+		$assign[] = $key . " = ?";
+		$values[] = $value;
+	}
+	$assign = implode(', ', $assign);
+
+	$query = $db->prepare("
+		UPDATE smol_venue
+		SET $assign
+		WHERE id = $id
+	");
+	check_query($query);
+
+	$query->execute($values);
+	check_query($query);
+
+	$venue = get_venue($id);
+
+	json_output(array(
+		'venue' => $venue
+	));
+
 }
 
 function check_query($query) {

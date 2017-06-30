@@ -108,6 +108,7 @@ var app = {
 			}).addTo(map);
 			$('.leaflet-control-zoom-in').html('<span class="fa fa-plus"></span>');
 			$('.leaflet-control-zoom-out').html('<span class="fa fa-minus"></span>');
+			$('#map').addClass('has-zoom-controls');
 		}
 
 		L.control.locate({
@@ -132,12 +133,6 @@ var app = {
 
 		$('.leaflet-pelias-search-icon').html('<span class="fa fa-bars"></span>');
 
-		$('.leaflet-pelias-search-icon').click(function() {
-			app.show_menu();
-		});
-
-		$('.leaflet-pelias-control').addClass('show-menu-icon');
-
 		$('.leaflet-pelias-input').focus(function() {
 			$('.leaflet-pelias-search-icon .fa').removeClass('fa-bars');
 			$('.leaflet-pelias-search-icon .fa').addClass('fa-search');
@@ -154,7 +149,37 @@ var app = {
 	},
 
 	setup_menu: function() {
+
+		$('.leaflet-pelias-search-icon').click(function() {
+			app.show_menu();
+		});
+
 		$('#menu .close').click(app.hide_menu);
+
+		$('#map').click(function(e) {
+			if ($(e.target).hasClass('icon')) {
+				var venue_id = $(e.target).data('venue-id');
+				app.edit_venue(venue_id);
+				e.preventDefault();
+			} else if ($(e.target).closest('.icon').length > 0) {
+				var venue_id = $(e.target).closest('.icon').data('venue-id');
+				app.edit_venue(venue_id);
+				e.preventDefault();
+			}
+		});
+
+		app.setup_edit_venue_form();
+	},
+
+	setup_edit_venue_form: function() {
+		$('#edit-venue').submit(function(e) {
+			e.preventDefault();
+			app.edit_venue_save();
+		});
+		$('#edit-venue-cancel').click(function(e) {
+			e.preventDefault();
+			app.hide_menu();
+		});
 	},
 
 	load_map: function(id) {
@@ -229,11 +254,95 @@ var app = {
 			if (rsp.venue) {
 				app.data.venues[index] = rsp.venue;
 				localforage.setItem('map_' + app.data.id, app.data);
+				marker.venue = rsp.venue;
+				$(app.map.getPane('popupPane'))
+					.find('.icon')
+					.attr('data-venue-id', rsp.venue.id);
 			} else if (rsp.error) {
 				console.error(rsp.error);
 			} else {
 				console.error('could not add_venue');
 			}
+		});
+	},
+
+	edit_venue: function(id) {
+		var venue = null;
+		for (var i = 0; i < app.data.venues.length; i++) {
+			if (app.data.venues[i].id == id) {
+				venue = app.data.venues[i];
+				break;
+			}
+		}
+
+		if (! venue) {
+			console.error('could not find venue ' + id + ' to edit');
+			return;
+		}
+
+		console.log('edit_venue', venue);
+
+		$('#edit-venue-name').val(venue.name);
+		$('#edit-venue-id').val(id);
+
+		app.show_menu('edit-venue');
+	},
+
+	edit_venue_save: function() {
+
+		var id = parseInt($('#edit-venue-id').val());
+		var name = $('#edit-venue-name').val();
+		var venue = null;
+
+		for (var i = 0; i < app.data.venues.length; i++) {
+			if (app.data.venues[i].id == id) {
+				venue = app.data.venues[i];
+				venue.name = name;
+				console.log('updated app.data', venue);
+				break;
+			}
+		}
+
+		if (! venue) {
+			$('#edit-venue-rsp').html('Oops, could not find venue ' + id + ' to save.');
+			$('#edit-venue-rsp').addClass('error');
+			return;
+		}
+
+		app.map.eachLayer(function(layer) {
+			if (layer.venue &&
+			    layer.venue.id == id) {
+				app.set_popup(layer, venue);
+				console.log('updated layer', layer.venue);
+			}
+		});
+
+		localforage.setItem('map_' + app.data.id, app.data)
+			.then(function(rsp) {
+				console.log('updated localforage', rsp);
+			});
+
+		$('#edit-venue-rsp').html('Saving...');
+		$('#edit-venue-rsp').removeClass('error');
+
+		var data = {
+			id: id,
+			name: name,
+		};
+		app.api_call('update_venue', data).then(function(rsp) {
+			if (rsp.error) {
+				$('#edit-venue-rsp').html(rsp.error);
+				$('#edit-venue-rsp').addClass('error');
+				return;
+			} else if (! rsp.venue) {
+				$('#edit-venue-rsp').html('Oops, something went wrong while saving. Try again?');
+				$('#edit-venue-rsp').addClass('error');
+				return;
+			} else {
+				console.log('updated db', rsp);
+			}
+			$('#edit-venue-rsp').html('');
+			app.hide_menu();
 		});
 	},
 
@@ -244,12 +353,17 @@ var app = {
 			fillColor: venue.color
 		});
 		var marker = new L.CircleMarker(ll, style);
-		marker.venue = venue;
 		marker.addTo(app.map);
-		var name = venue.name || (venue.latitude.toFixed(6) + ', ' + venue.longitude.toFixed(6));
-		var html = '<span class="icon" style="background-color: ' + venue.color + ';"><span class="fa fa-' + venue.icon + '"></span></span>' + '<span class="name">' + name + '</span>';
-		marker.bindPopup(html);
+		app.set_popup(marker, venue);
 		return marker;
+	},
+
+	set_popup: function(marker, venue) {
+		marker.venue = venue;
+		var name = venue.name || (venue.latitude.toFixed(6) + ', ' + venue.longitude.toFixed(6));
+		var data_id = venue.id ? ' data-venue-id="' + venue.id + '"' : '';
+		var html = '<span class="icon" style="background-color: ' + venue.color + ';"' + data_id + '><span class="fa fa-' + venue.icon + '"></span></span>' + '<span class="name">' + name + '</span>';
+		marker.bindPopup(html);
 	},
 
 	show_venues: function(venues) {
@@ -295,7 +409,9 @@ var app = {
 		});
 	},
 
-	show_menu: function() {
+	show_menu: function(form_id) {
+		$('#menu form.visible').removeClass('visible');
+		$('#' + form_id).addClass('visible');
 		$('#menu').addClass('active');
 	},
 

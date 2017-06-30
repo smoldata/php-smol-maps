@@ -19,6 +19,20 @@
 			<div id="map"></div>
 			<div id="menu">
 				<span class="close"><span class="fa fa-close"></span></span>
+				<form action="/data.php" method="post" id="edit-venue">
+					<h1>Edit venue</h1>
+					<input type="hidden" name="venue_id" id="edit-venue-id" value="">
+					<label>
+						Venue name
+						<input type="text" name="name" id="edit-venue-name" value="">
+					</label>
+					<div id="edit-venue-buttons">
+						<input type="submit" name="action" class="btn" id="edit-venue-save" value="Save">
+						<input type="submit" name="action" class="btn" id="edit-venue-cancel" value="Cancel">
+					</div>
+					<div id="edit-venue-rsp"></div>
+					<a href="#" id="edit-venue-delete">Delete this venue?</a>
+				</form>
 			</div>
 		</div>
 		<script type="text/javascript" src="cordova.js"></script>

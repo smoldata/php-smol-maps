@@ -209,6 +209,7 @@ body {
 	border-radius: 20px;
 	text-align: center;
 	margin-right: 10px;
+	cursor: pointer;
 }
 
 .leaflet-container a.leaflet-popup-close-button:hover {
@@ -217,6 +218,91 @@ body {
 
 .leaflet-popup-pane {
 	z-index: 10001; /* why does this not work?? */
+}
+
+#menu form {
+	display: none;
+	width: 100%;
+	max-width: 640px;
+	padding: 10px;
+	margin: 0 auto;
+	min-height: 100vh;
+	position: relative;
+}
+
+#menu form.visible {
+	display: block;
+}
+
+h1 {
+	font-size: 24px;
+	margin-bottom: 30px;
+}
+
+input[type="text"] {
+	display: block;
+	font-size: 14px;
+	padding: 10px;
+	border: 1px solid #ccc;
+	width: 100%;
+	margin: 10px 0 0 0;
+	border-radius: 2px;
+}
+
+label {
+	display: block;
+	font-size: 14px;
+	font-weight: bold;
+	margin-top: 15px;
+}
+
+.btn {
+	border: none;
+	color: #8442D5;
+	background: transparent;
+	border: 2px solid #8442D5;
+	font-size: 14px;
+	font-weight: bold;
+	padding: 10px 15px;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+#edit-venue-buttons {
+	border-top: 1px solid #170A26;
+	margin-top: 30px;
+	padding-top: 30px;
+}
+
+#edit-venue-save {
+	color: #fff;
+	background-color: #8442D5;
+	border-color: #8442D5;
+}
+
+.btn:hover,
+#edit-venue-save:hover {
+	color: #fff;
+	background: #000;
+	border-color: #000;
+}
+
+#edit-venue-delete {
+	position: absolute;
+	bottom: 15px;
+	color: #DE2B32;
+}
+
+#edit-venue-rsp {
+	margin-top: 30px;
+}
+
+#edit-venue-rsp.error {
+	color: #DE2B32;
+}
+
+#edit-venue-delete:hover {
+	color: #000;
 }
 
 @media (min-width: 321px) {
@@ -239,5 +325,21 @@ body {
 		border-radius: 30px;
 		line-height: 60px;
 		font-size: 28px;
+	}
+
+	#map.has-zoom-controls .leaflet-control-zoom a,
+	#map.has-zoom-controls .leaflet-touch .leaflet-control-zoom a,
+	#map.has-zoom-controls .leaflet-control-locate a,
+	#map.has-zoom-controls .leaflet-touch .leaflet-control-locate a,
+	#map.has-zoom-controls .leaflet-control-locate a:hover,
+	#map.has-zoom-controls .leaflet-control-locate a:first-child,
+	#map.has-zoom-controls .leaflet-control-zoom a:first-child,
+	#map.has-zoom-controls .leaflet-control-locate a:last-child,
+	#map.has-zoom-controls .leaflet-control-zoom a:last-child {
+		width: 40px;
+		height: 40px;
+		border-radius: 20px;
+		line-height: 40px;
+		font-size: 20px;
 	}
 }
