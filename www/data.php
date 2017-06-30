@@ -297,14 +297,10 @@ function method_update_venue() {
 
 	global $db;
 
-	$required = array('id');
-
-	foreach ($required as $req) {
-		if (! isset($_POST[$req])) {
-			json_output(array(
-				'error' => "include an '$req' arg"
-			));
-		}
+	if (! isset($_POST['id'])) {
+		json_output(array(
+			'error' => "include an 'id' arg"
+		));
 	}
 
 	$id = intval($_POST['id']);
@@ -333,6 +329,32 @@ function method_update_venue() {
 
 	json_output(array(
 		'venue' => $venue
+	));
+
+}
+
+function method_delete_venue() {
+
+	global $db;
+
+	if (! isset($_POST['id'])) {
+		json_output(array(
+			'error' => "include an 'id' arg"
+		));
+	}
+
+	$id = intval($_POST['id']);
+	$query = $db->prepare("
+		DELETE FROM smol_venue
+		WHERE id = $id
+	");
+	check_query($query);
+
+	$query->execute(array($id));
+	check_query($query);
+
+	json_output(array(
+		'deleted' => $id
 	));
 
 }

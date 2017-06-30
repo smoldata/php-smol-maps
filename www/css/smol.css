@@ -249,6 +249,10 @@ input[type="text"] {
 	border-radius: 2px;
 }
 
+input[type="text"]:focus {
+	border-color: #170A26;
+}
+
 label {
 	display: block;
 	font-size: 14px;

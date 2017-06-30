@@ -180,6 +180,10 @@ var app = {
 			e.preventDefault();
 			app.hide_menu();
 		});
+		$('#edit-venue-delete').click(function(e) {
+			e.preventDefault();
+			app.delete_venue();
+		});
 	},
 
 	load_map: function(id) {
@@ -340,6 +344,47 @@ var app = {
 				return;
 			} else {
 				console.log('updated db', rsp);
+			}
+			$('#edit-venue-rsp').html('');
+			app.hide_menu();
+		});
+	},
+
+	delete_venue: function() {
+		var id = parseInt($('#edit-venue-id').val());
+
+		var new_venues = [];
+		for (var i = 0; i < app.data.venues.length; i++) {
+			if (app.data.venues[i].id == id) {
+				continue;
+			}
+			new_venues.push(app.data.venues[i]);
+		}
+		app.data.venues = new_venues;
+
+		localforage.setItem('map_' + app.data.id, app.data)
+			.then(function(rsp) {
+				console.log('updated localforage', rsp);
+			});
+
+		app.map.eachLayer(function(layer) {
+			if (layer.venue &&
+			    layer.venue.id == id) {
+				app.map.removeLayer(layer);
+			}
+		});
+
+		$('#edit-venue-rsp').html('Deleting...');
+		$('#edit-venue-rsp').removeClass('error');
+
+		var data = {
+			id: id
+		};
+		app.api_call('delete_venue', data).then(function(rsp) {
+			if (rsp.error) {
+				$('#edit-venue-rsp').html(rsp.error);
+				$('#edit-venue-rsp').addClass('error');
+				return;
 			}
 			$('#edit-venue-rsp').html('');
 			app.hide_menu();
