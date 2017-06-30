@@ -11,8 +11,26 @@ var app = {
 		radius: 5
 	},
 
-	default_icon: 'flag',
-	default_color: '#8442D5',
+	data_defaults: {
+
+		// Updates here should be mirrored in data.php
+
+		id: 0,
+		name: 'Untitled map',
+		latitude: 40.641849,
+		longitude: -73.959986,
+		zoom: 15
+	},
+
+	venue_defaults: {
+
+		// Updates here should be mirrored in data.php
+
+		id: 0,
+		name: null,
+		icon: 'flag',
+		color: '#8442D5'
+	},
 
 	init: function() {
 		if (typeof cordova == 'object') {
@@ -30,6 +48,7 @@ var app = {
 
 	setup: function() {
 		app.setup_data(function() {
+			console.log(app.data);
 			app.setup_map();
 			app.setup_menu();
 		});
@@ -55,23 +74,11 @@ var app = {
 		localforage.getItem('map').then(function(map) {
 			if (map) {
 				app.data = map;
-				if (typeof callback == 'function') {
-					callback();
-				}
 			} else {
-				return app.api_call('create_map').then(function(rsp) {
-					if (rsp.error) {
-						console.error(rsp.error);
-					} else if (rsp.map) {
-						app.data = rsp.map;
-						localforage.setItem('map', rsp.map);
-						if (typeof callback == 'function') {
-							callback();
-						}
-					} else {
-						console.error('could not setup_data');
-					}
-				});
+				app.data = app.data_defaults;
+			}
+			if (typeof callback == 'function') {
+				callback();
 			}
 		});
 	},
@@ -97,7 +104,7 @@ var app = {
 
 		L.control.addVenue({
 			position: 'bottomright',
-			click: app.add_venue
+			click: app.add_venue_handler
 		}).addTo(map);
 
 		L.control.geocoder('mapzen-byN58rS', {
@@ -110,13 +117,6 @@ var app = {
 		}).addTo(map);
 
 		map.setView([app.data.latitude, app.data.longitude], app.data.zoom);
-		/*map.on('moveend', function() {
-			var ll = map.getCenter();
-			app.update_data({
-				latitude: ll.lat,
-				longitude: ll.lng
-			});
-		});*/
 
 		$('.leaflet-pelias-search-icon').html('<span class="fa fa-bars"></span>');
 
@@ -145,23 +145,62 @@ var app = {
 		$('#menu .close').click(app.hide_menu);
 	},
 
+	add_map: function() {
+		var ll = app.map.getCenter();
+		var view = {
+			latitude: ll.lat,
+			longitude: ll.lng,
+			zoom: app.map.getZoom()
+		};
+		return app.api_call('add_map', view).then(function(rsp) {
+			if (rsp.error) {
+				console.error(rsp.error);
+			} else if (rsp.map) {
+				app.data = rsp.map;
+				localforage.setItem('map', rsp.map);
+			} else {
+				console.error('could not setup_data');
+			}
+		});
+	},
+
+	add_venue_handler: function() {
+		if (app.data.id) {
+			app.add_venue();
+		} else {
+			app.add_map().then(app.add_venue);
+		}
+	},
+
 	add_venue: function() {
 		var ll = app.map.getCenter();
-		var venue = {
-			name: null,
-			lat: ll.lat,
-			lng: ll.lng,
-			icon: app.default_icon,
-			color: app.default_color,
-		};
+		var venue = L.extend(app.venue_defaults, {
+			map_id: app.data.id,
+			latitude: ll.lat,
+			longitude: ll.lng
+		});
+
+		var index = app.venues.length;
 		app.venues.push(venue);
 		localforage.setItem('venues', app.venues);
+
 		var marker = app.add_marker(venue);
 		marker.openPopup();
+
+		app.api_call('add_venue', venue).then(function(rsp) {
+			if (rsp.venue) {
+				app.venues[index] = rsp.venue;
+				localforage.setItem('venues', app.venues);
+			} else if (rsp.error) {
+				console.error(rsp.error);
+			} else {
+				console.error('could not add_venue');
+			}
+		});
 	},
 
 	add_marker: function(venue) {
-		var ll = [venue.lat, venue.lng];
+		var ll = [venue.latitude, venue.longitude];
 		var style = L.extend(app.marker_style, {
 			color: venue.color,
 			fillColor: venue.color
@@ -169,7 +208,7 @@ var app = {
 		var marker = new L.CircleMarker(ll, style);
 		marker.venue = venue;
 		marker.addTo(app.map);
-		var name = venue.name || (venue.lat.toFixed(6) + ', ' + venue.lng.toFixed(6));
+		var name = venue.name || (venue.latitude.toFixed(6) + ', ' + venue.longitude.toFixed(6));
 		var html = '<span class="icon" style="background-color: ' + venue.color + ';"><span class="fa fa-' + venue.icon + '"></span></span>' + '<span class="name">' + name + '</span>';
 		marker.bindPopup(html);
 		return marker;
@@ -198,7 +237,6 @@ var app = {
 	},
 
 	update_data: function(updates) {
-		console.log(updates);
 		updates.id = app.data.id;
 		app.api_call('update_map', updates)
 			.then(function(rsp) {

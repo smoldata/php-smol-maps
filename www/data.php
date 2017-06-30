@@ -5,10 +5,17 @@ date_default_timezone_set('Asia/Seoul');
 // 37.5670374, 127.007694
 // 40.641849, -73.959986
 
-$default_name = 'Untitled map';
-$default_lat = 40.641849;
-$default_lng = -73.959986;
-$default_zoom = 15;
+$defaults = array(
+
+	// Updates here should be mirrored in smol.js
+
+	'name' => 'Untitled map',
+	'latitude' => 40.641849,
+	'longitude' => -73.959986,
+	'zoom' => 15,
+	'color' => '#8442D5',
+	'icon' => 'flag'
+);
 
 if (! file_exists('data/maps.db')) {
 	$db = new PDO('sqlite:data/maps.db');
@@ -19,6 +26,20 @@ if (! file_exists('data/maps.db')) {
 			latitude DOUBLE,
 			longitude DOUBLE,
 			zoom INTEGER,
+			created DATETIME,
+			updated DATETIME
+		)
+	");
+
+	$db->query("
+		CREATE table smol_venue (
+			id INTEGER PRIMARY KEY,
+			map_id INTEGER,
+			name VARCHAR(255),
+			latitude DOUBLE,
+			longitude DOUBLE,
+			icon VARCHAR(255),
+			color VARCHAR(255),
 			created DATETIME,
 			updated DATETIME
 		)
@@ -65,6 +86,32 @@ function get_map($id) {
 	return $map;
 }
 
+function get_venue($id) {
+	global $db;
+
+	$query = $db->prepare("
+		SELECT *
+		FROM smol_venue
+		WHERE id = ?
+	");
+	check_query($query);
+
+	$query->execute(array($id));
+	$venue = $query->fetch();
+	if (! $venue) {
+		json_output(array(
+			'error' => "venue $id not found"
+		));
+	}
+
+	$venue['id'] = intval($venue['id']);
+	$venue['map_id'] = intval($venue['map_id']);
+	$venue['latitude'] = floatval($venue['latitude']);
+	$venue['longitude'] = floatval($venue['longitude']);
+
+	return $venue;
+}
+
 function method_get_maps() {
 	global $db;
 	$query = $db->query("
@@ -78,8 +125,8 @@ function method_get_maps() {
 	));
 }
 
-function method_create_map() {
-	global $db, $default_name, $default_lat, $default_lng, $default_zoom;
+function method_add_map() {
+	global $db, $defaults;
 
 	$query = $db->prepare("
 		INSERT INTO smol_map
@@ -90,10 +137,10 @@ function method_create_map() {
 
 	$now = date('Y-m-d H:i:s');
 	$query->execute(array(
-		$default_name,
-		$default_lat,
-		$default_lng,
-		$default_zoom,
+		$defaults['name'],
+		$defaults['latitude'],
+		$defaults['longitude'],
+		$defaults['zoom'],
 		$now,
 		$now
 	));
@@ -139,6 +186,66 @@ function method_update_map() {
 
 	json_output(array(
 		'map' => $map
+	));
+}
+
+function method_add_venue() {
+	global $db, $defaults;
+
+	$required = array('map_id', 'latitude', 'longitude', 'color', 'icon');
+
+	foreach ($required as $req) {
+		if (empty($_POST[$req])) {
+			json_output(array(
+				'error' => "include an '$req' arg"
+			));
+		}
+	}
+
+	$query = $db->prepare("
+		INSERT INTO smol_venue
+		(map_id, name, latitude, longitude, color, icon, created, updated)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+	");
+	check_query($query);
+
+	if (! empty($_POST['name'])) {
+		$name = $_POST['name'];
+	} else {
+		$name = null;
+	}
+
+	if (! empty($_POST['color'])) {
+		$color = $_POST['color'];
+	} else {
+		$color = $defaults['color'];
+	}
+
+	if (! empty($_POST['icon'])) {
+		$icon = $_POST['icon'];
+	} else {
+		$icon = $defaults['icon'];
+	}
+
+	$now = date('Y-m-d H:i:s');
+
+	$query->execute(array(
+		$_POST['map_id'],
+		$name,
+		$_POST['latitude'],
+		$_POST['longitude'],
+		$color,
+		$icon,
+		$now,
+		$now
+	));
+	check_query($query);
+
+	$id = $db->lastInsertId();
+	$venue = get_venue($id);
+
+	json_output(array(
+		'venue' => $venue
 	));
 }
 
