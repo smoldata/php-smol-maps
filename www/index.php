@@ -40,6 +40,28 @@
 						Venue name
 						<input type="text" name="name" id="edit-venue-name" value="">
 					</label>
+					<label>
+						Venue address
+						<input type="text" name="address" id="edit-venue-address" value="">
+					</label>
+					<label>
+						Venue tags
+						<div class="help">comma separated: <code>cats, cat cafe, coffee</code></div>
+						<input type="text" name="tags" id="edit-venue-tags" value="">
+					</label>
+					<label for="edit-venue-icon">
+						Venue icon
+						<div class="help">icons are from <a href="http://fontawesome.io/icons/">FontAwesome</a></div>
+					</label>
+					<div id="edit-venue-icon-display"><span class="fa"></span></div>
+					<select name="icon" id="edit-venue-icon">
+						<?php include 'icons.txt'; ?>
+					</select>
+					<label>
+						Venue color
+						<div class="help"><a href="https://en.wikipedia.org/wiki/Web_colors">hex color</a> code, for inspiration check out <a href="http://paletton.com" target="_blank">Paletton</a> or <a href="https://color.adobe.com/explore/most-popular/?time=week" target="_blank">Adpbe Colors</a></div>
+						<input type="text" name="color" id="edit-venue-color" value="">
+					</label>
 					<div class="edit-buttons">
 						<input type="submit" name="action" class="btn btn-save" value="Save">
 						<input type="submit" name="action" class="btn btn-cancel" value="Cancel">

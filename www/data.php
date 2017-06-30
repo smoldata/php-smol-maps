@@ -37,6 +37,8 @@ if (! file_exists('data/maps.db')) {
 			id INTEGER PRIMARY KEY,
 			map_id INTEGER,
 			name VARCHAR(255),
+			address VARCHAR(255),
+			tags VARCHAR(255),
 			latitude DOUBLE,
 			longitude DOUBLE,
 			icon VARCHAR(255),

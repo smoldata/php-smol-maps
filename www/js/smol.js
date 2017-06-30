@@ -29,6 +29,8 @@ var app = {
 
 		id: 0,
 		name: null,
+		address: null,
+		tags: null,
 		icon: 'flag',
 		color: '#8442D5',
 		current: 1
@@ -209,6 +211,14 @@ var app = {
 		$('#edit-venue .edit-delete').click(function(e) {
 			e.preventDefault();
 			app.delete_venue();
+		});
+		$('#edit-venue-icon').change(function() {
+			var icon = $('#edit-venue-icon').val();
+			$('#edit-venue-icon-display .fa')[0].className = 'fa fa-' + icon;
+		});
+		$('#edit-venue-color').change(function() {
+			var color = $('#edit-venue-color').val();
+			$('#edit-venue-icon-display').css('background-color', color);
 		});
 	},
 
@@ -393,10 +403,14 @@ var app = {
 			return;
 		}
 
-		console.log('edit_venue', venue);
-
-		$('#edit-venue-name').val(venue.name);
 		$('#edit-venue-id').val(id);
+		$('#edit-venue-name').val(venue.name);
+		$('#edit-venue-address').val(venue.address);
+		$('#edit-venue-tags').val(venue.tags);
+		$('#edit-venue-icon').val(venue.icon);
+		$('#edit-venue-icon-display').css('background-color', venue.color);
+		$('#edit-venue-icon-display .fa')[0].className = 'fa fa-' + venue.icon;
+		$('#edit-venue-color').val(venue.color);
 
 		app.show_menu('edit-venue');
 	},
@@ -405,12 +419,20 @@ var app = {
 
 		var id = parseInt($('#edit-venue-id').val());
 		var name = $('#edit-venue-name').val();
+		var icon = $('#edit-venue-icon').val();
+		var color = $('#edit-venue-color').val();
+		var address = $('#edit-venue-address').val();
+		var tags = $('#edit-venue-tags').val();
 		var venue = null;
 
 		for (var i = 0; i < app.data.venues.length; i++) {
 			if (app.data.venues[i].id == id) {
 				venue = app.data.venues[i];
 				venue.name = name;
+				venue.icon = icon;
+				venue.color = color;
+				venue.address = address;
+				venue.tags = tags;
 				console.log('updated app.data', venue);
 				break;
 			}
@@ -441,6 +463,10 @@ var app = {
 		var data = {
 			id: id,
 			name: name,
+			icon: icon,
+			color: color,
+			address: address,
+			tags: tags
 		};
 		app.api_call('update_venue', data).then(function(rsp) {
 			if (rsp.error) {
@@ -573,11 +599,12 @@ var app = {
 	set_popup: function(marker, venue) {
 		marker.venue = venue;
 		var name = venue.name || (venue.latitude.toFixed(6) + ', ' + venue.longitude.toFixed(6));
+		var address = venue.address ? '<div class="address">' + venue.address + '</div>' : '';
 		var data_id = venue.id ? ' data-venue-id="' + venue.id + '"' : '';
 		var html = '<form action="/data.php" class="venue"' + data_id + ' onsubmit="app.edit_name_save(); return false;">' +
 				'<div class="icon" style="background-color: ' + venue.color + ';">' +
 				'<span class="fa fa-' + venue.icon + '"></span></div>' +
-				'<div class="name"><span class="inner">' + name + '</span></div>' +
+				'<div class="name"><span class="inner">' + name + '</span>' + address + '</div>' +
 				'<div class="clear"></div>' +
 				'</form>';
 		marker.bindPopup(html);
