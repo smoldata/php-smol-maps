@@ -12,15 +12,19 @@ body {
 	margin: 0;
 }
 
+a {
+	color: #8442D5;
+}
+
+.clear {
+	clear: both;
+}
+
 .help {
 	font-size: 12px;
 	font-weight: normal;
 	color: #666;
 	margin: 10px 0 15px 0;
-}
-
-.help a {
-	color: #8442D5;
 }
 
 code {
@@ -266,10 +270,6 @@ code {
 	word-break: break-all;
 }
 
-.leaflet-popup .clear {
-	clear: both;
-}
-
 .leaflet-popup .name .inner:hover {
 	background-color: #170A26;
 	cursor: pointer;
@@ -336,6 +336,12 @@ label {
 	margin-top: 20px;
 }
 
+label.column {
+	float: left;
+	width: 125px;
+	margin-right: 20px;
+}
+
 select {
 	font-size: 14px;
 }
@@ -387,6 +393,8 @@ select {
 .edit-delete:hover {
 	color: #000;
 }
+
+
 
 #edit-venue-icon-display {
 	color: #fff;

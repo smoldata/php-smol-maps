@@ -26,6 +26,39 @@
 						Map name
 						<input type="text" name="name" id="edit-map-name" value="">
 					</label>
+					<label class="column">
+						Default latitude
+						<input type="text" name="name" id="edit-map-latitude" value="">
+					</label>
+					<label class="column">
+						Default longitude
+						<input type="text" name="name" id="edit-map-longitude" value="">
+					</label>
+					<label class="column">
+						Default zoom level
+						<input type="text" name="name" id="edit-map-zoom" value="">
+						<div class="help">ranges from 13 to 16</div>
+					</label>
+					<div class="clear"></div>
+					<p><a href="#" id="edit-map-set-view">Use current map view as the default</a></p>
+					<label for="edit-map-theme">
+						Map theme
+					</label>
+					<div id="map-theme-display"></div>
+					<select id="edit-map-theme">
+						<option>black</option>
+						<option>blue</option>
+						<option>blue-gray</option>
+						<option>brown-orange</option>
+						<option>gray</option>
+						<option>gray-gold</option>
+						<option>high-contrast</option>
+						<option>inverted</option>
+						<option>pink</option>
+						<option>pink-yellow</option>
+						<option>purple-green</option>
+						<option>sepia</option>
+					</select>
 					<div class="edit-buttons">
 						<input type="submit" name="action" class="btn btn-save" value="Save">
 						<input type="submit" name="action" class="btn btn-cancel" value="Cancel">
@@ -51,7 +84,7 @@
 					</label>
 					<label for="edit-venue-icon">
 						Venue icon
-						<div class="help">icons are from <a href="http://fontawesome.io/icons/">FontAwesome</a></div>
+						<div class="help">icons are from <a href="http://fontawesome.io/icons/" target="_blank">FontAwesome</a></div>
 					</label>
 					<div id="edit-venue-icon-display"><span class="fa"></span></div>
 					<select name="icon" id="edit-venue-icon">
@@ -59,7 +92,7 @@
 					</select>
 					<label>
 						Venue color
-						<div class="help"><a href="https://en.wikipedia.org/wiki/Web_colors">hex color</a> code, for inspiration check out <a href="http://paletton.com" target="_blank">Paletton</a> or <a href="https://color.adobe.com/explore/most-popular/?time=week" target="_blank">Adpbe Colors</a></div>
+						<div class="help"><a href="https://en.wikipedia.org/wiki/Web_colors" target="_blank">hex color</a> code, for inspiration check out <a href="http://paletton.com" target="_blank">Paletton</a> or <a href="https://color.adobe.com/explore/most-popular/?time=week" target="_blank">Adpbe Colors</a></div>
 						<input type="text" name="color" id="edit-venue-color" value="">
 					</label>
 					<div class="edit-buttons">

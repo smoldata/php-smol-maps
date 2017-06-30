@@ -22,10 +22,14 @@ if (! file_exists('data/maps.db')) {
 	$db->query("
 		CREATE table smol_map (
 			id INTEGER PRIMARY KEY,
+			slug VARCHAR(255),
 			name VARCHAR(255),
 			latitude DOUBLE,
 			longitude DOUBLE,
 			zoom INTEGER,
+			labels VARCHAR(255),
+			theme VARCHAR(255),
+			default_color VARCHAR(255),
 			current INTEGER DEFAULT 1,
 			created DATETIME,
 			updated DATETIME

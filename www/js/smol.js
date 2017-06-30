@@ -195,6 +195,14 @@ var app = {
 			e.preventDefault();
 			app.edit_map_save();
 		});
+		$('#edit-map-set-view').click(function(e) {
+			e.preventDefault();
+			var ll = app.map.getCenter();
+			var zoom = app.map.getZoom();
+			$('#edit-map-latitude').val(ll.lat);
+			$('#edit-map-longitude').val(ll.lng);
+			$('#edit-map-zoom').val(zoom);
+		});
 		$('#edit-map .edit-delete').click(function(e) {
 			e.preventDefault();
 			if (confirm('Are you sure you want to delete the map?')) {
@@ -281,6 +289,9 @@ var app = {
 			app.add_map(app.edit_map);
 		} else {
 			$('#edit-map-name').val(app.data.name);
+			$('#edit-map-latitude').val(app.data.latitude);
+			$('#edit-map-longitude').val(app.data.longitude);
+			$('#edit-map-zoom').val(app.data.zoom);
 			$('#edit-map-id').val(app.data.id);
 			app.show_menu('edit-map');
 		}
@@ -290,8 +301,15 @@ var app = {
 
 		var id = parseInt($('#edit-map-id').val());
 		var name = $('#edit-map-name').val();
+		var latitude = parseFloat($('#edit-map-latitude').val());
+		var longitude = parseFloat($('#edit-map-longitude').val());
+		var zoom = parseInt($('#edit-map-zoom').val());
 
 		app.data.name = name;
+		app.data.latitude = latitude;
+		app.data.longitude = longitude;
+		app.data.zoom = zoom;
+
 		localforage.setItem('map_' + app.data.id, app.data)
 			.then(function(rsp) {
 				console.log('updated localforage', rsp);
@@ -303,6 +321,9 @@ var app = {
 		var data = {
 			id: id,
 			name: name,
+			latitude: latitude,
+			longitude: longitude,
+			zoom: zoom
 		};
 		app.api_call('update_map', data).then(function(rsp) {
 			if (rsp.error) {
@@ -381,6 +402,7 @@ var app = {
 				$(app.map.getPane('popupPane'))
 					.find('.venue')
 					.attr('data-venue-id', rsp.venue.id);
+				app.set_popup(marker, rsp.venue);
 			} else if (rsp.error) {
 				console.error(rsp.error);
 			} else {
