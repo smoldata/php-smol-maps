@@ -1,6 +1,7 @@
 var app = {
 
 	httpd: null,
+	data: null,
 	venues: [],
 
 	marker_style: {
@@ -28,8 +29,10 @@ var app = {
 	},
 
 	setup: function() {
-		app.setup_map();
-		app.setup_menu();
+		app.setup_data(function() {
+			app.setup_map();
+			app.setup_menu();
+		});
 	},
 
 	error: function(msg) {
@@ -45,6 +48,32 @@ var app = {
 				localhost_only: false
 			}, app.setup, app.error);
 		}
+	},
+
+	// TODO: make this callback a promise
+	setup_data: function(callback) {
+		localforage.getItem('map').then(function(map) {
+			if (map) {
+				app.data = map;
+				if (typeof callback == 'function') {
+					callback();
+				}
+			} else {
+				return app.api_call('create_map').then(function(rsp) {
+					if (rsp.error) {
+						console.error(rsp.error);
+					} else if (rsp.map) {
+						app.data = rsp.map;
+						localforage.setItem('map', rsp.map);
+						if (typeof callback == 'function') {
+							callback();
+						}
+					} else {
+						console.error('could not setup_data');
+					}
+				});
+			}
+		});
 	},
 
 	setup_map: function() {
@@ -80,11 +109,14 @@ var app = {
 			scene: '/lib/refill/refill-style.yaml'
 		}).addTo(map);
 
-		// Seoul
-		//map.setView([37.5670374, 127.007694], 15);
-
-		// Flatbush
-		map.setView([40.641849, -73.959986], 15);
+		map.setView([app.data.latitude, app.data.longitude], app.data.zoom);
+		/*map.on('moveend', function() {
+			var ll = map.getCenter();
+			app.update_data({
+				latitude: ll.lat,
+				longitude: ll.lng
+			});
+		});*/
 
 		$('.leaflet-pelias-search-icon').html('<span class="fa fa-bars"></span>');
 
@@ -155,11 +187,37 @@ var app = {
 
 	reset_map: function() {
 		app.venues = [];
+		app.data = null;
+		localforage.setItem('map', app.data);
 		localforage.setItem('venues', app.venues);
 		app.map.eachLayer(function(layer) {
 			if (layer.venue) {
 				app.map.removeLayer(layer);
 			}
+		});
+	},
+
+	update_data: function(updates) {
+		console.log(updates);
+		updates.id = app.data.id;
+		app.api_call('update_map', updates)
+			.then(function(rsp) {
+				if (rsp.error) {
+					console.error(rsp.error);
+				} else {
+					app.data.updated = rsp.map.updated;
+				}
+			});
+
+		app.data = L.extend(app.data, updates);
+		localforage.setItem('map', app.data);
+	},
+
+	api_call: function(method, data) {
+		return $.ajax({
+			method: 'POST',
+			url: '/data.php?method=' + method,
+			data: data
 		});
 	},
 
