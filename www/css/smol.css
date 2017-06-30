@@ -77,14 +77,21 @@ body {
 }
 
 .leaflet-control-add-venue a,
-.leaflet-touch .leaflet-control-add-venue a {
+.leaflet-touch .leaflet-control-add-venue a,
+.leaflet-control-add-venue a:first-child,
+.leaflet-control-add-venue a:last-child {
 	background: #8442D5;
 }
 
 .leaflet-control-locate a:hover,
-.leaflet-control-add-venue a:hover {
+.leaflet-control-add-venue a:hover,
+.leaflet-control-zoom a:hover {
 	opacity: 1.0;
-	background: #170A26;
+	background: #000;
+}
+
+.leaflet-control-zoom-in {
+	margin-bottom: 1px;
 }
 
 .leaflet-touch .leaflet-control-locate a:hover,
