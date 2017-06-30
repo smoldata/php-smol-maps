@@ -26,6 +26,7 @@ if (! file_exists('data/maps.db')) {
 			latitude DOUBLE,
 			longitude DOUBLE,
 			zoom INTEGER,
+			current INTEGER DEFAULT 1,
 			created DATETIME,
 			updated DATETIME
 		)
@@ -40,6 +41,7 @@ if (! file_exists('data/maps.db')) {
 			longitude DOUBLE,
 			icon VARCHAR(255),
 			color VARCHAR(255),
+			current INTEGER DEFAULT 1,
 			created DATETIME,
 			updated DATETIME
 		)
@@ -83,6 +85,7 @@ function get_map($id) {
 	$map['latitude'] = floatval($map['latitude']);
 	$map['longitude'] = floatval($map['longitude']);
 	$map['zoom'] = intval($map['zoom']);
+	$map['current'] = intval($map['current']);
 
 	return $map;
 }
@@ -105,6 +108,7 @@ function get_map_venues($map_id) {
 		$venue['map_id'] = intval($venue['map_id']);
 		$venue['latitude'] = floatval($venue['latitude']);
 		$venue['longitude'] = floatval($venue['longitude']);
+		$venue['current'] = intval($venue['current']);
 		$venues[$id] = $venue;
 	}
 
@@ -133,6 +137,7 @@ function get_venue($id) {
 	$venue['map_id'] = intval($venue['map_id']);
 	$venue['latitude'] = floatval($venue['latitude']);
 	$venue['longitude'] = floatval($venue['longitude']);
+	$venue['current'] = intval($venue['current']);
 
 	return $venue;
 }
@@ -333,6 +338,33 @@ function method_update_venue() {
 
 }
 
+function method_delete_map() {
+
+	global $db;
+
+	if (! isset($_POST['id'])) {
+		json_output(array(
+			'error' => "include an 'id' arg"
+		));
+	}
+
+	$id = intval($_POST['id']);
+	$query = $db->prepare("
+		UPDATE smol_map
+		SET current = 0
+		WHERE id = ?
+	");
+	check_query($query);
+
+	$query->execute(array($id));
+	check_query($query);
+
+	json_output(array(
+		'deleted' => $id
+	));
+
+}
+
 function method_delete_venue() {
 
 	global $db;
@@ -345,7 +377,8 @@ function method_delete_venue() {
 
 	$id = intval($_POST['id']);
 	$query = $db->prepare("
-		DELETE FROM smol_venue
+		UPDATE smol_venue
+		SET current = 0
 		WHERE id = $id
 	");
 	check_query($query);

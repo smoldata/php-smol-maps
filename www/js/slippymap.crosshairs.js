@@ -111,7 +111,7 @@ slippymap.crosshairs = (function(){
 	    style.push("background-position: center center");
 	    style.push("background-repeat: no-repeat");
 	    style.push("background: url(" + data_url + ")");
-	    style.push("z-index:10000");
+	    style.push("z-index:625");
 
 	    style = style.join(";");
 

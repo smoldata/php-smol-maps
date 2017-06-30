@@ -272,40 +272,39 @@ label {
 	cursor: pointer;
 }
 
-#edit-venue-buttons {
+.edit-buttons {
 	border-top: 1px solid #170A26;
 	margin-top: 30px;
 	padding-top: 30px;
 }
 
-#edit-venue-save {
-	color: #fff;
-	background-color: #8442D5;
-	border-color: #8442D5;
-}
-
-.btn:hover,
-#edit-venue-save:hover {
+.btn:hover {
 	color: #fff;
 	background: #000;
 	border-color: #000;
 }
 
-#edit-venue-delete {
+.btn-save {
+	color: #fff;
+	background-color: #8442D5;
+	border-color: #8442D5;
+}
+
+.edit-delete {
 	position: absolute;
 	bottom: 15px;
 	color: #DE2B32;
 }
 
-#edit-venue-rsp {
+.edit-rsp {
 	margin-top: 30px;
 }
 
-#edit-venue-rsp.error {
+.edit-rsp.error {
 	color: #DE2B32;
 }
 
-#edit-venue-delete:hover {
+.edit-delete:hover {
 	color: #000;
 }
 

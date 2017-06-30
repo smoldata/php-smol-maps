@@ -12,13 +12,27 @@
 		<link rel="stylesheet" type="text/css" href="lib/leaflet.locatecontrol/dist/L.Control.Locate.css">
 		<link rel="stylesheet" type="text/css" href="lib/leaflet-geocoder-mapzen/dist/leaflet-geocoder-mapzen.css">
 		<link rel="stylesheet" type="text/css" href="css/smol.css">
-		<title>smol</title>
+		<title>smol map</title>
 	</head>
 	<body>
 		<div id="app">
 			<div id="map"></div>
 			<div id="menu">
 				<span class="close"><span class="fa fa-close"></span></span>
+				<form action="/data.php" method="post" id="edit-map">
+					<h1>Edit map</h1>
+					<input type="hidden" name="map_id" id="edit-map-id" value="">
+					<label>
+						Map name
+						<input type="text" name="name" id="edit-map-name" value="">
+					</label>
+					<div class="edit-buttons">
+						<input type="submit" name="action" class="btn btn-save" value="Save">
+						<input type="submit" name="action" class="btn btn-cancel" value="Cancel">
+					</div>
+					<div class="edit-rsp"></div>
+					<a href="#" class="edit-delete">Delete this map?</a>
+				</form>
 				<form action="/data.php" method="post" id="edit-venue">
 					<h1>Edit venue</h1>
 					<input type="hidden" name="venue_id" id="edit-venue-id" value="">
@@ -26,12 +40,12 @@
 						Venue name
 						<input type="text" name="name" id="edit-venue-name" value="">
 					</label>
-					<div id="edit-venue-buttons">
-						<input type="submit" name="action" class="btn" id="edit-venue-save" value="Save">
-						<input type="submit" name="action" class="btn" id="edit-venue-cancel" value="Cancel">
+					<div class="edit-buttons">
+						<input type="submit" name="action" class="btn btn-save" value="Save">
+						<input type="submit" name="action" class="btn btn-cancel" value="Cancel">
 					</div>
-					<div id="edit-venue-rsp"></div>
-					<a href="#" id="edit-venue-delete">Delete this venue?</a>
+					<div class="edit-rsp"></div>
+					<a href="#" class="edit-delete">Delete this venue?</a>
 				</form>
 			</div>
 		</div>
