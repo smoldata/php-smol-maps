@@ -2,7 +2,6 @@ var app = {
 
 	httpd: null,
 	data: null,
-	venues: [],
 
 	marker_style: {
 		fillOpacity: 0.7,
@@ -19,7 +18,8 @@ var app = {
 		name: 'Untitled map',
 		latitude: 40.641849,
 		longitude: -73.959986,
-		zoom: 15
+		zoom: 15,
+		venues: []
 	},
 
 	venue_defaults: {
@@ -69,16 +69,28 @@ var app = {
 		}
 	},
 
-	// TODO: make this callback a promise
 	setup_data: function(callback) {
-		localforage.getItem('map').then(function(map) {
-			if (map) {
-				app.data = map;
+		// See if we have a map_id stored
+		localforage.getItem('map_id').then(function(id) {
+			// If yes, we are working from that map's data
+			if (id) {
+				localforage.getItem('map_' + id).then(function(data) {
+					if (map) {
+						app.data = data;
+					} else {
+						console.error("could not load 'map_" + id + "' from localforage");
+						app.data = app.data_defaults;
+					}
+					if (typeof callback == 'function') {
+						callback();
+					}
+				});
 			} else {
+				// Otherwise, use the default
 				app.data = app.data_defaults;
-			}
-			if (typeof callback == 'function') {
-				callback();
+				if (typeof callback == 'function') {
+					callback();
+				}
 			}
 		});
 	},
@@ -138,11 +150,37 @@ var app = {
 
 		slippymap.crosshairs.init(map);
 
-		localforage.getItem('venues').then(app.show_venues);
+		app.show_venues(app.data.venues);
 	},
 
 	setup_menu: function() {
 		$('#menu .close').click(app.hide_menu);
+	},
+
+	load_map: function(id) {
+		app.api_call('get_map', {
+			id: id
+		}).then(function(rsp) {
+			if (rsp.map) {
+				app.data = rsp.map;
+				localforage.setItem('map_id', id);
+				localforage.setItem('map_' + id, app.data);
+
+				var ll = [app.data.latitude, app.data.longitude];
+				app.map.setView(ll, app.data.zoom);
+
+				app.map.eachLayer(function(layer) {
+					if (layer.venue) {
+						app.map.removeLayer(layer);
+					}
+				});
+				app.show_venues(app.data.venues);
+			} else if (rsp.error) {
+				console.error(rsp.error);
+			} else {
+				console.error('could not load map ' + id);
+			}
+		});
 	},
 
 	add_map: function() {
@@ -153,11 +191,11 @@ var app = {
 			zoom: app.map.getZoom()
 		};
 		return app.api_call('add_map', view).then(function(rsp) {
-			if (rsp.error) {
-				console.error(rsp.error);
-			} else if (rsp.map) {
+			if (rsp.map) {
 				app.data = rsp.map;
-				localforage.setItem('map', rsp.map);
+				localforage.setItem('map_' + app.data.id, rsp.map);
+			} else if (rsp.error) {
+					console.error(rsp.error);
 			} else {
 				console.error('could not setup_data');
 			}
@@ -165,7 +203,7 @@ var app = {
 	},
 
 	add_venue_handler: function() {
-		if (app.data.id) {
+		if (app.data && app.data.id) {
 			app.add_venue();
 		} else {
 			app.add_map().then(app.add_venue);
@@ -180,17 +218,17 @@ var app = {
 			longitude: ll.lng
 		});
 
-		var index = app.venues.length;
-		app.venues.push(venue);
-		localforage.setItem('venues', app.venues);
+		var index = app.data.venues.length;
+		app.data.venues.push(venue);
+		localforage.setItem('map_' + app.data.id, app.data);
 
 		var marker = app.add_marker(venue);
 		marker.openPopup();
 
 		app.api_call('add_venue', venue).then(function(rsp) {
 			if (rsp.venue) {
-				app.venues[index] = rsp.venue;
-				localforage.setItem('venues', app.venues);
+				app.data.venues[index] = rsp.venue;
+				localforage.setItem('map_' + app.data.id, app.data);
 			} else if (rsp.error) {
 				console.error(rsp.error);
 			} else {
@@ -218,17 +256,15 @@ var app = {
 		if (! venues) {
 			return;
 		}
-		app.venues = venues;
+		app.data.venues = venues;
 		for (var i = 0; i < venues.length; i++) {
 			app.add_marker(venues[i]);
 		}
 	},
 
 	reset_map: function() {
-		app.venues = [];
 		app.data = null;
-		localforage.setItem('map', app.data);
-		localforage.setItem('venues', app.venues);
+		localforage.setItem('map_id', 0);
 		app.map.eachLayer(function(layer) {
 			if (layer.venue) {
 				app.map.removeLayer(layer);
@@ -248,7 +284,7 @@ var app = {
 			});
 
 		app.data = L.extend(app.data, updates);
-		localforage.setItem('map', app.data);
+		localforage.setItem('map_' + app.data.id, app.data);
 	},
 
 	api_call: function(method, data) {

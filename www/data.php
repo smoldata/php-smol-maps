@@ -48,6 +48,7 @@ if (! file_exists('data/maps.db')) {
 	$db = new PDO('sqlite:data/maps.db');
 }
 $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+$db->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false); // wtf data types?
 
 if (! empty($_REQUEST['method'])) {
 	$method = "method_{$_REQUEST['method']}";
@@ -84,6 +85,30 @@ function get_map($id) {
 	$map['zoom'] = intval($map['zoom']);
 
 	return $map;
+}
+
+function get_map_venues($map_id) {
+	global $db;
+
+	$query = $db->prepare("
+		SELECT *
+		FROM smol_venue
+		WHERE map_id = ?
+	");
+	check_query($query);
+
+	$query->execute(array($map_id));
+	$venues = $query->fetchAll();
+
+	foreach ($venues as $id => $venue) {
+		$venue['id'] = intval($venue['id']);
+		$venue['map_id'] = intval($venue['map_id']);
+		$venue['latitude'] = floatval($venue['latitude']);
+		$venue['longitude'] = floatval($venue['longitude']);
+		$venues[$id] = $venue;
+	}
+
+	return $venues;
 }
 
 function get_venue($id) {
@@ -125,6 +150,23 @@ function method_get_maps() {
 	));
 }
 
+function method_get_map() {
+
+	if (empty($_POST['id'])) {
+		json_output(array(
+			'error' => "include an 'id' arg"
+		));
+	}
+	$id = $_POST['id'];
+
+	$map = get_map($id);
+	$map['venues'] = get_map_venues($id);
+
+	json_output(array(
+		'map' => $map
+	));
+}
+
 function method_add_map() {
 	global $db, $defaults;
 
@@ -148,6 +190,7 @@ function method_add_map() {
 
 	$id = $db->lastInsertId();
 	$map = get_map($id);
+	$map['venues'] = array();
 
 	json_output(array(
 		'map' => $map
