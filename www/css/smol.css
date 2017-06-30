@@ -199,8 +199,8 @@ body {
 	margin: 13px 19px 13px 13px;
 }
 
-.leaflet-popup-content .icon {
-	display: inline-block;
+.leaflet-popup .icon {
+	float: left;
 	font-size: 20px;
 	line-height: 40px;
 	padding: 0;
@@ -208,8 +208,50 @@ body {
 	height: 40px;
 	border-radius: 20px;
 	text-align: center;
-	margin-right: 10px;
+	margin-right: 5px;
 	cursor: pointer;
+}
+
+.leaflet-popup.editing .icon {
+	display: none;
+}
+
+.leaflet-popup .name {
+	float: left;
+	font-size: 14px;
+	width: 160px;
+}
+
+.leaflet-popup.editing .name {
+	float: none;
+}
+
+.leaflet-popup .name .inner {
+	padding: 5px;
+	display: inline-block;
+	word-break: break-all;
+}
+
+.leaflet-popup .clear {
+	clear: both;
+}
+
+.leaflet-popup .name:hover {
+	background-color: #170A26;
+	cursor: pointer;
+}
+
+.leaflet-popup.editing .name:hover {
+	background-color: inherit;
+	cursor: default;
+}
+
+.leaflet-popup .leaflet-popup-content-wrapper {
+	width: 238px;
+}
+
+.leaflet-popup input[type="text"] {
+	width: 203px;
 }
 
 .leaflet-container a.leaflet-popup-close-button:hover {
@@ -307,6 +349,8 @@ label {
 .edit-delete:hover {
 	color: #000;
 }
+
+
 
 @media (min-width: 321px) {
 	.leaflet-control-zoom a,

@@ -149,6 +149,10 @@ var app = {
 		slippymap.crosshairs.init(map);
 
 		app.show_venues(app.data.venues);
+
+		map.on('popupclose', function() {
+			$('.leaflet-popup').removeClass('editing');
+		});
 	},
 
 	setup_menu: function() {
@@ -160,13 +164,17 @@ var app = {
 		$('#menu .close').click(app.hide_menu);
 
 		$('#map').click(function(e) {
-			if ($(e.target).hasClass('icon')) {
-				var venue_id = $(e.target).data('venue-id');
+			var venue_id = $(e.target)
+				.closest('.venue')
+				.data('venue-id');
+			if ($(e.target).hasClass('icon') ||
+			    $(e.target).closest('.icon').length > 0) {
 				app.edit_venue(venue_id);
 				e.preventDefault();
-			} else if ($(e.target).closest('.icon').length > 0) {
-				var venue_id = $(e.target).closest('.icon').data('venue-id');
-				app.edit_venue(venue_id);
+			} else if ($(e.target).hasClass('name') ||
+			           $(e.target).closest('.name').length > 0 &&
+			           ! $(e.target).closest('.leaflet-popup').hasClass('editing')) {
+				app.edit_name($(e.target).closest('.venue'));
 				e.preventDefault();
 			}
 		});
@@ -361,7 +369,7 @@ var app = {
 				localforage.setItem('map_' + app.data.id, app.data);
 				marker.venue = rsp.venue;
 				$(app.map.getPane('popupPane'))
-					.find('.icon')
+					.find('.venue')
 					.attr('data-venue-id', rsp.venue.id);
 			} else if (rsp.error) {
 				console.error(rsp.error);
@@ -492,6 +500,64 @@ var app = {
 		});
 	},
 
+	edit_name: function($venue) {
+		console.log('edit_name', $venue);
+		if ($venue.length == 0) {
+			return;
+		}
+		$venue.closest('.leaflet-popup').addClass('editing');
+		console.log($venue.find('.name .inner'));
+		var name = $venue.find('.name .inner').html();
+		$venue.find('.name').html('<input type="text" class="edit-name">');
+		$venue.find('.name input').val(name);
+		$venue.find('.name input')[0].select();
+		console.log($venue.find('.name input'));
+	},
+
+	edit_name_save: function() {
+		var name = $('.leaflet-popup input').val();
+		$('.leaflet-popup .name').html('<span class="inner">' + name + '</span>');
+		$('.leaflet-popup').removeClass('editing');
+
+		var id = $('.leaflet-popup form').data('venue-id');
+		var venue = null;
+
+		for (var i = 0; i < app.data.venues.length; i++) {
+			if (app.data.venues[i].id == id) {
+				venue = app.data.venues[i];
+				venue.name = name;
+				console.log('updated app.data', venue);
+				break;
+			}
+		}
+
+		if (! venue) {
+			console.error('could not save name for id ' + id);
+			return;
+		}
+
+		localforage.setItem('map_' + app.data.id, app.data)
+			.then(function(rsp) {
+				console.log('updated localforage', rsp);
+			});
+
+		var data = {
+			id: id,
+			name: name,
+		};
+		app.api_call('update_venue', data).then(function(rsp) {
+			if (rsp.error) {
+				console.error(rsp.error);
+				return;
+			} else if (! rsp.venue) {
+				console.error('Oops, something went wrong while saving. Try again?');
+				return;
+			} else {
+				console.log('updated db', rsp);
+			}
+		});
+	},
+
 	add_marker: function(venue) {
 		var ll = [venue.latitude, venue.longitude];
 		var style = L.extend(app.marker_style, {
@@ -508,7 +574,12 @@ var app = {
 		marker.venue = venue;
 		var name = venue.name || (venue.latitude.toFixed(6) + ', ' + venue.longitude.toFixed(6));
 		var data_id = venue.id ? ' data-venue-id="' + venue.id + '"' : '';
-		var html = '<span class="icon" style="background-color: ' + venue.color + ';"' + data_id + '><span class="fa fa-' + venue.icon + '"></span></span>' + '<span class="name">' + name + '</span>';
+		var html = '<form action="/data.php" class="venue"' + data_id + ' onsubmit="app.edit_name_save(); return false;">' +
+				'<div class="icon" style="background-color: ' + venue.color + ';">' +
+				'<span class="fa fa-' + venue.icon + '"></span></div>' +
+				'<div class="name"><span class="inner">' + name + '</span></div>' +
+				'<div class="clear"></div>' +
+				'</form>';
 		marker.bindPopup(html);
 	},
 
