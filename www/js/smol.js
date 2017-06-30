@@ -3,16 +3,15 @@ var app = {
 	httpd: null,
 	venues: [],
 
-	default_style: {
-		color: '#8442D5',
-		fillColor: '#8442D5',
+	marker_style: {
 		fillOpacity: 0.7,
 		weight: 2,
 		opacity: 0.9,
 		radius: 5
 	},
 
-	default_emoji: 'round_pushpin',
+	default_icon: 'flag',
+	default_color: '#8442D5',
 
 	init: function() {
 		if (typeof cordova == 'object') {
@@ -54,6 +53,14 @@ var app = {
 			zoomControl: false
 		});
 		app.map = map;
+
+		if ($(document.body).width() > 640) {
+			L.control.zoom({
+				position: 'bottomleft'
+			}).addTo(map);
+			$('.leaflet-control-zoom-in').html('<span class="fa fa-plus"></span>');
+			$('.leaflet-control-zoom-out').html('<span class="fa fa-minus"></span>');
+		}
 
 		L.control.locate({
 			position: 'bottomleft'
@@ -108,13 +115,12 @@ var app = {
 
 	add_venue: function() {
 		var ll = app.map.getCenter();
-		var name = ll.lat.toFixed(6) + ', ' + ll.lng.toFixed(6);
 		var venue = {
-			name: name,
+			name: null,
 			lat: ll.lat,
 			lng: ll.lng,
-			emoji: app.default_emoji,
-			style: app.default_style,
+			icon: app.default_icon,
+			color: app.default_color,
 		};
 		app.venues.push(venue);
 		localforage.setItem('venues', app.venues);
@@ -124,8 +130,15 @@ var app = {
 
 	add_marker: function(venue) {
 		var ll = [venue.lat, venue.lng];
-		var marker = new L.CircleMarker(ll, venue.style).addTo(app.map);
-		var html = '<span class="emoji">📍</span> ' + '<span class="name">' + venue.name + '</span>';
+		var style = L.extend(app.marker_style, {
+			color: venue.color,
+			fillColor: venue.color
+		});
+		var marker = new L.CircleMarker(ll, style);
+		marker.venue = venue;
+		marker.addTo(app.map);
+		var name = venue.name || (venue.lat.toFixed(6) + ', ' + venue.lng.toFixed(6));
+		var html = '<span class="icon" style="background-color: ' + venue.color + ';"><span class="fa fa-' + venue.icon + '"></span></span>' + '<span class="name">' + name + '</span>';
 		marker.bindPopup(html);
 		return marker;
 	},
@@ -138,6 +151,16 @@ var app = {
 		for (var i = 0; i < venues.length; i++) {
 			app.add_marker(venues[i]);
 		}
+	},
+
+	reset_map: function() {
+		app.venues = [];
+		localforage.setItem('venues', app.venues);
+		app.map.eachLayer(function(layer) {
+			if (layer.venue) {
+				app.map.removeLayer(layer);
+			}
+		});
 	},
 
 	show_menu: function() {

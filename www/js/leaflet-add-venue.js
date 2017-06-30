@@ -27,7 +27,7 @@
 		options: {
 			position: 'bottomright',
 			layer: undefined,
-			icon: 'fa fa-plus',
+			icon: 'fa fa-flag',
 			iconElementTag: 'span',
 			strings: {
 				title: 'Add a venue'
@@ -41,7 +41,6 @@
 		},
 
 		initialize: function (options) {
-			console.log('initialize', this.options);
 			for (var i in options) {
 				if (typeof this.options[i] === 'object') {
 					L.extend(this.options[i], options[i]);

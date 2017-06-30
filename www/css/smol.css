@@ -51,16 +51,20 @@ body {
 	border: none;
 }
 
-.leaflet-touch .leaflet-control-locate a,
+.leaflet-control-zoom a,
+.leaflet-touch .leaflet-control-zoom a,
 .leaflet-control-locate a,
+.leaflet-touch .leaflet-control-locate a,
 .leaflet-touch .leaflet-control-add-venue a,
 .leaflet-control-add-venue a,
 .leaflet-control-locate a:hover,
 .leaflet-control-add-venue a:hover,
 .leaflet-control-locate a:first-child,
-.leaflet-control-add-venue a:first-child
+.leaflet-control-add-venue a:first-child,
+.leaflet-control-zoom a:first-child,
 .leaflet-control-locate a:last-child,
-.leaflet-control-add-venue a:last-child {
+.leaflet-control-add-venue a:last-child,
+.leaflet-control-zoom a:last-child {
 	width: 40px;
 	height: 40px;
 	line-height: 40px;
@@ -70,6 +74,11 @@ body {
 	opacity: 0.8;
 	color: #fff;
 	cursor: pointer;
+}
+
+.leaflet-control-add-venue a,
+.leaflet-touch .leaflet-control-add-venue a {
+	background: #8442D5;
 }
 
 .leaflet-control-locate a:hover,
@@ -188,16 +197,16 @@ body {
 	margin: 13px 19px 13px 13px;
 }
 
-.emoji {
-	background: #fff;
-	font-size: 20px;
-	padding: 0;
-	width: 30px;
-	height: 30px;
-	border-radius: 15px;
+.leaflet-popup-content .icon {
 	display: inline-block;
+	font-size: 20px;
+	line-height: 40px;
+	padding: 0;
+	width: 40px;
+	height: 40px;
+	border-radius: 20px;
 	text-align: center;
-	margin-right: 5px;
+	margin-right: 10px;
 }
 
 .leaflet-container a.leaflet-popup-close-button:hover {
@@ -209,13 +218,9 @@ body {
 }
 
 @media (min-width: 321px) {
-	.leaflet-touch .leaflet-control-locate a,
-	.leaflet-control-locate a,
 	.leaflet-touch .leaflet-control-add-venue a,
 	.leaflet-control-add-venue a,
-	.leaflet-control-locate a:first-child,
 	.leaflet-control-add-venue a:first-child,
-	.leaflet-control-locate a:last-child,
 	.leaflet-control-add-venue a:last-child {
 		width: 60px;
 		height: 60px;
