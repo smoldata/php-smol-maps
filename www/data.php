@@ -10,11 +10,13 @@ $defaults = array(
 	// Updates here should be mirrored in smol.js
 
 	'name' => 'Untitled map',
-	'latitude' => 40.641849,
-	'longitude' => -73.959986,
+	'latitude' => 37.5670374,
+	'longitude' => 127.007694,
 	'zoom' => 15,
 	'color' => '#8442D5',
-	'icon' => 'flag'
+	'icon' => 'flag',
+	'theme' => 'black',
+	'labels' => 'normal'
 );
 
 if (! file_exists('data/maps.db')) {
@@ -24,6 +26,8 @@ if (! file_exists('data/maps.db')) {
 			id INTEGER PRIMARY KEY,
 			slug VARCHAR(255),
 			name VARCHAR(255),
+			authors VARCHAR(255),
+			description TEXT,
 			latitude DOUBLE,
 			longitude DOUBLE,
 			zoom INTEGER,
@@ -148,6 +152,36 @@ function get_venue($id) {
 	return $venue;
 }
 
+function get_slug() {
+
+	global $db;
+
+	$slug = '';
+	$chars = '123456789abcdefghijklmnpqrstuvwxyz';
+	$num_chars = strlen($chars);
+	$length = 5;
+	for ($i = 0; $i < $length; $i++) {
+		$index = rand(0, $num_chars - 1);
+		$slug .= substr($chars, $index, 1);
+	}
+
+	$query = $db->prepare("
+		SELECT id
+		FROM smol_map
+		WHERE slug = ?
+	");
+	check_query($query);
+
+	$query->execute(array($slug));
+	$row = $query->fetch();
+
+	if (! empty($row)) {
+		return get_slug();
+	}
+
+	return $slug;
+}
+
 function method_get_maps() {
 	global $db;
 	$query = $db->query("
@@ -183,17 +217,21 @@ function method_add_map() {
 
 	$query = $db->prepare("
 		INSERT INTO smol_map
-		(name, latitude, longitude, zoom, created, updated)
-		VALUES (?, ?, ?, ?, ?, ?)
+		(name, slug, latitude, longitude, zoom, theme, labels, created, updated)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 	");
 	check_query($query);
 
 	$now = date('Y-m-d H:i:s');
+	$slug = get_slug();
 	$query->execute(array(
 		$defaults['name'],
+		$slug,
 		$defaults['latitude'],
 		$defaults['longitude'],
 		$defaults['zoom'],
+		$defaults['theme'],
+		$defaults['labels'],
 		$now,
 		$now
 	));

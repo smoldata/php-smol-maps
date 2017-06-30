@@ -16,9 +16,13 @@ var app = {
 
 		id: 0,
 		name: 'Untitled map',
-		latitude: 40.641849,
-		longitude: -73.959986,
+		latitude: 37.5670374,
+		longitude: 127.007694,
 		zoom: 15,
+		theme: 'black',
+		labels: 'normal',
+		authors: null,
+		description: null,
 		current: 1,
 		venues: []
 	},
@@ -130,8 +134,10 @@ var app = {
 			attribution: '<a href="https://mapzen.com/" target="_blank">Mapzen</a> | <a href="https://openstreetmap.org/">OSM</a>'
 		}).addTo(map);
 
-		Tangram.leafletLayer({
-			scene: '/lib/refill/refill-style.yaml'
+		app.tangram = Tangram.leafletLayer({
+			scene: {
+				import: app.get_refill_import()
+			}
 		}).addTo(map);
 
 		map.setView([app.data.latitude, app.data.longitude], app.data.zoom);
@@ -202,6 +208,10 @@ var app = {
 			$('#edit-map-latitude').val(ll.lat);
 			$('#edit-map-longitude').val(ll.lng);
 			$('#edit-map-zoom').val(zoom);
+		});
+		$('#edit-map-theme').change(function() {
+			var theme = $('#edit-map-theme').val();
+			$('#edit-map-theme-display').attr('src', '/img/preview-' + theme + '.jpg');
 		});
 		$('#edit-map .edit-delete').click(function(e) {
 			e.preventDefault();
@@ -293,6 +303,10 @@ var app = {
 			$('#edit-map-longitude').val(app.data.longitude);
 			$('#edit-map-zoom').val(app.data.zoom);
 			$('#edit-map-id').val(app.data.id);
+
+			$('#edit-venue-theme').val(app.data.theme);
+			$('#edit-venue-labels').val(app.data.labels);
+			$('#edit-map-theme-display').attr('src', '/img/preview-' + app.data.theme + '.jpg');
 			app.show_menu('edit-map');
 		}
 	},
@@ -304,11 +318,15 @@ var app = {
 		var latitude = parseFloat($('#edit-map-latitude').val());
 		var longitude = parseFloat($('#edit-map-longitude').val());
 		var zoom = parseInt($('#edit-map-zoom').val());
+		var theme = $('#edit-map-theme').val();
+		var labels = $('#edit-map-labels').val();
 
 		app.data.name = name;
 		app.data.latitude = latitude;
 		app.data.longitude = longitude;
 		app.data.zoom = zoom;
+		app.data.theme = theme;
+		app.data.labels = labels;
 
 		localforage.setItem('map_' + app.data.id, app.data)
 			.then(function(rsp) {
@@ -323,7 +341,9 @@ var app = {
 			name: name,
 			latitude: latitude,
 			longitude: longitude,
-			zoom: zoom
+			zoom: zoom,
+			theme: theme,
+			labels: labels
 		};
 		app.api_call('update_map', data).then(function(rsp) {
 			if (rsp.error) {
@@ -341,6 +361,14 @@ var app = {
 			$('.edit-rsp').html('');
 			app.hide_menu();
 		});
+
+		app.map.removeLayer(app.tangram);
+		app.tangram = Tangram.leafletLayer({
+			scene: {
+				import: app.get_refill_import()
+			}
+		}).addTo(app.map);
+
 	},
 
 	delete_map: function() {
@@ -686,6 +714,21 @@ var app = {
 
 	hide_menu: function() {
 		$('#menu').removeClass('active');
+	},
+
+	get_refill_import: function() {
+
+		var theme = app.data.theme;
+		var labels = app.data.labels;
+		if (labels == 'normal') {
+			labels = '';
+		} else {
+			labels = '-' + labels;
+		}
+		return [
+			'/lib/refill/refill-style.yaml',
+			'/lib/refill/themes/' + theme + '.yaml'
+		];
 	}
 
 };

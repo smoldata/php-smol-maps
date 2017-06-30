@@ -336,14 +336,27 @@ label {
 	margin-top: 20px;
 }
 
-label.column {
+select {
+	font-size: 14px;
+	margin-top: 10px;
+}
+
+.column {
 	float: left;
 	width: 125px;
 	margin-right: 20px;
 }
 
-select {
-	font-size: 14px;
+.wide-column {
+	width: 236px;
+}
+
+.headroom {
+	margin-top: 30px;
+}
+
+.no-headroom {
+	margin-top: 0;
 }
 
 .btn {
@@ -394,8 +407,6 @@ select {
 	color: #000;
 }
 
-
-
 #edit-venue-icon-display {
 	color: #fff;
 	display: inline-block;
@@ -407,6 +418,13 @@ select {
 	border-radius: 30px;
 	text-align: center;
 	margin-right: 10px;
+}
+
+#edit-map-theme-display {
+	width: 100%;
+	height: auto;
+	border: 10px solid #fff;
+	border-radius: 4px;
 }
 
 @media (min-width: 321px) {

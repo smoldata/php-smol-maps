@@ -41,24 +41,39 @@
 					</label>
 					<div class="clear"></div>
 					<p><a href="#" id="edit-map-set-view">Use current map view as the default</a></p>
-					<label for="edit-map-theme">
-						Map theme
-					</label>
-					<div id="map-theme-display"></div>
-					<select id="edit-map-theme">
-						<option>black</option>
-						<option>blue</option>
-						<option>blue-gray</option>
-						<option>brown-orange</option>
-						<option>gray</option>
-						<option>gray-gold</option>
-						<option>high-contrast</option>
-						<option>inverted</option>
-						<option>pink</option>
-						<option>pink-yellow</option>
-						<option>purple-green</option>
-						<option>sepia</option>
-					</select>
+					<div class="headroom">
+						<div class="column wide-column">
+							<img id="edit-map-theme-display" src="/img/preview-black.jpg">
+						</div>
+						<div class="column">
+							<label class="no-headroom">
+								Map theme
+								<select id="edit-map-theme">
+									<option>black</option>
+									<option>blue</option>
+									<option>blue-gray</option>
+									<option>brown-orange</option>
+									<option>gray</option>
+									<option>gray-gold</option>
+									<option>high-contrast</option>
+									<option>inverted</option>
+									<option>pink</option>
+									<option>pink-yellow</option>
+									<option>purple-green</option>
+									<option>sepia</option>
+								</select>
+							</label>
+							<!--<label>
+								Map labels
+								<select id="edit-map-labels">
+									<option>normal</option>
+									<option>no-labels</option>
+									<option>more-labels</option>
+								</select>
+							</label>-->
+						</div>
+						<div class="clear"></div>
+					</div>
 					<div class="edit-buttons">
 						<input type="submit" name="action" class="btn btn-save" value="Save">
 						<input type="submit" name="action" class="btn btn-cancel" value="Cancel">
