@@ -65,7 +65,8 @@ $db->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, false); // wtf data types?
 if (! empty($_REQUEST['method'])) {
 	$method = "method_{$_REQUEST['method']}";
 	if (function_exists($method)) {
-		$method();
+		$rsp = $method();
+		json_output($rsp);
 	}
 } else {
 	json_output(array(
@@ -89,6 +90,38 @@ function get_map($id) {
 		json_output(array(
 			'error' => "map $id not found"
 		));
+	}
+
+	$map['id'] = intval($map['id']);
+	$map['latitude'] = floatval($map['latitude']);
+	$map['longitude'] = floatval($map['longitude']);
+	$map['zoom'] = intval($map['zoom']);
+	$map['current'] = intval($map['current']);
+
+	return $map;
+}
+
+function get_map_by_slug($slug) {
+	global $db;
+
+	$query = $db->prepare("
+		SELECT *
+		FROM smol_map
+		WHERE slug = ?
+	");
+	check_query($query);
+
+	$query->execute(array($slug));
+	$map = $query->fetch();
+	if (! $map) {
+		// Just generate one, whatever
+		$rsp = method_add_map($slug);
+		if (empty($rsp['map'])) {
+			return array(
+				'error' => "Could not find map '$slug'"
+			);
+		}
+		$map = $rsp['map'];
 	}
 
 	$map['id'] = intval($map['id']);
@@ -190,29 +223,29 @@ function method_get_maps() {
 	");
 	check_query($query);
 	$maps = $query->fetchAll();
-	json_output(array(
+	return array(
 		'maps' => $maps
-	));
+	);
 }
 
 function method_get_map() {
 
-	if (empty($_POST['id'])) {
+	if (empty($_POST['slug'])) {
 		json_output(array(
-			'error' => "include an 'id' arg"
+			'error' => "include a 'slug' arg"
 		));
 	}
-	$id = $_POST['id'];
+	$slug = $_POST['slug'];
 
-	$map = get_map($id);
-	$map['venues'] = get_map_venues($id);
+	$map = get_map_by_slug($slug);
+	$map['venues'] = get_map_venues($map['id']);
 
-	json_output(array(
+	return array(
 		'map' => $map
-	));
+	);
 }
 
-function method_add_map() {
+function method_add_map($slug = null) {
 	global $db, $defaults;
 
 	$query = $db->prepare("
@@ -223,7 +256,9 @@ function method_add_map() {
 	check_query($query);
 
 	$now = date('Y-m-d H:i:s');
-	$slug = get_slug();
+	if (empty($slug)) {
+		$slug = get_slug();
+	}
 	$query->execute(array(
 		$defaults['name'],
 		$slug,
@@ -235,15 +270,16 @@ function method_add_map() {
 		$now,
 		$now
 	));
+	$error = $db->errorInfo();
 	check_query($query);
 
 	$id = $db->lastInsertId();
 	$map = get_map($id);
 	$map['venues'] = array();
 
-	json_output(array(
+	return array(
 		'map' => $map
-	));
+	);
 }
 
 function method_update_map() {
@@ -276,9 +312,9 @@ function method_update_map() {
 	$query->execute($values);
 	$map = get_map($id);
 
-	json_output(array(
+	return array(
 		'map' => $map
-	));
+	);
 }
 
 function method_add_venue() {
@@ -337,9 +373,9 @@ function method_add_venue() {
 	$id = $db->lastInsertId();
 	$venue = get_venue($id);
 
-	json_output(array(
+	return array(
 		'venue' => $venue
-	));
+	);
 }
 
 function method_update_venue() {
@@ -376,9 +412,9 @@ function method_update_venue() {
 
 	$venue = get_venue($id);
 
-	json_output(array(
+	return array(
 		'venue' => $venue
-	));
+	);
 
 }
 
@@ -403,9 +439,9 @@ function method_delete_map() {
 	$query->execute(array($id));
 	check_query($query);
 
-	json_output(array(
+	return array(
 		'deleted' => $id
-	));
+	);
 
 }
 
@@ -430,9 +466,9 @@ function method_delete_venue() {
 	$query->execute(array($id));
 	check_query($query);
 
-	json_output(array(
+	return array(
 		'deleted' => $id
-	));
+	);
 
 }
 

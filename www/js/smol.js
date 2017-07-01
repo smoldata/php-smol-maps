@@ -79,29 +79,49 @@ var app = {
 	},
 
 	setup_data: function(callback) {
-		// See if we have a map_id stored
-		localforage.getItem('map_id').then(function(id) {
-			// If yes, we are working from that map's data
-			if (id) {
-				localforage.getItem('map_' + id).then(function(data) {
-					if (map) {
-						app.data = data;
-					} else {
-						console.error("could not load 'map_" + id + "' from localforage");
-						app.data = app.data_defaults;
-					}
+
+		var slug_match = location.pathname.match(/\/([a-zA-Z0-9_-]+)/);
+		if (slug_match) {
+			// Load up the data from the server
+			app.api_call('get_map', {
+				slug: slug_match[1]
+			}).then(function(rsp) {
+				if (rsp.map) {
+					app.data = rsp.map;
+					localforage.setItem('map_' + app.data.id, rsp.map);
+					localforage.setItem('map_id', rsp.map);
+					callback();
+				} else if (rsp.error) {
+					console.error(rsp.error);
+				} else {
+					console.error('could not get_map ' + slug_match[1]);
+				}
+			});
+		} else {
+			// See if we have a map_id stored
+			localforage.getItem('map_id').then(function(id) {
+				// If yes, we are working from that map's data
+				if (id) {
+					localforage.getItem('map_' + id).then(function(data) {
+						if (map) {
+							app.data = data;
+						} else {
+							console.error("could not load 'map_" + id + "' from localforage");
+							app.data = app.data_defaults;
+						}
+						if (typeof callback == 'function') {
+							callback();
+						}
+					});
+				} else {
+					// Otherwise, use the default
+					app.data = app.data_defaults;
 					if (typeof callback == 'function') {
 						callback();
 					}
-				});
-			} else {
-				// Otherwise, use the default
-				app.data = app.data_defaults;
-				if (typeof callback == 'function') {
-					callback();
 				}
-			}
-		});
+			});
+		}
 	},
 
 	setup_map: function() {
