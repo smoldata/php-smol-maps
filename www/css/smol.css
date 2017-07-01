@@ -242,7 +242,7 @@ code {
 }
 
 .leaflet-popup.editing .icon,
-.leaflet-popup.editing .address {
+.leaflet-popup.editing .extra {
 	display: none;
 }
 
@@ -254,7 +254,7 @@ code {
 	margin-top: -5px;
 }
 
-.leaflet-popup .address {
+.leaflet-popup .extra {
 	font-weight: normal;
 	font-size: 12px;
 	margin-left: 5px;

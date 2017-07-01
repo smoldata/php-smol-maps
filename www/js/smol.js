@@ -707,12 +707,14 @@ var app = {
 	set_popup: function(marker, venue) {
 		marker.venue = venue;
 		var name = venue.name || (venue.latitude.toFixed(6) + ', ' + venue.longitude.toFixed(6));
-		var address = venue.address ? '<div class="address">' + venue.address + '</div>' : '';
+		var extra = '';
+		extra = venue.address ? '<div class="extra">' + venue.address + '</div>' : extra;
+		extra = venue.tags ? '<div class="extra">' + venue.tags + '</div>' : extra;
 		var data_id = venue.id ? ' data-venue-id="' + venue.id + '"' : '';
 		var html = '<form action="/data.php" class="venue"' + data_id + ' onsubmit="app.edit_name_save(); return false;">' +
 				'<div class="icon" style="background-color: ' + venue.color + ';">' +
 				'<span class="fa fa-' + venue.icon + '"></span></div>' +
-				'<div class="name"><span class="inner">' + name + '</span>' + address + '</div>' +
+				'<div class="name"><span class="inner">' + name + '</span>' + extra + '</div>' +
 				'<div class="clear"></div>' +
 				'</form>';
 		marker.bindPopup(html);
