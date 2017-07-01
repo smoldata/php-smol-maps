@@ -164,6 +164,8 @@ var app = {
 			scene: scene
 		}).addTo(map);
 
+		var hash = new L.Hash(map);
+
 		map.setView([app.data.latitude, app.data.longitude], app.data.zoom);
 
 		$('.leaflet-pelias-search-icon').html('<span class="fa fa-bars"></span>');
