@@ -103,7 +103,7 @@ var app = {
 				// If yes, we are working from that map's data
 				if (id) {
 					localforage.getItem('map_' + id).then(function(data) {
-						if (map) {
+						if (data) {
 							app.data = data;
 						} else {
 							console.error("could not load 'map_" + id + "' from localforage");
