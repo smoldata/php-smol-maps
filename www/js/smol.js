@@ -19,8 +19,12 @@ var app = {
 		latitude: 37.5670374,
 		longitude: 127.007694,
 		zoom: 13,
-		theme: 'black',
-		labels: 'normal',
+		base: 'refill',
+		options: {
+			refill_theme: "black",
+			walkabout_path: false,
+			walkabout_bike: false
+		},
 		authors: null,
 		description: null,
 		current: 1,
@@ -87,7 +91,7 @@ var app = {
 				slug: slug_match[1]
 			}).then(function(rsp) {
 				if (rsp.map) {
-					app.data = rsp.map;
+					app.data = app.normalize_data(rsp.map);
 					localforage.setItem('map_' + app.data.id, rsp.map);
 					localforage.setItem('map_id', rsp.map);
 					callback();
@@ -104,7 +108,7 @@ var app = {
 				if (id && typeof id == 'number') {
 					localforage.getItem('map_' + id).then(function(data) {
 						if (data) {
-							app.data = data;
+							app.data = app.normalize_data(data);
 						} else {
 							console.error("could not load 'map_" + id + "' from localforage");
 							app.data = app.data_defaults;
@@ -154,10 +158,10 @@ var app = {
 			attribution: '<a href="https://mapzen.com/" target="_blank">Mapzen</a> | <a href="https://openstreetmap.org/">OSM</a>'
 		}).addTo(map);
 
+		var scene = app.get_tangram_scene();
+		console.log(scene);
 		app.tangram = Tangram.leafletLayer({
-			scene: {
-				import: app.get_refill_import()
-			}
+			scene: scene
 		}).addTo(map);
 
 		map.setView([app.data.latitude, app.data.longitude], app.data.zoom);
@@ -229,9 +233,19 @@ var app = {
 			$('#edit-map-longitude').val(ll.lng);
 			$('#edit-map-zoom').val(zoom);
 		});
-		$('#edit-map-theme').change(function() {
-			var theme = $('#edit-map-theme').val();
-			$('#edit-map-theme-display').attr('src', '/img/preview-' + theme + '.jpg');
+		$('#edit-map-base').change(function() {
+			var base = $('#edit-map-base').val();
+			if (base == 'refill') {
+				$('#edit-map-preview').attr('src', '/img/preview-refill-black.jpg');
+			} else if (base == 'walkabout') {
+				$('#edit-map-preview').attr('src', '/img/preview-walkabout.jpg');
+			}
+			$('.edit-map-options').removeClass('selected');
+			$('#edit-map-options-' + base).addClass('selected');
+		});
+		$('#edit-map-refill-theme').change(function() {
+			var theme = $('#edit-map-refill-theme').val();
+			$('#edit-map-preview').attr('src', '/img/preview-refill-' + theme + '.jpg');
 		});
 		$('#edit-map .edit-delete').click(function(e) {
 			e.preventDefault();
@@ -323,10 +337,18 @@ var app = {
 			$('#edit-map-longitude').val(app.data.longitude);
 			$('#edit-map-zoom').val(app.data.zoom);
 			$('#edit-map-id').val(app.data.id);
-
-			$('#edit-venue-theme').val(app.data.theme);
-			$('#edit-venue-labels').val(app.data.labels);
-			$('#edit-map-theme-display').attr('src', '/img/preview-' + app.data.theme + '.jpg');
+			$('#edit-map-base').val(app.data.base);
+			if (app.data.base == 'refill') {
+				var theme = app.data.options.refill_theme;
+				$('#edit-map-refill-theme').val(theme);
+				$('#edit-map-preview').attr('src', '/img/preview-refill-' + theme + '.jpg');
+			} else if (app.data.base == 'walkabout') {
+				$('#edit-map-preview').attr('src', '/img/preview-walkabout.jpg');
+				$('#edit-map-walkabout-path')[0].checked = app.data.options.walkabout_path;
+				$('#edit-map-walkabout-bike')[0].checked = app.data.options.walkabout_bike;
+			}
+			$('.edit-map-options').removeClass('selected');
+			$('#edit-map-options-' + app.data.base).addClass('selected');
 			app.show_menu('edit-map');
 		}
 	},
@@ -338,23 +360,23 @@ var app = {
 		var latitude = parseFloat($('#edit-map-latitude').val());
 		var longitude = parseFloat($('#edit-map-longitude').val());
 		var zoom = parseInt($('#edit-map-zoom').val());
-		var theme = $('#edit-map-theme').val();
-		var labels = $('#edit-map-labels').val();
+		var base = $('#edit-map-base').val();
+		var options = app.edit_map_options();
 
 		app.data.name = name;
 		app.data.latitude = latitude;
 		app.data.longitude = longitude;
 		app.data.zoom = zoom;
-		app.data.theme = theme;
-		app.data.labels = labels;
+		app.data.base = base;
+		app.data.options = options;
+
+		$('.edit-rsp').html('Saving...');
+		$('.edit-rsp').removeClass('error');
 
 		localforage.setItem('map_' + app.data.id, app.data)
 			.then(function(rsp) {
 				console.log('updated localforage', rsp);
 			});
-
-		$('.edit-rsp').html('Saving...');
-		$('.edit-rsp').removeClass('error');
 
 		var data = {
 			id: id,
@@ -362,8 +384,8 @@ var app = {
 			latitude: latitude,
 			longitude: longitude,
 			zoom: zoom,
-			theme: theme,
-			labels: labels
+			base: base,
+			options: JSON.stringify(options)
 		};
 		app.api_call('update_map', data).then(function(rsp) {
 			if (rsp.error) {
@@ -384,11 +406,25 @@ var app = {
 
 		app.map.removeLayer(app.tangram);
 		app.tangram = Tangram.leafletLayer({
-			scene: {
-				import: app.get_refill_import()
-			}
+			scene: app.get_tangram_scene()
 		}).addTo(app.map);
 
+	},
+
+	edit_map_options: function() {
+		var options = app.data.options || {};
+		var base = $('#edit-map-base').val();
+		if (base == 'refill') {
+			var options = {
+				refill_theme: $('#edit-map-refill-theme').val()
+			};
+		} else if (base == 'walkabout') {
+			var options = {
+				walkabout_path: $('#edit-map-walkabout-path')[0].checked,
+				walkabout_bike: $('#edit-map-walkabout-bike')[0].checked
+			};
+		}
+		return options;
 	},
 
 	delete_map: function() {
@@ -736,19 +772,53 @@ var app = {
 		$('#menu').removeClass('active');
 	},
 
-	get_refill_import: function() {
-
-		var theme = app.data.theme;
-		var labels = app.data.labels;
-		if (labels == 'normal') {
-			labels = '';
-		} else {
-			labels = '-' + labels;
+	get_tangram_scene: function() {
+		var base = app.data.base;
+		var options = app.data.options;
+		var scene = {
+			global: {
+				sdk_mapzen_api_key: config.sdk_mapzen_api_key
+			}
+		};
+		if (base == 'refill') {
+			scene.global = L.extend(scene.global, config.refill);
+			scene.import = [
+				'/lib/refill/refill-style.yaml',
+				'/lib/refill/themes/' + options.refill_theme + '.yaml'
+			];
+		} else if (base == 'walkabout') {
+			scene.global = L.extend(scene.global, config.walkabout);
+			scene.import = [
+				'/lib/walkabout/walkabout-style.yaml',
+			];
+			if (options.walkabout_path) {
+				scene.global.sdk_path_overlay = true;
+			}
+			if (options.walkabout_bike) {
+				scene.global.sdk_bike_overlay = true;
+			}
 		}
-		return [
-			'/lib/refill/refill-style.yaml',
-			'/lib/refill/themes/' + theme + '.yaml'
-		];
+		return scene;
+	},
+
+	normalize_data: function(data) {
+		if (typeof data.options == 'undefined') {
+			data.options = {};
+		}
+		if (typeof data.base == 'undefined') {
+			data.base = 'refill';
+		}
+		if (typeof data.theme == 'string') {
+			data.options.refill_theme = data.theme;
+			delete data.theme;
+		}
+		if (typeof data.labels != 'undefined') {
+			delete data.labels;
+		}
+		if (typeof data.default_color != 'undefined') {
+			delete data.default_color;
+		}
+		return data;
 	}
 
 };

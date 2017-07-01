@@ -420,11 +420,28 @@ select {
 	margin-right: 10px;
 }
 
-#edit-map-theme-display {
+#edit-map-preview {
 	width: 100%;
 	height: auto;
 	border: 10px solid #fff;
 	border-radius: 4px;
+}
+
+.edit-map-options {
+	display: none;
+	width: 180px;
+}
+
+.edit-map-options .checkbox {
+	margin-top: 20px;
+}
+
+.edit-map-options.selected {
+	display: block;
+}
+
+.checkbox label {
+	display: inline;
 }
 
 @media (min-width: 321px) {

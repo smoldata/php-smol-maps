@@ -44,26 +44,49 @@
 					<p><a href="#" id="edit-map-set-view">Use current map view as the default</a></p>
 					<div class="headroom">
 						<div class="column wide-column">
-							<img id="edit-map-theme-display" src="/img/preview-black.jpg">
+							<img id="edit-map-preview" src="/img/preview-refill-black.jpg">
 						</div>
 						<div class="column">
 							<label class="no-headroom">
-								Map theme
-								<select id="edit-map-theme">
-									<option>black</option>
-									<option>blue</option>
-									<option>blue-gray</option>
-									<option>brown-orange</option>
-									<option>gray</option>
-									<option>gray-gold</option>
-									<option>high-contrast</option>
-									<option>inverted</option>
-									<option>pink</option>
-									<option>pink-yellow</option>
-									<option>purple-green</option>
-									<option>sepia</option>
+								Base map
+								<select id="edit-map-base">
+									<option>refill</option>
+									<option>walkabout</option>
 								</select>
 							</label>
+							<div id="edit-map-options-refill" class="edit-map-options">
+								<label>
+									Map theme
+									<select id="edit-map-refill-theme">
+										<option>black</option>
+										<option>blue</option>
+										<option>blue-gray</option>
+										<option>brown-orange</option>
+										<option>gray</option>
+										<option>gray-gold</option>
+										<option>high-contrast</option>
+										<option>inverted</option>
+										<option>pink</option>
+										<option>pink-yellow</option>
+										<option>purple-green</option>
+										<option>sepia</option>
+									</select>
+								</label>
+							</div>
+							<div id="edit-map-options-walkabout" class="edit-map-options">
+								<div class="checkbox">
+									<input type="checkbox" name="walkabout_path" id="edit-map-walkabout-path">
+									<label for="edit-map-walkabout-path">
+										Show trail overlay
+									</label>
+								</div>
+								<div class="checkbox">
+									<input type="checkbox" name="walkabout_bike" id="edit-map-walkabout-bike">
+									<label for="edit-map-walkabout-bike">
+										Show bike overlay
+									</label>
+								</div>
+							</div>
 							<!--<label>
 								Map labels
 								<select id="edit-map-labels">
@@ -121,6 +144,13 @@
 			</div>
 		</div>
 		<!--<script type="text/javascript" src="cordova.js"></script>-->
+		<script>
+			<?php if (! file_exists('config.json')) { ?>
+				console.error('no config.json found');
+			<?php } else { ?>
+				var config = <?php echo trim(file_get_contents('config.json')); ?>;
+			<?php } ?>
+		</script>
 		<script type="text/javascript" src="/lib/jquery/dist/jquery.js"></script>
 		<script type="text/javascript" src="/lib/leaflet/dist/leaflet-src.js"></script>
 		<script type="text/javascript" src="/lib/tangram/dist/tangram.debug.js"></script>

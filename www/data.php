@@ -15,8 +15,12 @@ $defaults = array(
 	'zoom' => 13,
 	'color' => '#8442D5',
 	'icon' => 'flag',
-	'theme' => 'black',
-	'labels' => 'normal'
+	'base' => 'refill',
+	'options' => array(
+		'refill_theme' => 'black',
+		'walkabout_path' => false,
+		'walkabout_bike' => false
+	)
 );
 
 if (! file_exists('data/maps.db')) {
@@ -31,9 +35,8 @@ if (! file_exists('data/maps.db')) {
 			latitude DOUBLE,
 			longitude DOUBLE,
 			zoom INTEGER,
-			labels VARCHAR(255),
-			theme VARCHAR(255),
-			default_color VARCHAR(255),
+			base VARCHAR(255),
+			options TEXT,
 			current INTEGER DEFAULT 1,
 			created DATETIME,
 			updated DATETIME
@@ -97,6 +100,7 @@ function get_map($id) {
 	$map['longitude'] = floatval($map['longitude']);
 	$map['zoom'] = intval($map['zoom']);
 	$map['current'] = intval($map['current']);
+	$map['options'] = json_decode($map['options']);
 
 	return $map;
 }
@@ -129,6 +133,7 @@ function get_map_by_slug($slug) {
 	$map['longitude'] = floatval($map['longitude']);
 	$map['zoom'] = intval($map['zoom']);
 	$map['current'] = intval($map['current']);
+	$map['options'] = json_decode($map['options']);
 
 	return $map;
 }
@@ -250,7 +255,7 @@ function method_add_map($slug = null) {
 
 	$query = $db->prepare("
 		INSERT INTO smol_map
-		(name, slug, latitude, longitude, zoom, theme, labels, created, updated)
+		(name, slug, latitude, longitude, zoom, base, options, created, updated)
 		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 	");
 	check_query($query);
@@ -265,8 +270,8 @@ function method_add_map($slug = null) {
 		$defaults['latitude'],
 		$defaults['longitude'],
 		$defaults['zoom'],
-		$defaults['theme'],
-		$defaults['labels'],
+		$defaults['base'],
+		json_encode($defaults['options']),
 		$now,
 		$now
 	));
