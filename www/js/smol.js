@@ -101,7 +101,7 @@ var app = {
 			// See if we have a map_id stored
 			localforage.getItem('map_id').then(function(id) {
 				// If yes, we are working from that map's data
-				if (id) {
+				if (id && typeof id == 'number') {
 					localforage.getItem('map_' + id).then(function(data) {
 						if (data) {
 							app.data = data;
