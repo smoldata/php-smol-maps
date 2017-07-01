@@ -18,7 +18,7 @@ var app = {
 		name: 'Untitled map',
 		latitude: 37.5670374,
 		longitude: 127.007694,
-		zoom: 15,
+		zoom: 13,
 		theme: 'black',
 		labels: 'normal',
 		authors: null,

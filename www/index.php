@@ -6,13 +6,14 @@
 		<meta name="format-detection" content="telephone=no">
 		<meta name="msapplication-tap-highlight" content="no">
 		<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
-		<link rel="stylesheet" type="text/css" href="lib/font-awesome/css/font-awesome.css">
-		<link rel="stylesheet" type="text/css" href="lib/leaflet.locatecontrol/dist/L.Control.Locate.css">
-		<link rel="stylesheet" type="text/css" href="lib/leaflet/dist/leaflet.css">
-		<link rel="stylesheet" type="text/css" href="lib/leaflet.locatecontrol/dist/L.Control.Locate.css">
-		<link rel="stylesheet" type="text/css" href="lib/leaflet-geocoder-mapzen/dist/leaflet-geocoder-mapzen.css">
-		<link rel="stylesheet" type="text/css" href="css/smol.css">
+		<link rel="stylesheet" type="text/css" href="/lib/font-awesome/css/font-awesome.css">
+		<link rel="stylesheet" type="text/css" href="/lib/leaflet.locatecontrol/dist/L.Control.Locate.css">
+		<link rel="stylesheet" type="text/css" href="/lib/leaflet/dist/leaflet.css">
+		<link rel="stylesheet" type="text/css" href="/lib/leaflet.locatecontrol/dist/L.Control.Locate.css">
+		<link rel="stylesheet" type="text/css" href="/lib/leaflet-geocoder-mapzen/dist/leaflet-geocoder-mapzen.css">
+		<link rel="stylesheet" type="text/css" href="/css/smol.css">
 		<title>smol map</title>
+		<script type="text/javascript" src="/lib/local-forage/dist/localforage.js"></script>
 	</head>
 	<body>
 		<div id="app">
@@ -119,15 +120,14 @@
 				</form>
 			</div>
 		</div>
-		<script type="text/javascript" src="cordova.js"></script>
-		<script type="text/javascript" src="lib/jquery/dist/jquery.js"></script>
-		<script type="text/javascript" src="lib/leaflet/dist/leaflet-src.js"></script>
-		<script type="text/javascript" src="lib/tangram/dist/tangram.debug.js"></script>
-		<script type="text/javascript" src="lib/leaflet.locatecontrol/dist/L.Control.Locate.min.js"></script>
-		<script type="text/javascript" src="lib/leaflet-geocoder-mapzen/dist/leaflet-geocoder-mapzen.js"></script>
-		<script type="text/javascript" src="lib/local-forage/dist/localforage.js"></script>
-		<script type="text/javascript" src="js/leaflet-add-venue.js"></script>
-		<script type="text/javascript" src="js/slippymap.crosshairs.js"></script>
-		<script type="text/javascript" src="js/smol.js"></script>
+		<!--<script type="text/javascript" src="cordova.js"></script>-->
+		<script type="text/javascript" src="/lib/jquery/dist/jquery.js"></script>
+		<script type="text/javascript" src="/lib/leaflet/dist/leaflet-src.js"></script>
+		<script type="text/javascript" src="/lib/tangram/dist/tangram.debug.js"></script>
+		<script type="text/javascript" src="/lib/leaflet.locatecontrol/dist/L.Control.Locate.min.js"></script>
+		<script type="text/javascript" src="/lib/leaflet-geocoder-mapzen/dist/leaflet-geocoder-mapzen.js"></script>
+		<script type="text/javascript" src="/js/leaflet-add-venue.js"></script>
+		<script type="text/javascript" src="/js/slippymap.crosshairs.js"></script>
+		<script type="text/javascript" src="/js/smol.js"></script>
 	</body>
 </html>
