@@ -157,6 +157,7 @@
 		<script type="text/javascript" src="/lib/leaflet.locatecontrol/dist/L.Control.Locate.min.js"></script>
 		<script type="text/javascript" src="/lib/leaflet-geocoder-mapzen/dist/leaflet-geocoder-mapzen.js"></script>
 		<script type="text/javascript" src="/lib/leaflet-hash/leaflet-hash.js"></script>
+		<script type="text/javascript" src="/lib/file-saver/FileSaver.js"></script>
 		<script type="text/javascript" src="/js/leaflet-add-venue.js"></script>
 		<script type="text/javascript" src="/js/slippymap.crosshairs.js"></script>
 		<script type="text/javascript" src="/js/smol.js"></script>

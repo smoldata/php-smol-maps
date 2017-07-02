@@ -65,6 +65,7 @@ var app = {
 			app.setup_map();
 			app.setup_menu();
 		});
+		app.setup_screengrab();
 	},
 
 	error: function(msg) {
@@ -273,6 +274,15 @@ var app = {
 		$('#edit-venue-color').change(function() {
 			var color = $('#edit-venue-color').val();
 			$('#edit-venue-icon-display').css('background-color', color);
+		});
+	},
+
+	setup_screengrab: function() {
+		$(document.body).keypress(function(e) {
+			if ((e.key == 's' || e.key == 'S') && e.metaKey) {
+				e.preventDefault();
+				app.screengrab();
+			}
 		});
 	},
 
@@ -823,6 +833,14 @@ var app = {
 			delete data.default_color;
 		}
 		return data;
+	},
+
+	screengrab: function() {
+		var scene = app.tangram.scene;
+		scene.screenshot().then(function(sh){
+			var fname = app.data.name + '-' + (new Date()) + '.png';
+			saveAs(sh.blob, fname);
+		});
 	}
 
 };
