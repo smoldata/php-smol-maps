@@ -477,6 +477,75 @@ function method_delete_venue() {
 
 }
 
+function method_get_tangram_layer() {
+
+	global $db;
+
+	if (! isset($_GET['id'])) {
+		json_output(array(
+			'error' => "include an 'id' arg"
+		));
+	}
+	$id = $_GET['id'];
+
+	header('Content-Type: text/plain');
+	$venues = get_map_venues($id);
+
+	echo "sources:\n";
+
+	foreach ($venues as $index => $venue) {
+		$label = "venue$index";
+		echo "    $label:\n";
+		echo "        type: GeoJSON\n";
+		echo "        url: /data.php?method=get_venue_geojson&id={$venue['id']}\n";
+	}
+
+	echo "layers:\n";
+	foreach ($venues as $index => $venue) {
+		$label = "venue$index";
+		echo "    $label:\n";
+		echo "        data: { source: $label }\n";
+		echo "        draw:\n";
+		echo "            points:\n";
+		echo "                color: \"{$venue['color']}\"\n";
+		echo "                size: 13px\n";
+		echo "                z: 1000\n";
+	}
+	exit;
+}
+
+function method_get_venue_geojson() {
+	if (! isset($_GET['id'])) {
+		json_output(array(
+			'error' => "include an 'id' arg"
+		));
+	}
+	$id = $_GET['id'];
+
+	$venue = get_venue($id);
+	$feature = array(
+		'type' => 'Feature',
+		'properties' => array(
+			'name' => $venue['name']
+		),
+		'geometry' => array(
+			'type' => 'Point',
+			'coordinates' => array(
+				$venue['longitude'],
+				$venue['latitude']
+			)
+		)
+	);
+	$feature_collection = array(
+		'type' => 'FeatureCollection',
+		'features' => array($feature)
+	);
+
+	header('Content-Type: application/json');
+	echo json_encode($feature_collection);
+	exit;
+}
+
 function check_query($query) {
 	global $db;
 	if (! $query) {

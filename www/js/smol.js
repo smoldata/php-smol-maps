@@ -183,7 +183,9 @@ var app = {
 
 		slippymap.crosshairs.init(map);
 
-		app.show_venues(app.data.venues);
+		if (location.search.indexOf('print') === -1) {
+			app.show_venues(app.data.venues);
+		}
 
 		map.on('popupclose', function() {
 			$('.leaflet-popup').removeClass('editing');
@@ -231,7 +233,7 @@ var app = {
 		$('#edit-map-set-view').click(function(e) {
 			e.preventDefault();
 			var ll = app.map.getCenter();
-			var zoom = app.map.getZoom();
+			var zoom = Math.round(app.map.getZoom());
 			$('#edit-map-latitude').val(ll.lat);
 			$('#edit-map-longitude').val(ll.lng);
 			$('#edit-map-zoom').val(zoom);
@@ -792,7 +794,8 @@ var app = {
 		var scene = {
 			global: {
 				sdk_mapzen_api_key: config.sdk_mapzen_api_key
-			}
+			},
+			import: ['/lib/refill/refill-style.yaml']
 		};
 		if (base == 'refill') {
 			scene.global = L.extend(scene.global, config.refill);
@@ -812,6 +815,11 @@ var app = {
 				scene.global.sdk_bike_overlay = true;
 			}
 		}
+
+		if (location.search.indexOf('print') !== -1) {
+			scene.import.push('/data.php?method=get_tangram_layer&id=' + app.data.id);
+		}
+
 		return scene;
 	},
 
@@ -837,8 +845,9 @@ var app = {
 
 	screengrab: function() {
 		var scene = app.tangram.scene;
-		scene.screenshot().then(function(sh){
-			var fname = app.data.name + '-' + (new Date()) + '.png';
+		scene.screenshot().then(function(sh) {
+			var prefix = app.data.name.toLowerCase().replace(/\s+/, '-');
+			var fname = prefix + '-' + (new Date().getTime()) + '.png';
 			saveAs(sh.blob, fname);
 		});
 	}
