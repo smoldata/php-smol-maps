@@ -15,7 +15,7 @@
 		<title>smol map</title>
 		<script type="text/javascript" src="/lib/local-forage/dist/localforage.js"></script>
 	</head>
-	<body>
+	<body<?php if (! empty($_GET['print'])) { echo ' class="print"'; } ?>>
 		<div id="app">
 			<div id="map"></div>
 			<div id="menu">
@@ -103,7 +103,10 @@
 						<input type="submit" name="action" class="btn btn-cancel" value="Cancel">
 					</div>
 					<div class="edit-rsp"></div>
-					<a href="#" class="edit-delete">Delete this map?</a>
+					<div id="edit-map-links">
+						<a href="#" id="edit-map-print" target="_blank">Print this map</a>
+						<a href="#" class="edit-delete">Delete this map?</a>
+					</div>
 				</form>
 				<form action="/data.php" method="post" id="edit-venue">
 					<h1>Edit venue</h1>

@@ -494,22 +494,33 @@ function method_get_tangram_layer() {
 	echo "sources:\n";
 
 	foreach ($venues as $index => $venue) {
-		$label = "venue$index";
-		echo "    $label:\n";
+		$source = "_venue_source_$index";
+		echo "    $source:\n";
 		echo "        type: GeoJSON\n";
 		echo "        url: /data.php?method=get_venue_geojson&id={$venue['id']}\n";
 	}
 
 	echo "layers:\n";
 	foreach ($venues as $index => $venue) {
-		$label = "venue$index";
-		echo "    $label:\n";
-		echo "        data: { source: $label }\n";
+		$layer = "_venue_layer_$index";
+		$source = "_venue_source_$index";
+		echo "    $layer:\n";
+		echo "        data: { source: $source }\n";
 		echo "        draw:\n";
 		echo "            points:\n";
+		echo "                blend_order: 1\n";
 		echo "                color: \"{$venue['color']}\"\n";
 		echo "                size: 13px\n";
-		echo "                z: 1000\n";
+		echo "        {$layer}_labels:\n";
+		echo "            draw:\n";
+		echo "                text:\n";
+		echo "                    text_source: name\n";
+		echo "                    font:\n";
+		echo "                        fill: \"{$venue['color']}\"\n";
+		echo "                        size: 10pt\n";
+		echo "                        stroke:\n";
+		echo "                            width: 5px\n";
+		echo "                            color: white\n";
 	}
 	exit;
 }

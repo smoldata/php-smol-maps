@@ -8,7 +8,7 @@ html {
 
 body {
 	font-family: sans-serif;
-	background: #170A26;
+	background: #fff;
 	margin: 0;
 }
 
@@ -52,6 +52,12 @@ code {
 	right: 0;
 	bottom: 0;
 	left: 0;
+}
+
+body.print #map {
+	left: auto;
+	right: auto;
+	width: 70.7143vw;
 }
 
 .leaflet-pelias-input {
@@ -390,9 +396,8 @@ select {
 }
 
 .edit-delete {
-	position: absolute;
-	bottom: 15px;
 	color: #DE2B32;
+	margin-left: 10px;
 }
 
 .edit-rsp {

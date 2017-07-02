@@ -94,7 +94,7 @@ var app = {
 				if (rsp.map) {
 					app.data = app.normalize_data(rsp.map);
 					localforage.setItem('map_' + app.data.id, rsp.map);
-					localforage.setItem('map_id', rsp.map);
+					localforage.setItem('map_id', rsp.map.id);
 					callback();
 				} else if (rsp.error) {
 					console.error(rsp.error);
@@ -136,7 +136,8 @@ var app = {
 		});
 		app.map = map;
 
-		if ($(document.body).width() > 640) {
+		if ($(document.body).width() > 640 &&
+		    ! $(document.body).hasClass('print')) {
 			L.control.zoom({
 				position: 'bottomleft'
 			}).addTo(map);
@@ -145,19 +146,21 @@ var app = {
 			$('#map').addClass('has-zoom-controls');
 		}
 
-		L.control.locate({
-			position: 'bottomleft'
-		}).addTo(map);
+		if (! $(document.body).hasClass('print')) {
+			L.control.locate({
+				position: 'bottomleft'
+			}).addTo(map);
 
-		L.control.addVenue({
-			position: 'bottomright',
-			click: app.add_venue_handler
-		}).addTo(map);
+			L.control.addVenue({
+				position: 'bottomright',
+				click: app.add_venue_handler
+			}).addTo(map);
 
-		L.control.geocoder('mapzen-byN58rS', {
-			expanded: true,
-			attribution: '<a href="https://mapzen.com/" target="_blank">Mapzen</a> | <a href="https://openstreetmap.org/">OSM</a>'
-		}).addTo(map);
+			L.control.geocoder('mapzen-byN58rS', {
+				expanded: true,
+				attribution: '<a href="https://mapzen.com/" target="_blank">Mapzen</a> | <a href="https://openstreetmap.org/">OSM</a>'
+			}).addTo(map);
+		}
 
 		var scene = app.get_tangram_scene();
 		console.log(scene);
@@ -165,9 +168,19 @@ var app = {
 			scene: scene
 		}).addTo(map);
 
+		var view = location.hash.match(/#(.+?)\/(.+?)\/(.+?)/)
+		if (! view) {
+			map.setView([app.data.latitude, app.data.longitude], app.data.zoom);
+		} else {
+			map.setView([view[2], view[3]], view[1]);
+		}
+
 		var hash = new L.Hash(map);
 
-		map.setView([app.data.latitude, app.data.longitude], app.data.zoom);
+		if (! $(document.body).hasClass('print')) {
+			slippymap.crosshairs.init(map);
+			app.show_venues(app.data.venues);
+		}
 
 		$('.leaflet-pelias-search-icon').html('<span class="fa fa-bars"></span>');
 
@@ -181,15 +194,17 @@ var app = {
 			$('.leaflet-pelias-search-icon .fa').addClass('fa-bars');
 		});
 
-		slippymap.crosshairs.init(map);
-
-		if (location.search.indexOf('print') === -1) {
-			app.show_venues(app.data.venues);
-		}
-
 		map.on('popupclose', function() {
 			$('.leaflet-popup').removeClass('editing');
 		});
+
+		if ($(document.body).hasClass('print')) {
+			app.tangram.scene.subscribe({
+				view_complete: function() {
+					app.screengrab();
+				}
+			});
+		}
 	},
 
 	setup_menu: function() {
@@ -363,6 +378,7 @@ var app = {
 			}
 			$('.edit-map-options').removeClass('selected');
 			$('#edit-map-options-' + app.data.base).addClass('selected');
+			$('#edit-map-print').attr('href', '/' + app.data.slug + '?print=1' + location.hash);
 			app.show_menu('edit-map');
 		}
 	},
@@ -795,12 +811,12 @@ var app = {
 			global: {
 				sdk_mapzen_api_key: config.sdk_mapzen_api_key
 			},
-			import: ['/lib/refill/refill-style.yaml']
+			import: ['/lib/refill/refill-style-no-labels.yaml']
 		};
 		if (base == 'refill') {
 			scene.global = L.extend(scene.global, config.refill);
 			scene.import = [
-				'/lib/refill/refill-style.yaml',
+				'/lib/refill/refill-style-no-labels.yaml',
 				'/lib/refill/themes/' + options.refill_theme + '.yaml'
 			];
 		} else if (base == 'walkabout') {
