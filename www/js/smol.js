@@ -805,24 +805,30 @@ var app = {
 	},
 
 	get_tangram_scene: function() {
+
+		var labels = '';
+		if (location.search.indexOf('print') !== -1) {
+			labels = '-no-labels';
+		}
+
 		var base = app.data.base;
 		var options = app.data.options;
 		var scene = {
 			global: {
 				sdk_mapzen_api_key: config.sdk_mapzen_api_key
 			},
-			import: ['/lib/refill/refill-style-no-labels.yaml']
+			import: [base_style]
 		};
 		if (base == 'refill') {
 			scene.global = L.extend(scene.global, config.refill);
 			scene.import = [
-				'/lib/refill/refill-style-no-labels.yaml',
+				'/lib/refill/refill-style' + labels + '.yaml',
 				'/lib/refill/themes/' + options.refill_theme + '.yaml'
 			];
 		} else if (base == 'walkabout') {
 			scene.global = L.extend(scene.global, config.walkabout);
 			scene.import = [
-				'/lib/walkabout/walkabout-style.yaml',
+				'/lib/walkabout/walkabout-style' + labels + '.yaml',
 			];
 			if (options.walkabout_path) {
 				scene.global.sdk_path_overlay = true;

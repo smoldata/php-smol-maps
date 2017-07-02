@@ -106,7 +106,7 @@ function get_map($id) {
 }
 
 function get_map_by_slug($slug) {
-	global $db;
+	global $db, $defaults;
 
 	$query = $db->prepare("
 		SELECT *
@@ -134,6 +134,10 @@ function get_map_by_slug($slug) {
 	$map['zoom'] = intval($map['zoom']);
 	$map['current'] = intval($map['current']);
 	$map['options'] = json_decode($map['options']);
+
+	if (empty($map['options'])) {
+		$map['options'] = $defaults['options'];
+	}
 
 	return $map;
 }
