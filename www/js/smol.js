@@ -817,7 +817,7 @@ var app = {
 			global: {
 				sdk_mapzen_api_key: config.sdk_mapzen_api_key
 			},
-			import: [base_style]
+			import: ['/lib/refill/refill-style' + labels + '.yaml']
 		};
 		if (base == 'refill') {
 			scene.global = L.extend(scene.global, config.refill);

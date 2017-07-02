@@ -149,6 +149,7 @@ function get_map_venues($map_id) {
 		SELECT *
 		FROM smol_venue
 		WHERE map_id = ?
+		  AND current = 1
 	");
 	check_query($query);
 
@@ -468,7 +469,7 @@ function method_delete_venue() {
 	$query = $db->prepare("
 		UPDATE smol_venue
 		SET current = 0
-		WHERE id = $id
+		WHERE id = ?
 	");
 	check_query($query);
 
