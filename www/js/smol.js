@@ -201,7 +201,10 @@ var app = {
 		if ($(document.body).hasClass('print')) {
 			app.tangram.scene.subscribe({
 				view_complete: function() {
-					app.screengrab();
+					// Not actually complete, just wait one more second
+					setTimeout(function() {
+						app.screengrab();
+					}, 1000);
 				}
 			});
 		}
