@@ -496,6 +496,12 @@ function method_get_tangram_layer() {
 	header('Content-Type: text/plain');
 	$venues = get_map_venues($id);
 
+	echo "styles:\n";
+	echo "    _points:\n";
+	echo "        base: points\n";
+	echo "        blend: overlay\n";
+	echo "        blend_order: 3\n";
+
 	echo "sources:\n";
 
 	foreach ($venues as $index => $venue) {
@@ -509,23 +515,28 @@ function method_get_tangram_layer() {
 	foreach ($venues as $index => $venue) {
 		$layer = "_venue_layer_$index";
 		$source = "_venue_source_$index";
+		$rgb = hex2rgb($venue['color']);
+		$rgb = implode(', ', $rgb);
 		echo "    $layer:\n";
 		echo "        data: { source: $source }\n";
-		echo "        draw:\n";
-		echo "            points:\n";
-		echo "                blend_order: 1\n";
-		echo "                color: \"{$venue['color']}\"\n";
-		echo "                size: 13px\n";
-		echo "        {$layer}_labels:\n";
+		echo "        _dots:\n";
 		echo "            draw:\n";
-		echo "                text:\n";
-		echo "                    text_source: name\n";
-		echo "                    font:\n";
-		echo "                        fill: \"{$venue['color']}\"\n";
-		echo "                        size: 10pt\n";
-		echo "                        stroke:\n";
-		echo "                            width: 5px\n";
-		echo "                            color: white\n";
+		echo "                _points:\n";
+		echo "                    color: rgba({$rgb}, 0.7)\n";
+		echo "                    size: 12px\n";
+		echo "                    outline:\n";
+		echo "                        width: 2px\n";
+		echo "                        color: \"{$venue['color']}\"\n";
+		echo "                    text:\n";
+		echo "                        text_source: name\n";
+		echo "                        font:\n";
+		echo "                            family: global.text_font_family\n";
+		echo "                            weight: bold\n";
+		echo "                            fill: black\n";
+		echo "                            size: 10pt\n";
+		echo "                            stroke:\n";
+		echo "                                width: 5px\n";
+		echo "                                color: white\n";
 	}
 	exit;
 }
@@ -539,6 +550,7 @@ function method_get_venue_geojson() {
 	$id = $_GET['id'];
 
 	$venue = get_venue($id);
+
 	$feature = array(
 		'type' => 'Feature',
 		'properties' => array(
@@ -570,6 +582,15 @@ function check_query($query) {
 			'error' => $error[2]
 		));
 	}
+}
+
+function hex2rgb($color){
+	$color = str_replace('#', '', $color);
+	$rgb = array();
+	for ($i = 0; $i < 3; $i++) {
+		$rgb[$i] = hexdec(substr($color,(2 * $i), 2));
+	}
+	return $rgb;
 }
 
 function json_output($out) {
