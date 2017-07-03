@@ -815,7 +815,7 @@ var app = {
 		var options = app.data.options;
 		var scene = {
 			global: {
-				sdk_mapzen_api_key: config.sdk_mapzen_api_key
+				sdk_mapzen_api_key: config.mapzen_api_key
 			},
 			import: ['/lib/refill/refill-style' + labels + '.yaml']
 		};
