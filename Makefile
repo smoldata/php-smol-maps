@@ -5,12 +5,12 @@ LAT_MAX = 37.697175
 MIN_ZOOM = 11
 MAX_ZOOM = 17
 
-all: refill walkabout
+tiles: tiles_refill tiles_walkabout
 
-env:
+tiles_env:
 	source env/bin/activate
 
-refill: env
+tiles_refill: tiles_env
 	mkdir www/tiles/tmp
 	tilepack --type=vector \
 	         --tile-format=topojson \
@@ -23,7 +23,7 @@ refill: env
 	rsync -r www/tiles/tmp/all/ www/tiles/topojson/
 	rm -rf www/tiles/tmp
 
-walkabout: env
+tiles_walkabout: tiles_env
 	mkdir www/tiles/tmp
 	mkdir www/tiles/tmp/mvt
 	tilepack --type=vector \
