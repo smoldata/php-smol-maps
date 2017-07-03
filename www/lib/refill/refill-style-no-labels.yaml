@@ -713,8 +713,6 @@ sources:
         url:  global.sdk_sources_mapzen_url
         url_params:
             api_key: global.sdk_mapzen_api_key
-        #url:  https://tile.dev.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
-        # url:  //localhost:8080/vector/all/{z}/{x}/{y}.topojson
         max_zoom: 16
 
     # # Only enable this for local debug, should not be enabled for prod (app inserts these at runtime)
