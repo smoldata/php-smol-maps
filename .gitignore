@@ -1,6 +1,6 @@
 .DS_Store
 node_modules
-/www/data/maps.db
+/www/data/*.db
 /www/config.json
 /env
 /www/tiles/topojson

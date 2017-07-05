@@ -45,6 +45,9 @@ var app = {
 	},
 
 	init: function() {
+		if (location.search.indexOf('print') !== -1) {
+			$(document.body).addClass('print');
+		}
 		if (typeof cordova == 'object') {
 			document.addEventListener('deviceready', app.ready, false);
 		} else {
@@ -60,12 +63,16 @@ var app = {
 
 	setup: function() {
 		app.setup_data(function() {
-			console.log(app.data);
-			document.title = app.data.name;
-			app.setup_map();
-			app.setup_menu();
+			app.setup_config(function() {
+				console.log('map', app.data);
+				console.log('config', app.config);
+				document.title = app.data.name;
+				app.setup_map();
+				app.setup_menu();
+			});
 		});
 		app.setup_screengrab();
+		app.setup_icons();
 	},
 
 	error: function(msg) {
@@ -163,7 +170,7 @@ var app = {
 		}
 
 		var scene = app.get_tangram_scene();
-		console.log(scene);
+		console.log('scene', scene);
 		app.tangram = Tangram.leafletLayer({
 			scene: scene
 		}).addTo(map);
@@ -303,6 +310,19 @@ var app = {
 				e.preventDefault();
 				app.screengrab();
 			}
+		});
+	},
+
+	setup_icons: function() {
+		app.load_cached('icons.html', function(icons) {
+			$('#edit-venue-icon').html(icons);
+		});
+	},
+
+	setup_config: function(cb) {
+		app.load_cached('config.json', function(config) {
+			app.config = config;
+			cb();
 		});
 	},
 
@@ -818,18 +838,18 @@ var app = {
 		var options = app.data.options;
 		var scene = {
 			global: {
-				sdk_mapzen_api_key: config.mapzen_api_key
+				sdk_mapzen_api_key: app.config.mapzen_api_key
 			},
 			import: ['/lib/refill/refill-style' + labels + '.yaml']
 		};
 		if (base == 'refill') {
-			scene.global = L.extend(scene.global, config.refill);
+			scene.global = L.extend(scene.global, app.config.refill);
 			scene.import = [
 				'/lib/refill/refill-style' + labels + '.yaml',
 				'/lib/refill/themes/' + options.refill_theme + '.yaml'
 			];
 		} else if (base == 'walkabout') {
-			scene.global = L.extend(scene.global, config.walkabout);
+			scene.global = L.extend(scene.global, app.config.walkabout);
 			scene.import = [
 				'/lib/walkabout/walkabout-style' + labels + '.yaml',
 			];
@@ -874,6 +894,37 @@ var app = {
 			var prefix = app.data.name.toLowerCase().replace(/\s+/, '-');
 			var fname = prefix + '-' + (new Date().getTime()) + '.png';
 			saveAs(sh.blob, fname);
+		});
+	},
+
+	load_cached: function(url, cb) {
+		localforage.getItem('cache-' + url, function(html) {
+			if (html) {
+				cb(html);
+			} else {
+				$.get(url, function(html) {
+					cb(html);
+					localforage.setItem('cache-' + url, html);
+					localforage.getItem('cache-index', function(index) {
+						if (! index) {
+							index = [];
+						}
+						index.push(url);
+						localforage.setItem('cache-index', index);
+					});
+				});
+			}
+		});
+	},
+
+	reset_cache: function() {
+		localforage.getItem('cache-index', function(index) {
+			if (! index) {
+				return;
+			}
+			for (var i = 0; i < index.length; i++) {
+				localforage.removeItem('cache-' + index[i]);
+			}
 		});
 	}
 

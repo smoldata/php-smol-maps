@@ -15,7 +15,7 @@
 		<title>smol map</title>
 		<script type="text/javascript" src="/lib/local-forage/dist/localforage.js"></script>
 	</head>
-	<body<?php if (! empty($_GET['print'])) { echo ' class="print"'; } ?>>
+	<body>
 		<div id="app">
 			<div id="map"></div>
 			<div id="menu">
@@ -129,9 +129,7 @@
 						<div class="help">icons are from <a href="http://fontawesome.io/icons/" target="_blank">FontAwesome</a></div>
 					</label>
 					<div id="edit-venue-icon-display"><span class="fa"></span></div>
-					<select name="icon" id="edit-venue-icon">
-						<?php include 'icons.txt'; ?>
-					</select>
+					<select name="icon" id="edit-venue-icon"></select>
 					<label>
 						Venue color
 						<div class="help"><a href="https://en.wikipedia.org/wiki/Web_colors" target="_blank">hex color</a> code, for inspiration check out <a href="http://paletton.com" target="_blank">Paletton</a> or <a href="https://color.adobe.com/explore/most-popular/?time=week" target="_blank">Adpbe Colors</a></div>
@@ -146,14 +144,7 @@
 				</form>
 			</div>
 		</div>
-		<!--<script type="text/javascript" src="cordova.js"></script>-->
-		<script>
-			<?php if (! file_exists('config.json')) { ?>
-				console.error('no config.json found');
-			<?php } else { ?>
-				var config = <?php echo trim(file_get_contents('config.json')); ?>;
-			<?php } ?>
-		</script>
+		<script type="text/javascript" src="cordova.js"></script>
 		<script type="text/javascript" src="/lib/jquery/dist/jquery.js"></script>
 		<script type="text/javascript" src="/lib/leaflet/dist/leaflet-src.js"></script>
 		<script type="text/javascript" src="/lib/tangram/dist/tangram.debug.js"></script>
