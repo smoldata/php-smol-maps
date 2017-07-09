@@ -19,6 +19,9 @@
         "cordova-plugin-geolocation": {
             "GEOLOCATION_USAGE_DESCRIPTION": " ",
             "PACKAGE_NAME": "org.smoldata.cordova.smol"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "org.smoldata.cordova.smol"
         }
     },
     "dependent_plugins": {

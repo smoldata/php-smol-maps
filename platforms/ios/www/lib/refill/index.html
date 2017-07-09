@@ -221,11 +221,11 @@
         );
         map.setView(map_start_location.slice(0, 2), map_start_location[2]);
 
-        var tg_baseScene = 'refill-style.yaml';
+        var tg_baseScene = 'refill-style-no-labels.yaml';
 
         var dev_or_prod = 'prod';
         // prod
-        var mapzen_api_key = 'vector-tiles-W2tPU-Y';
+        var mapzen_api_key = 'vector-tiles-haXTO7g';
 
         if( dev_or_prod == 'dev' ) {
             mapzen_api_key = 'mapzen-xkUbe6g';
@@ -425,7 +425,7 @@
                 'Some (no shields)': 'some_no_shields',
                 'None': 'none'
             };
-            gui.labels = query.labels || 'some';
+            gui.labels = query.labels || 'none';
             gui.add(gui, 'labels', labels).onChange(function(value) {
                 var _default = true;
                 var _more = false;
@@ -518,7 +518,6 @@
                 'COLOR - blue-gray': 'blue-gray',
                 'DARK - inverted': 'inverted',
                 'DARK - purple-green': 'purple-green',
-                'DARK - gray-gold': 'gray-gold'
             };
             // use query language, else default to English
             gui.color = query.color || 'black';

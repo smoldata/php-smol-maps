@@ -1,0 +1,10 @@
+{
+	"sdk_mapzen_api_key": "mapzen-byN58rS",
+	"refill": {
+		"sdk_sources_mapzen_url": "http://dev.map.smoldata.org/tiles/topojson/{z}/{x}/{y}.topojson"
+	},
+	"walkabout": {
+		"sdk_sources_mapzen_url": "http://dev.map.smoldata.org/tiles/mvt/{z}/{x}/{y}.mvt",
+		"sdk_normals_url": "http://dev.map.smoldata.org/tiles/terrain/{z}/{x}/{y}.png"
+	}
+}

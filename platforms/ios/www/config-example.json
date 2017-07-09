@@ -1,0 +1,10 @@
+{
+	"mapzen_api_key": "mapzen-xxxxxxx",
+	"refill": {
+		"sdk_sources_mapzen_url": "https://tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson"
+	},
+	"walkabout": {
+		"sdk_sources_mapzen_url": "https://tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.mvt",
+		"sdk_normals_url": "https://tile.mapzen.com/mapzen/terrain/v1/normal/{z}/{x}/{y}.png"
+	}
+}

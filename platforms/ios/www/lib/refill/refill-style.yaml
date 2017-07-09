@@ -16,7 +16,8 @@ import:
 global:
     # Sign up for a Mapzen API key to enjoy higher rate limits
     # https://mapzen.com/documentation/overview/#developer-accounts-and-api-keys
-    sdk_mapzen_api_key: 'mapzen-byN58rS'     # set this value to your Mapzen API key
+    sdk_mapzen_api_key: 'mapzen-xxxxxx'
+    sdk_sources_mapzen_url: 'https://tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson'
 
     #ux/ui
     ux_language: false             # l10n language code, trusting OSM in v0.10 tiles, fixed in v1.0 tiles
@@ -709,11 +710,9 @@ textures:
 sources:
     mapzen:
         type: TopoJSON #GeoJSON, MVT, TopoJSON
-        url:  https://tile.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
+        url:  global.sdk_sources_mapzen_url
         url_params:
             api_key: global.sdk_mapzen_api_key
-        #url:  https://tile.dev.mapzen.com/mapzen/vector/v1/all/{z}/{x}/{y}.topojson
-        # url:  //localhost:8080/vector/all/{z}/{x}/{y}.topojson
         max_zoom: 16
 
     # # Only enable this for local debug, should not be enabled for prod (app inserts these at runtime)

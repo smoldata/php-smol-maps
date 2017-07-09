@@ -3,6 +3,9 @@ node_modules
 /www/data/*.db
 /www/config.json
 /env
-/www/tiles/topojson
-/www/tiles/mvt
-/www/tiles/terrain
+/www/tiles/mvt/
+/www/tiles/topojson/
+/www/tiles/terrain/
+/platforms/*/www/tiles/mvt/
+/platforms/*/www/tiles/topojson/
+/platforms/*/www/tiles/terrain/

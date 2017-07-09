@@ -13,7 +13,8 @@
             "cordova-plugin-httpd": {},
             "cordova-plugin-geolocation": {
                 "GEOLOCATION_USAGE_DESCRIPTION": " "
-            }
+            },
+            "cordova-plugin-file": {}
         }
     },
     "dependencies": {
@@ -21,6 +22,7 @@
         "cordova-android": "~6.2.3",
         "cordova-ios": "~4.4.0",
         "cordova-plugin-compat": "^1.1.0",
+        "cordova-plugin-file": "^4.3.3",
         "cordova-plugin-geolocation": "^2.4.3",
         "cordova-plugin-httpd": "^0.9.3",
         "cordova-plugin-splashscreen": "^4.0.3",
