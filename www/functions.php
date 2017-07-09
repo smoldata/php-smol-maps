@@ -518,6 +518,9 @@ function hex2rgb($color){
 }
 
 function normalize_map_values($map) {
+
+	global $defaults;
+
 	$map['id'] = intval($map['id']);
 	$map['latitude'] = floatval($map['latitude']);
 	$map['longitude'] = floatval($map['longitude']);
