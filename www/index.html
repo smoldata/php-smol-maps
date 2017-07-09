@@ -27,6 +27,21 @@
 						Map name
 						<input type="text" name="name" id="edit-map-name" value="">
 					</label>
+					<label>
+						Map author(s)
+						<input type="text" name="author" id="edit-map-authors" value="">
+						<div class="help">your name (and your collaborators' names, if you have any)</div>
+					</label>
+					<label>
+						Map URL<br>
+						<div id="edit-map-slug-holder"><pre>https://map.smoldata.org/</pre><input type="text" name="slug" id="edit-map-slug" value=""></div>
+						<div class="help" id="edit-map-url-feedback">use letters, numbers, and hyphens (e.g., 8-nice-parks)</div>
+					</label>
+					<label>
+						Map description
+						<textarea name="description" id="edit-map-description" cols="60" rows="5"></textarea>
+						<div class="help">add some context for what your map shows</div>
+					</label>
 					<label class="column">
 						Default latitude
 						<input type="text" name="name" id="edit-map-latitude" value="">
@@ -123,6 +138,15 @@
 						Venue tags
 						<div class="help">comma separated: <code>cats, cat cafe, coffee</code></div>
 						<input type="text" name="tags" id="edit-venue-tags" value="">
+					</label>
+					<label>
+						Venue URL
+						<input type="text" name="name" id="edit-venue-url" value="">
+					</label>
+					<label>
+						Venue description
+						<textarea name="description" id="edit-venue-description" cols="60" rows="5"></textarea>
+						<div class="help">add some context about this venue</div>
 					</label>
 					<label for="edit-venue-icon">
 						Venue icon

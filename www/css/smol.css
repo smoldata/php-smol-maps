@@ -321,9 +321,11 @@ h1 {
 	margin-bottom: 30px;
 }
 
-input[type="text"] {
+input[type="text"],
+textarea {
 	display: block;
 	font-size: 14px;
+	font-family: sans-serif;
 	padding: 10px;
 	border: 1px solid #ccc;
 	width: 100%;
@@ -331,8 +333,18 @@ input[type="text"] {
 	border-radius: 2px;
 }
 
-input[type="text"]:focus {
+input[type="text"]:focus,
+textarea:focus {
 	border-color: #170A26;
+}
+
+#edit-map-slug-holder pre {
+	display: inline-block;
+}
+
+#edit-map-slug {
+	display: inline-block;
+	width: 160px;
 }
 
 label {
@@ -340,6 +352,10 @@ label {
 	font-size: 14px;
 	font-weight: bold;
 	margin-top: 20px;
+}
+
+label pre {
+	font-weight: normal;
 }
 
 select {
@@ -401,7 +417,7 @@ select {
 }
 
 .edit-rsp {
-	margin-top: 30px;
+	margin: 20px 0;
 }
 
 .edit-rsp.error {

@@ -16,6 +16,9 @@ var app = {
 
 		id: 0,
 		name: 'Untitled map',
+		slug: null,
+		authors: null,
+		description: null,
 		latitude: 37.5670374,
 		longitude: 127.007694,
 		zoom: 13,
@@ -39,6 +42,8 @@ var app = {
 		name: null,
 		address: null,
 		tags: null,
+		url: null,
+		description: null,
 		icon: 'flag',
 		color: '#8442D5',
 		current: 1
@@ -110,6 +115,13 @@ var app = {
 				}
 			});
 		} else {
+			app.data = app.data_defaults;
+			callback();
+		}
+		/*
+
+		disabling this for now
+
 			// See if we have a map_id stored
 			localforage.getItem('map_id').then(function(id) {
 				// If yes, we are working from that map's data
@@ -133,7 +145,7 @@ var app = {
 					}
 				}
 			});
-		}
+		}*/
 	},
 
 	setup_map: function() {
@@ -377,6 +389,12 @@ var app = {
 			} else {
 				console.error('could not setup_data');
 			}
+
+			var state = {
+				id: rsp.map.id,
+				slug: rsp.map.slug
+			};
+			history.pushState(state, rsp.map.name, '/' + rsp.map.slug);
 		});
 	},
 
@@ -385,6 +403,9 @@ var app = {
 			app.add_map(app.edit_map);
 		} else {
 			$('#edit-map-name').val(app.data.name);
+			$('#edit-map-description').val(app.data.description);
+			$('#edit-map-authors').val(app.data.authors);
+			$('#edit-map-slug').val(app.data.slug);
 			$('#edit-map-latitude').val(app.data.latitude);
 			$('#edit-map-longitude').val(app.data.longitude);
 			$('#edit-map-zoom').val(app.data.zoom);
@@ -402,7 +423,12 @@ var app = {
 			$('.edit-map-options').removeClass('selected');
 			$('#edit-map-options-' + app.data.base).addClass('selected');
 			$('#edit-map-print').attr('href', '/' + app.data.slug + '?print=1' + location.hash);
+
 			app.show_menu('edit-map');
+
+			var width = $('#edit-map-slug-holder').width();
+			width -= $('#edit-map-slug-holder pre').width();
+			$('#edit-map-slug').css('width', width);
 		}
 	},
 
@@ -410,6 +436,9 @@ var app = {
 
 		var id = parseInt($('#edit-map-id').val());
 		var name = $('#edit-map-name').val();
+		var authors = $('#edit-map-authors').val();
+		var slug = $('#edit-map-slug').val();
+		var description = $('#edit-map-description').val();
 		var latitude = parseFloat($('#edit-map-latitude').val());
 		var longitude = parseFloat($('#edit-map-longitude').val());
 		var zoom = parseInt($('#edit-map-zoom').val());
@@ -417,6 +446,9 @@ var app = {
 		var options = app.edit_map_options();
 
 		app.data.name = name;
+		app.data.authors = authors;
+		app.data.slug = slug;
+		app.data.description = description;
 		app.data.latitude = latitude;
 		app.data.longitude = longitude;
 		app.data.zoom = zoom;
@@ -434,6 +466,9 @@ var app = {
 		var data = {
 			id: id,
 			name: name,
+			authors: authors,
+			slug: slug,
+			description: description,
 			latitude: latitude,
 			longitude: longitude,
 			zoom: zoom,
@@ -455,6 +490,14 @@ var app = {
 			}
 			$('.edit-rsp').html('');
 			app.hide_menu();
+
+			if (location.pathname != '/' + rsp.map.slug) {
+				var state = {
+					id: rsp.map.id,
+					slug: rsp.map.slug
+				};
+				history.pushState(state, rsp.map.name, '/' + rsp.map.slug);
+			}
 		});
 
 		app.map.removeLayer(app.tangram);
@@ -566,6 +609,8 @@ var app = {
 		$('#edit-venue-name').val(venue.name);
 		$('#edit-venue-address').val(venue.address);
 		$('#edit-venue-tags').val(venue.tags);
+		$('#edit-venue-url').val(venue.url);
+		$('#edit-venue-description').val(venue.description);
 		$('#edit-venue-icon').val(venue.icon);
 		$('#edit-venue-icon-display').css('background-color', venue.color);
 		$('#edit-venue-icon-display .fa')[0].className = 'fa fa-' + venue.icon;
@@ -582,6 +627,8 @@ var app = {
 		var color = $('#edit-venue-color').val();
 		var address = $('#edit-venue-address').val();
 		var tags = $('#edit-venue-tags').val();
+		var url = $('#edit-venue-url').val();
+		var description = $('#edit-venue-description').val();
 		var venue = null;
 
 		for (var i = 0; i < app.data.venues.length; i++) {
@@ -592,6 +639,8 @@ var app = {
 				venue.color = color;
 				venue.address = address;
 				venue.tags = tags;
+				venue.url = url;
+				venue.description = description;
 				console.log('updated app.data', venue);
 				break;
 			}
@@ -625,7 +674,9 @@ var app = {
 			icon: icon,
 			color: color,
 			address: address,
-			tags: tags
+			tags: tags,
+			url: url,
+			description: description
 		};
 		app.api_call('update_venue', data).then(function(rsp) {
 			if (rsp.error) {
@@ -821,6 +872,7 @@ var app = {
 		$('#menu form.visible').removeClass('visible');
 		$('#' + form_id).addClass('visible');
 		$('#menu').addClass('active');
+		$('#menu').scrollTop(0);
 	},
 
 	hide_menu: function() {
