@@ -197,7 +197,6 @@ var app = {
 		var hash = new L.Hash(map);
 
 		if (! $(document.body).hasClass('print')) {
-			slippymap.crosshairs.init(map);
 			app.show_venues(app.data.venues);
 		}
 
