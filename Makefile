@@ -1,50 +1,45 @@
-LON_MIN = 126.776403417
-LAT_MIN = 37.4266035554
-LON_MAX = 127.205530474
-LAT_MAX = 37.697175
+LON_MIN = 121.287414382
+LAT_MIN = 24.6810777859
+LON_MAX = 122.079844597
+LAT_MAX = 25.6354841
 MIN_ZOOM = 11
 MAX_ZOOM = 17
 
-tiles: tiles_refill tiles_walkabout
+REFILL_VERSION = 8.0.0
+WALKABOUT_VERSION = 5.2.0
+BUBBLE_WRAP_VERSION = 7.2.0
 
-tiles_env:
-	source env/bin/activate
+all: deps styles tiles
 
-tiles_refill: tiles_env
-	mkdir www/tiles/tmp
-	tilepack --type=vector \
-	         --tile-format=topojson \
-	         --output-formats=zipfile \
-	         $(LON_MIN) $(LAT_MIN) $(LON_MAX) $(LAT_MAX) \
-	         $(MIN_ZOOM) $(MAX_ZOOM) \
-	         www/tiles/tmp/topojson
-	unzip -q www/tiles/tmp/topojson.zip -d www/tiles/tmp
-	mkdir -p www/tiles/topojson
-	rsync -r www/tiles/tmp/all/ www/tiles/topojson/
-	rm -rf www/tiles/tmp
+deps:
+	npm update
+	bower update
 
-tiles_walkabout: tiles_env
-	mkdir www/tiles/tmp
-	mkdir www/tiles/tmp/mvt
-	tilepack --type=vector \
-	         --tile-format=mvt \
-	         --output-formats=zipfile \
-	         $(LON_MIN) $(LAT_MIN) $(LON_MAX) $(LAT_MAX) \
-	         $(MIN_ZOOM) $(MAX_ZOOM) \
-	         www/tiles/tmp/mvt
-	unzip -q www/tiles/tmp/mvt.zip -d www/tiles/tmp/mvt
-	mkdir -p www/tiles/mvt
-	rsync -r www/tiles/tmp/mvt/all/ www/tiles/mvt/
+deps_tilepacks:
 
-	mkdir www/tiles/tmp/terrain
-	tilepack --type=terrain \
-	         --layer=normal \
-	         --tile-format=png \
-	         --output-formats=zipfile \
-	         $(LON_MIN) $(LAT_MIN) $(LON_MAX) $(LAT_MAX) \
-	         $(MIN_ZOOM) $(MAX_ZOOM) \
-	         www/tiles/tmp/terrain
-	unzip -q www/tiles/tmp/terrain.zip -d www/tiles/tmp/terrain
-	mkdir -p www/tiles/terrain
-	rsync -r www/tiles/tmp/terrain/normal/ www/tiles/terrain/
-	rm -rf www/tiles/tmp
+
+styles: style_refill style_walkabout style_bubble_wrap
+
+style_refill:
+	curl -o refill-style.zip -Ls https://github.com/tangrams/refill-style/archive/v$(REFILL_VERSION).zip
+	unzip -q refill-style.zip -d www/lib
+	rm refill-style.zip
+	rm -rf www/lib/refill-style
+	mv www/lib/refill-style-$(REFILL_VERSION) www/lib/refill-style
+
+style_walkabout:
+	curl -o walkabout-style.zip -Ls https://github.com/tangrams/walkabout-style/archive/v$(WALKABOUT_VERSION).zip
+	unzip -q walkabout-style.zip -d www/lib
+	rm walkabout-style.zip
+	rm -rf www/lib/walkabout-style
+	mv www/lib/walkabout-style-$(WALKABOUT_VERSION) www/lib/walkabout-style
+
+style_bubble_wrap:
+	curl -o bubble-wrap.zip -Ls https://github.com/tangrams/bubble-wrap/archive/v$(BUBBLE_WRAP_VERSION).zip
+	unzip -q bubble-wrap.zip -d www/lib
+	rm bubble-wrap.zip
+	rm -rf www/lib/bubble-wrap-style
+	mv www/lib/bubble-wrap-$(BUBBLE_WRAP_VERSION) www/lib/bubble-wrap-style
+
+tiles:
+	./tilepack.sh ${CURDIR}/www/tiles

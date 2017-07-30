@@ -1,0 +1,32 @@
+{
+	"mapzen_api_key": "mapzen-byN58rS",
+	"wof_ids": [1108808549],
+	"min_zoom": 11,
+	"max_zoom": 17,
+	"formats": {
+		"mvt": {
+			"tilepack_args": "--type=vector --tile-format=mvt",
+			"layer": "all"
+		},
+		"topojson": {
+			"tilepack_args": "--type=vector --tile-format=topojson",
+			"layer": "all"
+		},
+		"terrain": {
+			"tilepack_args": "--type=terrain --layer=normal --tile-format=png",
+			"layer": "normal"
+		}
+	},
+	"sources": {
+		"bubble-wrap-style": {
+			"sources_mapzen_url": "/tiles/mvt/{z}/{x}/{y}.mvt"
+		},
+		"refill-style": {
+			"sources_mapzen_url": "/tiles/topojson/{z}/{x}/{y}.topojson"
+		},
+		"walkabout-style": {
+			"sources_mapzen_url": "/tiles/mvt/{z}/{x}/{y}.mvt",
+			"normals_url": "/tiles/terrain/{z}/{x}/{y}.png"
+		}
+	}
+}
