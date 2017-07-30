@@ -50,8 +50,25 @@ if [ ! -f "$TILES_JSON" ] ; then
 		echo "Search here: https://whosonfirst.mapzen.com/spelunker"
 		echo -n "> "
 		read WOF_ID
+
 		if [[ ! $WOF_ID =~ ^[0-9]+$ ]] ; then
 			echo "Please enter a valid WOF ID (numeric)"
+		fi
+
+		WOF_JSON="$TILES_DIR/$WOF_ID.json"
+
+		if [ ! -f $WOF_JSON ] ; then
+			API_URL="https://whosonfirst-api.mapzen.com/?api_key=$MAPZEN_API_KEY&method=whosonfirst.places.getInfo&id=$WOF_ID&extras=geom:bbox"
+			curl -s -o $WOF_JSON $API_URL
+		fi
+
+		WOF_NAME=`jq -r '.place["wof:name"]' $WOF_JSON`
+
+		if [ "$WOF_NAME" == "null" ] ; then
+			echo "Could not find WOF ID $WOF_ID"
+			WOF_ID=""
+		else
+			echo "Using $WOF_NAME ($WOF_ID)"
 		fi
 	done
 
@@ -143,10 +160,14 @@ for WOF_ID in $WOF_IDS ; do
 	fi
 
 	WOF_NAME=`jq -r '.place["wof:name"]' $WOF_JSON`
-	echo "Loading $WOF_ID ($WOF_NAME)"
-
 	BBOX=`jq -r '.place["geom:bbox"]' $WOF_JSON`
-	echo "$WOF_ID bounding box: $BBOX"
+
+	if [ "$WOF_NAME" == "null" ] ; then
+		echo "Could not find WOF ID $WOF_ID (skipping)"
+		continue
+	fi
+	echo "Downloading $WOF_NAME ($WOF_ID)"
+	echo "Bounding box: $BBOX"
 
 	LON_MIN=`echo $BBOX | cut -d',' -f1`
 	LAT_MIN=`echo $BBOX | cut -d',' -f2`
@@ -159,8 +180,11 @@ for WOF_ID in $WOF_IDS ; do
 	FORMATS=`jq -r '.formats|keys[]' $TILES_JSON`
 
 	for FORMAT in $FORMATS ; do
+
 		ARGS=`jq -r ".formats.$FORMAT.tilepack_args" $TILES_JSON`
 		LAYER=`jq -r ".formats.$FORMAT.layer" $TILES_JSON`
+
+		mkdir -p $TILES_DIR/tmp
 
 		echo "Downloading $FORMAT tiles to tmp/$WOF_ID-$FORMAT.zip"
 		tilepack $ARGS \
