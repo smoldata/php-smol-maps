@@ -40,7 +40,7 @@ if [ ! -f "$TILES_JSON" ] ; then
 		echo "Register here: https://mapzen.com/dashboard"
 		echo -n "> "
 		read MAPZEN_API_KEY
-		if [[ ! $MIN_ZOOM =~ ^[0-9]+$ ]] ; then
+		if [[ ! $MAPZEN_API_KEY =~ ^[0-9]+$ ]] ; then
 			echo "Please enter a valid Mapzen API key"
 		fi
 	done
@@ -95,22 +95,22 @@ if [ ! -f "$TILES_JSON" ] ; then
 	            "layer": "all"
 	        },
 	        "terrain": {
-				"tilepack_args": "--type=terrain --layer=normal --tile-format=png",
-				"layer": "normal"
-			}
-		},
-		"sources": {
-			"bubble-wrap-style": {
-				"sources_mapzen_url": "/tiles/mvt/{z}/{x}/{y}.mvt"
-			},
-			"refill-style": {
-				"sources_mapzen_url": "/tiles/topojson/{z}/{x}/{y}.topojson"
-			},
-			"walkabout-style": {
-				"sources_mapzen_url": "/tiles/mvt/{z}/{x}/{y}.mvt",
-				"normals_url": "/tiles/terrain/{z}/{x}/{y}.png"
-			}
-		}
+	            "tilepack_args": "--type=terrain --layer=normal --tile-format=png",
+	            "layer": "normal"
+	        }
+	    },
+	    "sources": {
+	        "bubble-wrap-style": {
+	            "sources_mapzen_url": "/tiles/mvt/{z}/{x}/{y}.mvt"
+	        },
+	        "refill-style": {
+	            "sources_mapzen_url": "/tiles/topojson/{z}/{x}/{y}.topojson"
+	        },
+	        "walkabout-style": {
+	            "sources_mapzen_url": "/tiles/mvt/{z}/{x}/{y}.mvt",
+	            "normals_url": "/tiles/terrain/{z}/{x}/{y}.png"
+	        }
+	    }
 	}
 	EOF
 fi
