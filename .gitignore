@@ -1,11 +1,14 @@
 .DS_Store
 node_modules
 /www/data/*.db
-/www/config.json
 /env
 /www/tiles/mvt/
 /www/tiles/topojson/
 /www/tiles/terrain/
+/www/tiles/*.json
+/www/tiles/*.csv
+/www/tiles/*.zip
+/www/tiles/tiles.json
 /platforms/*/www/tiles/mvt/
 /platforms/*/www/tiles/topojson/
 /platforms/*/www/tiles/terrain/
