@@ -9,6 +9,8 @@
 # 2. Uses a Who's On First ID to determine lat/lon bounding box and downloads
 #    tiles in mvt, topojson, terrain formats
 # 3. Merges multiple WOF IDs into a common folder structure, separated by format
+#
+# See also: https://github.com/tilezen/tilepacks
 
 DEPS="curl jq python rsync unzip"
 for CMD in $DEPS ; do
