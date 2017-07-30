@@ -40,7 +40,7 @@ if [ ! -f "$TILES_JSON" ] ; then
 		echo "Register here: https://mapzen.com/dashboard"
 		echo -n "> "
 		read MAPZEN_API_KEY
-		if [[ ! $MAPZEN_API_KEY =~ ^[0-9]+$ ]] ; then
+		if [[ ! $MAPZEN_API_KEY =~ ^[a-z]+-[a-zA-Z0-9]+$ ]] ; then
 			echo "Please enter a valid Mapzen API key"
 		fi
 	done
@@ -162,16 +162,16 @@ for WOF_ID in $WOF_IDS ; do
 		ARGS=`jq -r ".formats.$FORMAT.tilepack_args" $TILES_JSON`
 		LAYER=`jq -r ".formats.$FORMAT.layer" $TILES_JSON`
 
-		echo "Downloading $FORMAT tiles to $WOF_ID-$FORMAT.zip"
+		echo "Downloading $FORMAT tiles to tmp/$WOF_ID-$FORMAT.zip"
 		tilepack $ARGS \
 		         --output-formats=zipfile \
 		         $LON_MIN $LAT_MIN $LON_MAX $LAT_MAX \
 		         $MIN_ZOOM $MAX_ZOOM \
-		         $TILES_DIR/$WOF_ID-$FORMAT
+		         $TILES_DIR/tmp/$WOF_ID-$FORMAT
 
-		echo "Unzipping $WOF_ID-$FORMAT.zip to tmp/$WOF_ID-$FORMAT"
+		echo "Unzipping tmp/$WOF_ID-$FORMAT.zip to tmp/$WOF_ID-$FORMAT"
 		mkdir -p $TILES_DIR/tmp/$WOF_ID-$FORMAT
-		unzip -q $TILES_DIR/$WOF_ID-$FORMAT.zip -d $TILES_DIR/tmp/$WOF_ID-$FORMAT
+		unzip -q $TILES_DIR/tmp/$WOF_ID-$FORMAT.zip -d $TILES_DIR/tmp/$WOF_ID-$FORMAT
 
 		echo "Merging tmp/$WOF_ID-$FORMAT files into $FORMAT dir"
 		mkdir -p $TILES_DIR/$FORMAT
