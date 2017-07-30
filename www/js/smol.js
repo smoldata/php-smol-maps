@@ -25,6 +25,8 @@ var app = {
 		base: 'refill',
 		options: {
 			refill_theme: "black",
+			refill_detail: 5,
+			refill_label: 5,
 			walkabout_path: false,
 			walkabout_bike: false
 		},
@@ -181,22 +183,7 @@ var app = {
 			}).addTo(map);
 		}
 
-		var scene = app.get_tangram_scene();
-		console.log('scene', scene);
-		app.tangram = Tangram.leafletLayer({
-			scene: scene
-		}).addTo(map);
-
-		app.tangram.scene.subscribe({
-			load: function() {
-				var sources = app.config.sources[app.data.base];
-				for (var source in sources) {
-					app.tangram.scene.setDataSource(source, sources[source]);
-				}
-				app.tangram.scene.updateConfig();
-				console.log('sources', app.tangram.scene.config.sources);
-			}
-		});
+		app.setup_tangram();
 
 		var view = location.hash.match(/#(.+?)\/(.+?)\/(.+?)/)
 		if (! view) {
@@ -237,6 +224,25 @@ var app = {
 				}
 			});
 		}
+	},
+
+	setup_tangram: function() {
+		var scene = app.get_tangram_scene();
+		console.log('scene', scene);
+		app.tangram = Tangram.leafletLayer({
+			scene: scene
+		}).addTo(app.map);
+
+		app.tangram.scene.subscribe({
+			load: function() {
+				var sources = app.config.sources[app.data.base];
+				for (var source in sources) {
+					app.tangram.scene.setDataSource(source, sources[source]);
+				}
+				app.tangram.scene.updateConfig();
+				console.log('sources', app.tangram.scene.config.sources);
+			}
+		});
 	},
 
 	setup_menu: function() {
@@ -288,7 +294,8 @@ var app = {
 		$('#edit-map-base').change(function() {
 			var base = $('#edit-map-base').val();
 			if (base == 'refill') {
-				$('#edit-map-preview').attr('src', '/img/preview-refill-black.jpg');
+				var theme = $('#edit-map-refill-theme').val();
+				$('#edit-map-preview').attr('src', '/img/preview-refill-' + theme + '.jpg');
 			} else if (base == 'walkabout') {
 				$('#edit-map-preview').attr('src', '/img/preview-walkabout.jpg');
 			}
@@ -412,6 +419,7 @@ var app = {
 		if (app.data.id == 0) {
 			app.add_map(app.edit_map);
 		} else {
+			var options = L.extend(app.data_defaults.options, app.data.options);
 			$('#edit-map-name').val(app.data.name);
 			$('#edit-map-description').val(app.data.description);
 			$('#edit-map-authors').val(app.data.authors);
@@ -422,9 +430,10 @@ var app = {
 			$('#edit-map-id').val(app.data.id);
 			$('#edit-map-base').val(app.data.base);
 			if (app.data.base == 'refill') {
-				var theme = app.data.options.refill_theme;
-				$('#edit-map-refill-theme').val(theme);
-				$('#edit-map-preview').attr('src', '/img/preview-refill-' + theme + '.jpg');
+				$('#edit-map-refill-theme').val(options.refill_theme);
+				$('#edit-map-refill-detail').val(options.refill_detail);
+				$('#edit-map-refill-label').val(options.refill_label);
+				$('#edit-map-preview').attr('src', '/img/preview-refill-' + options.refill_theme + '.jpg');
 			} else if (app.data.base == 'walkabout') {
 				$('#edit-map-preview').attr('src', '/img/preview-walkabout.jpg');
 				$('#edit-map-walkabout-path')[0].checked = app.data.options.walkabout_path;
@@ -511,10 +520,7 @@ var app = {
 		});
 
 		app.map.removeLayer(app.tangram);
-		app.tangram = Tangram.leafletLayer({
-			scene: app.get_tangram_scene()
-		}).addTo(app.map);
-
+		app.tangram = app.setup_tangram();
 	},
 
 	edit_map_options: function() {
@@ -522,7 +528,9 @@ var app = {
 		var base = $('#edit-map-base').val();
 		if (base == 'refill') {
 			var options = {
-				refill_theme: $('#edit-map-refill-theme').val()
+				refill_theme: $('#edit-map-refill-theme').val(),
+				refill_detail: $('#edit-map-refill-detail').val(),
+				refill_label: $('#edit-map-refill-label').val()
 			};
 		} else if (base == 'walkabout') {
 			var options = {
@@ -892,7 +900,7 @@ var app = {
 	get_tangram_scene: function() {
 
 		var base = app.data.base;
-		var options = app.data.options;
+		var options = L.extend(app.data_defaults.options, app.data.options);
 		var scene = {
 			global: {
 				sdk_mapzen_api_key: app.config.mapzen_api_key
@@ -902,12 +910,14 @@ var app = {
 			scene.global = L.extend(scene.global, app.config.refill);
 			scene.import = [
 				'/styles/refill/refill-style.yaml',
-				'/styles/refill/themes/color-' + options.refill_theme + '.yaml'
+				'/styles/refill/themes/color-' + options.refill_theme + '.yaml',
+				'/styles/refill/themes/detail-' + options.refill_detail + '.yaml',
+				'/styles/refill/themes/label-' + options.refill_label + '.yaml'
 			];
 		} else if (base == 'walkabout') {
 			scene.global = L.extend(scene.global, app.config.walkabout);
 			scene.import = [
-				'/lib/walkabout/walkabout-style.yaml',
+				'/styles/walkabout/walkabout-style.yaml',
 			];
 			if (options.walkabout_path) {
 				scene.global.sdk_path_overlay = true;
