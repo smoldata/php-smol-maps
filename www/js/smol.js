@@ -187,6 +187,17 @@ var app = {
 			scene: scene
 		}).addTo(map);
 
+		app.tangram.scene.subscribe({
+			load: function() {
+				var sources = app.config.sources[app.data.base];
+				for (var source in sources) {
+					app.tangram.scene.setDataSource(source, sources[source]);
+				}
+				app.tangram.scene.updateConfig();
+				console.log('sources', app.tangram.scene.config.sources);
+			}
+		});
+
 		var view = location.hash.match(/#(.+?)\/(.+?)\/(.+?)/)
 		if (! view) {
 			map.setView([app.data.latitude, app.data.longitude], app.data.zoom);
@@ -331,7 +342,7 @@ var app = {
 	},
 
 	setup_config: function(cb) {
-		app.load_cached('config.json', function(config) {
+		app.load_cached('/tiles/tiles.json', function(config) {
 			app.config = config;
 			cb();
 		});
@@ -880,29 +891,23 @@ var app = {
 
 	get_tangram_scene: function() {
 
-		var labels = '';
-		if (location.search.indexOf('print') !== -1) {
-			labels = '-no-labels';
-		}
-
 		var base = app.data.base;
 		var options = app.data.options;
 		var scene = {
 			global: {
 				sdk_mapzen_api_key: app.config.mapzen_api_key
-			},
-			import: ['/lib/refill/refill-style' + labels + '.yaml']
+			}
 		};
 		if (base == 'refill') {
 			scene.global = L.extend(scene.global, app.config.refill);
 			scene.import = [
-				'/lib/refill/refill-style' + labels + '.yaml',
-				'/lib/refill/themes/' + options.refill_theme + '.yaml'
+				'/styles/refill/refill-style.yaml',
+				'/styles/refill/themes/color-' + options.refill_theme + '.yaml'
 			];
 		} else if (base == 'walkabout') {
 			scene.global = L.extend(scene.global, app.config.walkabout);
 			scene.import = [
-				'/lib/walkabout/walkabout-style' + labels + '.yaml',
+				'/lib/walkabout/walkabout-style.yaml',
 			];
 			if (options.walkabout_path) {
 				scene.global.sdk_path_overlay = true;

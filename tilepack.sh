@@ -116,16 +116,33 @@ if [ ! -f "$TILES_JSON" ] ; then
 	            "layer": "normal"
 	        }
 	    },
-	    "sources": {
-	        "bubble-wrap-style": {
-	            "sources_mapzen_url": "/tiles/mvt/{z}/{x}/{y}.mvt"
+		"sources": {
+	        "bubble-wrap": {
+	            "mapzen": {
+	                "type": "MVT",
+	                "url": "/tiles/mvt/{z}/{x}/{y}.mvt",
+	                "max_zoom": 16
+	            }
 	        },
-	        "refill-style": {
-	            "sources_mapzen_url": "/tiles/topojson/{z}/{x}/{y}.topojson"
+	        "refill": {
+	            "mapzen": {
+	                "type": "TopoJSON",
+	                "url": "/tiles/topojson/{z}/{x}/{y}.topojson",
+	                "max_zoom": 16
+	            }
 	        },
-	        "walkabout-style": {
-	            "sources_mapzen_url": "/tiles/mvt/{z}/{x}/{y}.mvt",
-	            "normals_url": "/tiles/terrain/{z}/{x}/{y}.png"
+	        "walkabout": {
+	            "mapzen": {
+	                "type": "MVT",
+	                "url": "/tiles/mvt/{z}/{x}/{y}.mvt",
+	                "rasters": ["normals"],
+	                "max_zoom": 16
+	            },
+	            "normals": {
+	                "type": "Raster",
+	                "url": "/tiles/terrain/{z}/{x}/{y}.png",
+	                "max_zoom": 15
+	            }
 	        }
 	    }
 	}
