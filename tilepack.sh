@@ -1,5 +1,15 @@
 #!/bin/bash
 
+# tilepack.sh by @dphiffer
+# A shell script wrapper for the tilepack Python utility.
+# All credit to @iandees for doing the hard part.
+#
+# Usage: tilepack.sh path/to/tiles
+# 1. Looks for path/to/tiles/tiles.json config, generates one if none is found
+# 2. Uses a Who's On First ID to determine lat/lon bounding box and downloads
+#    tiles in mvt, topojson, terrain formats
+# 3. Merges multiple WOF IDs into a common folder structure, separated by format
+
 DEPS="curl jq python rsync unzip"
 for CMD in $DEPS ; do
 	command -v "$CMD" >/dev/null 2>&1 || { echo "Please install $CMD." >&2; exit 1; }
