@@ -25,10 +25,11 @@ var app = {
 		base: 'refill',
 		options: {
 			refill_theme: "black",
-			refill_detail: 5,
+			refill_detail: 10,
 			refill_label: 5,
-			walkabout_path: false,
-			walkabout_bike: false
+			walkabout_path: true,
+			walkabout_bike: false,
+			bubble_wrap_labels: "normal"
 		},
 		authors: null,
 		description: null,
@@ -227,6 +228,7 @@ var app = {
 	},
 
 	setup_tangram: function() {
+
 		var scene = app.get_tangram_scene();
 		console.log('scene', scene);
 		app.tangram = Tangram.leafletLayer({
@@ -298,6 +300,8 @@ var app = {
 				$('#edit-map-preview').attr('src', '/img/preview-refill-' + theme + '.jpg');
 			} else if (base == 'walkabout') {
 				$('#edit-map-preview').attr('src', '/img/preview-walkabout.jpg');
+			} else if (base == 'bubble-wrap') {
+				$('#edit-map-preview').attr('src', '/img/preview-bubble-wrap.jpg');
 			}
 			$('.edit-map-options').removeClass('selected');
 			$('#edit-map-options-' + base).addClass('selected');
@@ -438,6 +442,9 @@ var app = {
 				$('#edit-map-preview').attr('src', '/img/preview-walkabout.jpg');
 				$('#edit-map-walkabout-path')[0].checked = app.data.options.walkabout_path;
 				$('#edit-map-walkabout-bike')[0].checked = app.data.options.walkabout_bike;
+			} else if (app.data.base == 'bubble-wrap') {
+				$('#edit-map-preview').attr('src', '/img/preview-bubble-wrap.jpg');
+				$('#edit-map-bubble-wrap-labels').val(app.data.options.bubble_wrap_labels);
 			}
 			$('.edit-map-options').removeClass('selected');
 			$('#edit-map-options-' + app.data.base).addClass('selected');
@@ -536,6 +543,10 @@ var app = {
 			var options = {
 				walkabout_path: $('#edit-map-walkabout-path')[0].checked,
 				walkabout_bike: $('#edit-map-walkabout-bike')[0].checked
+			};
+		} else if (base == 'bubble-wrap') {
+			var options = {
+				bubble_wrap_labels: $('#edit-map-bubble-wrap-labels').val()
 			};
 		}
 		return options;
@@ -907,7 +918,6 @@ var app = {
 			}
 		};
 		if (base == 'refill') {
-			scene.global = L.extend(scene.global, app.config.refill);
 			scene.import = [
 				'/styles/refill/refill-style.yaml',
 				'/styles/refill/themes/color-' + options.refill_theme + '.yaml',
@@ -915,16 +925,29 @@ var app = {
 				'/styles/refill/themes/label-' + options.refill_label + '.yaml'
 			];
 		} else if (base == 'walkabout') {
-			scene.global = L.extend(scene.global, app.config.walkabout);
 			scene.import = [
 				'/styles/walkabout/walkabout-style.yaml',
 			];
 			if (options.walkabout_path) {
 				scene.global.sdk_path_overlay = true;
+			} else {
+				scene.global.sdk_path_overlay = false;
 			}
 			if (options.walkabout_bike) {
 				scene.global.sdk_bike_overlay = true;
+			} else {
+				scene.global.sdk_bike_overlay = false;
 			}
+		} else if (base == 'bubble-wrap') {
+			var labels = options.bubble_wrap_labels;
+			if (labels == 'normal') {
+				labels = '';
+			} else {
+				labels = '-' + labels;
+			}
+			scene.import = [
+				'/styles/bubble-wrap/bubble-wrap-style' + labels + '.yaml',
+			];
 		}
 
 		if (location.search.indexOf('print') !== -1) {

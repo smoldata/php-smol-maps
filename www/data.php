@@ -18,10 +18,11 @@ $defaults = array(
 	'base' => 'refill',
 	'options' => array(
 		'refill_theme' => 'black',
-		'refill_detail' => 5,
+		'refill_detail' => 10,
 		'refill_label' => 5,
-		'walkabout_path' => false,
-		'walkabout_bike' => false
+		'walkabout_path' => true,
+		'walkabout_bike' => false,
+		'bubble_wrap_labels' => 'normal'
 	)
 );
 
