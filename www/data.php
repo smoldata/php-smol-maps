@@ -17,6 +17,7 @@ $defaults = array(
 	'icon' => 'flag',
 	'base' => 'refill',
 	'options' => array(
+		'transit' => false,
 		'refill_theme' => 'black',
 		'refill_detail' => 10,
 		'refill_label' => 5,

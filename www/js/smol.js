@@ -24,6 +24,7 @@ var app = {
 		zoom: 13,
 		base: 'refill',
 		options: {
+			transit: false,
 			refill_theme: "black",
 			refill_detail: 10,
 			refill_label: 5,
@@ -433,6 +434,7 @@ var app = {
 			$('#edit-map-zoom').val(app.data.zoom);
 			$('#edit-map-id').val(app.data.id);
 			$('#edit-map-base').val(app.data.base);
+			$('#edit-map-transit')[0].checked = app.data.options.transit;
 			if (app.data.base == 'refill') {
 				$('#edit-map-refill-theme').val(options.refill_theme);
 				$('#edit-map-refill-detail').val(options.refill_detail);
@@ -549,6 +551,7 @@ var app = {
 				bubble_wrap_labels: $('#edit-map-bubble-wrap-labels').val()
 			};
 		}
+		options.transit = $('#edit-map-transit')[0].checked;
 		return options;
 	},
 
@@ -948,6 +951,11 @@ var app = {
 			scene.import = [
 				'/styles/bubble-wrap/bubble-wrap-style' + labels + '.yaml',
 			];
+		}
+		if (options.transit) {
+			scene.global.sdk_transit_overlay = true;
+		} else {
+			scene.global.sdk_transit_overlay = false;
 		}
 
 		if (location.search.indexOf('print') !== -1) {
