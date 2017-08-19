@@ -98,7 +98,6 @@ body.print #map {
 	height: 40px;
 	line-height: 40px;
 	font-size: 20px;
-	border-radius: 20px;
 	background: #170A26;
 	opacity: 0.8;
 	color: #fff;
@@ -110,6 +109,7 @@ body.print #map {
 .leaflet-control-add-venue a:first-child,
 .leaflet-control-add-venue a:last-child {
 	background: #8442D5;
+	border-radius: 20px;
 }
 
 .leaflet-control-locate a:hover,
@@ -482,9 +482,15 @@ select {
 	.leaflet-control-zoom a:last-child {
 		width: 60px;
 		height: 60px;
-		border-radius: 30px;
 		line-height: 60px;
 		font-size: 28px;
+	}
+
+	.leaflet-control-add-venue a,
+	.leaflet-touch .leaflet-control-add-venue a,
+	.leaflet-control-add-venue a:first-child,
+	.leaflet-control-add-venue a:last-child {
+		border-radius: 30px;
 	}
 
 	#map.has-zoom-controls .leaflet-control-zoom a,
@@ -498,7 +504,6 @@ select {
 	#map.has-zoom-controls .leaflet-control-zoom a:last-child {
 		width: 40px;
 		height: 40px;
-		border-radius: 20px;
 		line-height: 40px;
 		font-size: 20px;
 	}
