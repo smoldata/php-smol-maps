@@ -203,12 +203,16 @@ for WOF_ID in $WOF_IDS ; do
 
 		mkdir -p $TILES_DIR/tmp
 
-		echo "Downloading $FORMAT tiles to tmp/$WOF_ID-$FORMAT.zip"
-		tilepack $ARGS \
-		         --output-formats=zipfile \
-		         $LON_MIN $LAT_MIN $LON_MAX $LAT_MAX \
-		         $MIN_ZOOM $MAX_ZOOM \
-		         $TILES_DIR/tmp/$WOF_ID-$FORMAT
+		if [ ! -f "$TILES_DIR/tmp/$WOF_ID-$FORMAT.zip" ] ; then
+			echo "Downloading $FORMAT tiles to tmp/$WOF_ID-$FORMAT.zip"
+			tilepack $ARGS \
+			         --output-formats=zipfile \
+			         $LON_MIN $LAT_MIN $LON_MAX $LAT_MAX \
+			         $MIN_ZOOM $MAX_ZOOM \
+			         $TILES_DIR/tmp/$WOF_ID-$FORMAT
+		else
+			echo "Found existing tmp/$WOF_ID-$FORMAT.zip, using that"
+		fi
 
 		echo "Unzipping tmp/$WOF_ID-$FORMAT.zip to tmp/$WOF_ID-$FORMAT"
 		mkdir -p $TILES_DIR/tmp/$WOF_ID-$FORMAT
