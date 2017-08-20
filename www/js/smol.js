@@ -10,6 +10,11 @@ var app = {
 		radius: 5
 	},
 
+	config_defaults: {
+		feature_flag_edit: true,
+		feature_flag_search: true
+	},
+
 	data_defaults: {
 
 		// Updates here should be mirrored in data.php
@@ -75,9 +80,13 @@ var app = {
 			app.setup_config(function() {
 				console.log('map', app.data);
 				console.log('config', app.config);
-				document.title = app.data.name;
-				app.setup_map();
-				app.setup_menu();
+				if (app.data.id || app.config.feature_flag_edit) {
+					document.title = app.data.name;
+					app.setup_map();
+					app.setup_menu();
+				} else {
+					app.choose_map();
+				}
 			});
 		});
 		app.setup_screengrab();
@@ -153,6 +162,10 @@ var app = {
 	},
 
 	setup_map: function() {
+
+		if (app.map) {
+			return;
+		}
 
 		var map = L.map('map', {
 			zoomControl: false
@@ -251,10 +264,10 @@ var app = {
 	setup_menu: function() {
 
 		$('.leaflet-pelias-search-icon').click(function() {
-			if ($(document.body).hasClass('readonly')) {
-				app.choose_map();
-			} else {
+			if (app.config.feature_flag_edit) {
 				app.edit_map();
+			} else {
+				app.choose_map();
 			}
 		});
 
@@ -359,7 +372,7 @@ var app = {
 
 	setup_config: function(cb) {
 		app.load_cached('/tiles/tiles.json', function(config) {
-			app.config = config;
+			app.config = L.extend(app.config_defaults, config);
 			cb();
 		});
 	},
@@ -426,6 +439,18 @@ var app = {
 
 	choose_map: function() {
 		app.show_menu('choose-map');
+		app.api_call('get_maps').then(function(rsp) {
+			var html = '';
+			$.each(rsp.maps, function(i, map) {
+				var item = map.name;
+				item = '<a href="/' + map.slug + '" data-id="' + map.id + '">' + item + '</a>';
+				if (map.authors) {
+					item += ' by ' + map.authors;
+				}
+				html += '<li>' + item + '</li>';
+			});
+			$('#choose-map-list').html(html);
+		});
 	},
 
 	edit_map: function() {

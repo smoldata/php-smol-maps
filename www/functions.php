@@ -132,6 +132,8 @@ function method_get_maps() {
 	$query = $db->query("
 		SELECT *
 		FROM smol_map
+		WHERE public = 1
+		  AND current = 1
 	");
 	check_query($query);
 	$maps = $query->fetchAll();

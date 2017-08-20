@@ -102,6 +102,8 @@ if [ ! -f "$TILES_JSON" ] ; then
 	    "wof_ids": [$WOF_ID],
 	    "min_zoom": $MIN_ZOOM,
 	    "max_zoom": $MAX_ZOOM,
+	    "feature_flag_edit": true,
+	    "feature_flag_search": true,
 	    "formats": {
 	        "mvt": {
 	            "tilepack_args": "--type=vector --tile-format=mvt",

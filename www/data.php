@@ -44,6 +44,7 @@ if (! file_exists('data/maps.db')) {
 			base VARCHAR(255),
 			options TEXT,
 			current INTEGER DEFAULT 1,
+			public INTEGER DEFAULT 0,
 			created DATETIME,
 			updated DATETIME
 		)

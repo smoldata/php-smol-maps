@@ -3,6 +3,8 @@
     "wof_ids": [],
     "min_zoom": 10,
     "max_zoom": 16,
+    "feature_flag_edit": true,
+    "feature_flag_search": true,
     "formats": {
         "mvt": {
             "tilepack_args": "--type=vector --tile-format=mvt",

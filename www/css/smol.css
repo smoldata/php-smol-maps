@@ -490,6 +490,19 @@ body.search-disabled .leaflet-pelias-expanded a.leaflet-pelias-search-icon {
 	border-bottom-right-radius: 4px;
 }
 
+#choose-map-list {
+	margin: 0;
+	padding: 0;
+	border-bottom: 1px solid #ccc;
+}
+
+#choose-map-list li {
+	border-top: 1px solid #ccc;
+	list-style: none;
+	padding: 0.75em 0 0.75em 0;
+	margin: 0;
+}
+
 @media (min-width: 321px) {
 	.leaflet-control-zoom a,
 	.leaflet-touch .leaflet-control-zoom a,
