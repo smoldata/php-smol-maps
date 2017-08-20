@@ -1,8 +1,8 @@
 {
     "mapzen_api_key": "mapzen-xxxxxxx",
     "wof_ids": [],
-    "min_zoom": 11,
-    "max_zoom": 17,
+    "min_zoom": 10,
+    "max_zoom": 16,
     "formats": {
         "mvt": {
             "tilepack_args": "--type=vector --tile-format=mvt",

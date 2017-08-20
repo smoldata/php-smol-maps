@@ -74,25 +74,25 @@ if [ ! -f "$TILES_JSON" ] ; then
 
 	while [[ ! $MIN_ZOOM =~ ^[0-9]+$ ]] ; do
 		echo "Minimum zoom level (0-20)"
-		echo -n "[default 11]> "
+		echo -n "[default 10]> "
 		read MIN_ZOOM
 		if [ "$MIN_ZOOM" == "" ] ; then
-			MIN_ZOOM=11
-			echo "Using minimum zoom: 11"
+			MIN_ZOOM=10
+			echo "Using minimum zoom: ${MIN_ZOOM}"
 		elif [[ ! $MIN_ZOOM =~ ^[0-9]+$ ]] ; then
-			echo "Please enter a number 0-20 (press enter to use default of 11)"
+			echo "Please enter a number 0-20 (press enter to use default of 10)"
 		fi
 	done
 
 	while [[ ! $MAX_ZOOM =~ ^[0-9]+$ ]] ; do
 		echo "Maximum zoom level (0-20)"
-		echo -n "[default 17]> "
+		echo -n "[default 16]> "
 		read MAX_ZOOM
 		if [ "$MAX_ZOOM" == "" ] ; then
-			MAX_ZOOM=17
-			echo "Using maximum zoom: 17"
+			MAX_ZOOM=16
+			echo "Using maximum zoom: ${MAX_ZOOM}"
 		elif [[ ! $MAX_ZOOM =~ ^[0-9]+$ ]] ; then
-			echo "Please enter a number 0-20 (press enter to use default of 17)"
+			echo "Please enter a number 0-20 (press enter to use default of 16)"
 		fi
 	done
 
@@ -116,7 +116,7 @@ if [ ! -f "$TILES_JSON" ] ; then
 	            "layer": "normal"
 	        }
 	    },
-		"sources": {
+	    "sources": {
 	        "bubble-wrap": {
 	            "mapzen": {
 	                "type": "MVT",
