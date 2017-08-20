@@ -187,7 +187,7 @@ var app = {
 
 		app.setup_tangram();
 
-		var view = location.hash.match(/#(.+?)\/(.+?)\/(.+?)/)
+		var view = location.hash.match(/#(.+?)\/(.+?)\/(.+)$/);
 		if (! view) {
 			map.setView([app.data.latitude, app.data.longitude], app.data.zoom);
 		} else {
