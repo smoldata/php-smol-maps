@@ -251,7 +251,11 @@ var app = {
 	setup_menu: function() {
 
 		$('.leaflet-pelias-search-icon').click(function() {
-			app.edit_map();
+			if ($(document.body).hasClass('readonly')) {
+				app.choose_map();
+			} else {
+				app.edit_map();
+			}
 		});
 
 		$('#menu .close').click(app.hide_menu);
@@ -418,6 +422,10 @@ var app = {
 			};
 			history.pushState(state, rsp.map.name, '/' + rsp.map.slug);
 		});
+	},
+
+	choose_map: function() {
+		app.show_menu('choose-map');
 	},
 
 	edit_map: function() {

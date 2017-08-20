@@ -302,7 +302,7 @@ body.print #map {
 	z-index: 10001; /* why does this not work?? */
 }
 
-#menu form {
+#menu .menu-page {
 	display: none;
 	width: 100%;
 	max-width: 640px;
@@ -312,7 +312,7 @@ body.print #map {
 	position: relative;
 }
 
-#menu form.visible {
+#menu .menu-page.visible {
 	display: block;
 }
 
@@ -463,6 +463,31 @@ select {
 
 .checkbox label {
 	display: inline;
+}
+
+body.readonly .leaflet-control-add-venue {
+	display: none;
+}
+
+body.search-disabled .leaflet-pelias-input {
+	display: none;
+}
+
+body.search-disabled .leaflet-bar a.leaflet-pelias-search-icon:not(:hover) {
+	background-color: rgba(23, 10, 38, 0.8);
+}
+
+body.search-disabled .leaflet-bar a.leaflet-pelias-search-icon:hover {
+	background-color: rgba(23, 10, 38, 1);
+}
+
+body.search-disabled .leaflet-pelias-expanded {
+	width: auto;
+}
+
+body.search-disabled .leaflet-pelias-expanded a.leaflet-pelias-search-icon {
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
 }
 
 @media (min-width: 321px) {

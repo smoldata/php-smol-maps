@@ -15,12 +15,16 @@
 		<title>smol map</title>
 		<script type="text/javascript" src="/lib/local-forage/dist/localforage.js"></script>
 	</head>
-	<body>
+	<body class="readonly search-disabled">
 		<div id="app">
 			<div id="map"></div>
 			<div id="menu">
 				<span class="close"><span class="fa fa-close"></span></span>
-				<form action="/data.php" method="post" id="edit-map">
+				<div id="choose-map" class="menu-page">
+					<h1>Choose a map</h1>
+					<ul id="choose-map-list"></ul>
+				</div>
+				<form action="/data.php" method="post" id="edit-map" class="menu-page">
 					<h1>Edit map</h1>
 					<input type="hidden" name="map_id" id="edit-map-id" value="">
 					<label>
@@ -165,7 +169,7 @@
 						<a href="#" class="edit-delete">Delete this map?</a>
 					</div>
 				</form>
-				<form action="/data.php" method="post" id="edit-venue">
+				<form action="/data.php" method="post" id="edit-venue" class="menu-page">
 					<h1>Edit venue</h1>
 					<input type="hidden" name="venue_id" id="edit-venue-id" value="">
 					<label>
