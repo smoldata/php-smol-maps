@@ -483,13 +483,14 @@ select {
 		width: 60px;
 		height: 60px;
 		line-height: 60px;
-		font-size: 28px;
+		font-size: 20px;
 	}
 
 	.leaflet-control-add-venue a,
 	.leaflet-touch .leaflet-control-add-venue a,
 	.leaflet-control-add-venue a:first-child,
 	.leaflet-control-add-venue a:last-child {
+		font-size: 28px;
 		border-radius: 30px;
 	}
 
@@ -505,6 +506,12 @@ select {
 		width: 40px;
 		height: 40px;
 		line-height: 40px;
-		font-size: 20px;
+		font-size: 18px;
+	}
+
+	#map.has-zoom-controls .leaflet-control-zoom .fa {
+		font-size: 15px;
+		margin-left: -2px;
+		margin-top: -3px;
 	}
 }
