@@ -954,9 +954,13 @@ var app = {
 	},
 
 	api_call: function(method, data) {
+		if (! data) {
+			data = {};
+		}
+		data.method = method;
 		return $.ajax({
 			method: 'POST',
-			url: '/data.php?method=' + method,
+			url: '/data.php',
 			data: data
 		});
 	},
