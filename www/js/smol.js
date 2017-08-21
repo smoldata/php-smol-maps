@@ -258,6 +258,11 @@ var app = {
 			load: function() {
 				var sources = app.config.sources[app.data.base];
 				for (var source in sources) {
+					if (sources[source].url.substr(0, 24) == 'https://tile.mapzen.com/') {
+						sources[source].url_params = {
+							api_key: app.config.mapzen_api_key
+						};
+					}
 					app.tangram.scene.setDataSource(source, sources[source]);
 				}
 				app.tangram.scene.updateConfig();
