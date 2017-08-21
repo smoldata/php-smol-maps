@@ -88,6 +88,7 @@ var app = {
 					app.choose_map();
 				}
 			});
+			app.setup_map_details();
 		});
 		app.setup_screengrab();
 		app.setup_icons();
@@ -267,7 +268,7 @@ var app = {
 			if (app.config.feature_flag_edit) {
 				app.edit_map();
 			} else {
-				app.choose_map();
+				app.map_details();
 			}
 		});
 
@@ -377,6 +378,25 @@ var app = {
 		});
 	},
 
+	setup_map_details: function() {
+		var name = app.data.name || 'Untitled map';
+		$('#map-details-name').html(name);
+		if (app.data.authors) {
+			$('#map-details-authors').html('by ' + app.data.authors);
+		} else {
+			$('#map-details-authors').addClass('hidden');
+		}
+
+		var description = app.data.description || "";
+		description = description.trim();
+		description = description.replace(/\n/g, "<br>");
+		$('#map-details-description').html(description);
+		$('#map-details-back').click(function(e) {
+			e.preventDefault();
+			app.choose_map();
+		});
+	},
+
 	load_map: function(id) {
 		app.api_call('get_map', {
 			id: id
@@ -435,6 +455,10 @@ var app = {
 			};
 			history.pushState(state, rsp.map.name, '/' + rsp.map.slug);
 		});
+	},
+
+	map_details: function() {
+		app.show_menu('map-details');
 	},
 
 	choose_map: function() {
