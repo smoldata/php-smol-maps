@@ -90,6 +90,7 @@ var app = {
 			});
 			app.setup_map_details();
 		});
+		app.setup_choose_map();
 		app.setup_screengrab();
 		app.setup_icons();
 	},
@@ -193,10 +194,13 @@ var app = {
 				click: app.add_venue_handler
 			}).addTo(map);
 
-			L.control.geocoder('mapzen-byN58rS', {
+			L.control.geocoder(app.config.mapzen_api_key, {
 				expanded: true,
 				attribution: '<a href="https://mapzen.com/" target="_blank">Mapzen</a> | <a href="https://openstreetmap.org/">OSM</a>'
 			}).addTo(map);
+			if (! app.config.feature_flag_search) {
+				$(document.body).addClass('search-disabled');
+			}
 		}
 
 		app.setup_tangram();
@@ -391,9 +395,20 @@ var app = {
 		description = description.trim();
 		description = description.replace(/\n/g, "<br>");
 		$('#map-details-description').html(description);
-		$('#map-details-back').click(function(e) {
-			e.preventDefault();
-			app.choose_map();
+	},
+
+	setup_choose_map: function() {
+		app.api_call('get_maps').then(function(rsp) {
+			var html = '';
+			$.each(rsp.maps, function(i, map) {
+				var item = map.name;
+				item = '<a href="/' + map.slug + '" data-id="' + map.id + '">' + item + '</a>';
+				if (map.authors) {
+					item += ' by ' + map.authors;
+				}
+				html += '<li>' + item + '</li>';
+			});
+			$('#choose-map-list').html(html);
 		});
 	},
 
@@ -459,22 +474,11 @@ var app = {
 
 	map_details: function() {
 		app.show_menu('map-details');
+		$('#choose-map').addClass('visible');
 	},
 
 	choose_map: function() {
 		app.show_menu('choose-map');
-		app.api_call('get_maps').then(function(rsp) {
-			var html = '';
-			$.each(rsp.maps, function(i, map) {
-				var item = map.name;
-				item = '<a href="/' + map.slug + '" data-id="' + map.id + '">' + item + '</a>';
-				if (map.authors) {
-					item += ' by ' + map.authors;
-				}
-				html += '<li>' + item + '</li>';
-			});
-			$('#choose-map-list').html(html);
-		});
 	},
 
 	edit_map: function() {
@@ -957,9 +961,9 @@ var app = {
 		});
 	},
 
-	show_menu: function(form_id) {
-		$('#menu form.visible').removeClass('visible');
-		$('#' + form_id).addClass('visible');
+	show_menu: function(menu_id) {
+		$('#menu .visible').removeClass('visible');
+		$('#' + menu_id).addClass('visible');
 		$('#menu').addClass('active');
 		$('#menu').scrollTop(0);
 	},

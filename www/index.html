@@ -15,20 +15,19 @@
 		<title>Seoul Biennale - Read/Write Offline Mapping</title>
 		<script type="text/javascript" src="/lib/local-forage/dist/localforage.js"></script>
 	</head>
-	<body class="readonly search-disabled">
+	<body>
 		<div id="app">
 			<div id="map"></div>
 			<div id="menu">
 				<span class="close"><span class="fa fa-close"></span></span>
-				<div id="choose-map" class="menu-page">
-					<h1>Choose a map</h1>
-					<ul id="choose-map-list"></ul>
-				</div>
 				<div id="map-details" class="menu-page">
-					<h3><a href="#" id="map-details-back">&larr; Choose a map</a></h3>
 					<h1 id="map-details-name"></h1>
 					<h2 id="map-details-authors"></h2>
 					<div id="map-details-description"></div>
+				</div>
+				<div id="choose-map" class="menu-page">
+					<h3>Choose a map</h3>
+					<ul id="choose-map-list"></ul>
 				</div>
 				<form action="/data.php" method="post" id="edit-map" class="menu-page">
 					<h1>Edit map</h1>
