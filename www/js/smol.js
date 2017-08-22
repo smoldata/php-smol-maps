@@ -383,6 +383,12 @@ var app = {
 	setup_config: function(cb) {
 		app.load_cached('/tiles/tiles.json', function(config) {
 			app.config = L.extend(app.config_defaults, config);
+			if (! app.config.feature_flag_edit) {
+				$(document.body).addClass('readonly');
+			}
+			if (! app.config.feature_flag_search) {
+				$(document.body).addClass('disable-search');
+			}
 			cb();
 		});
 	},
