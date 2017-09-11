@@ -2,6 +2,7 @@ var app = {
 
 	httpd: null,
 	data: null,
+	//editing: false,
 
 	marker_style: {
 		fillOpacity: 0.7,
@@ -24,9 +25,9 @@ var app = {
 		slug: null,
 		authors: null,
 		description: null,
-		latitude: 37.5670374,
-		longitude: 127.007694,
-		zoom: 13,
+		latitude: null,
+		longitude: null,
+		zoom: null,
 		base: 'refill',
 		options: {
 			transit: false,
@@ -77,15 +78,16 @@ var app = {
 
 	setup: function() {
 		app.setup_data(function() {
-			app.setup_config(function() {
+			app.setup_config(function(wof) {
 				console.log('map', app.data);
 				console.log('config', app.config);
-				if (app.data.id || app.config.feature_flag_edit) {
+				if (app.data.id) {
 					document.title = app.data.name;
-					app.setup_map();
+					app.setup_map(wof);
 					app.setup_menu();
 				} else {
-					app.choose_map();
+					app.setup_map(wof);
+					//app.intro();
 				}
 			});
 			app.setup_map_details();
@@ -163,7 +165,7 @@ var app = {
 		}*/
 	},
 
-	setup_map: function() {
+	setup_map: function(wof) {
 
 		if (app.map) {
 			return;
@@ -173,6 +175,7 @@ var app = {
 			zoomControl: false
 		});
 		app.map = map;
+		map.setMinZoom(app.config.min_zoom);
 
 		if ($(document.body).width() > 640 &&
 		    ! $(document.body).hasClass('print')) {
@@ -206,10 +209,21 @@ var app = {
 		app.setup_tangram();
 
 		var view = location.hash.match(/#(.+?)\/(.+?)\/(.+)$/);
-		if (! view) {
-			map.setView([app.data.latitude, app.data.longitude], app.data.zoom);
-		} else {
+		if (view) {
 			map.setView([view[2], view[3]], view[1]);
+		} else if (app.data.latitude != null &&
+		           app.data.longitude != null &&
+		           app.data.zoom != null) {
+			map.setView([app.data.latitude, app.data.longitude], app.data.zoom);
+		} else if (wof && wof['geom:bbox']) {
+			var bbox = wof['geom:bbox'].split(',');
+			var swlat = parseFloat(bbox[1]);
+			var swlon = parseFloat(bbox[0]);
+			var nelat = parseFloat(bbox[3]);
+			var nelon = parseFloat(bbox[2]);
+			app.map.fitBounds([[swlat, swlon], [nelat, nelon]]);
+		} else {
+			// something something geolocation?
 		}
 
 		var hash = new L.Hash(map);
@@ -381,7 +395,7 @@ var app = {
 	},
 
 	setup_config: function(cb) {
-		app.load_cached('/tiles/tiles.json', function(config) {
+		$.get('/tiles/tiles.json').then(function(config) {
 			app.config = L.extend(app.config_defaults, config);
 			if (! app.config.feature_flag_edit) {
 				$(document.body).addClass('readonly');
@@ -389,7 +403,20 @@ var app = {
 			if (! app.config.feature_flag_search) {
 				$(document.body).addClass('disable-search');
 			}
-			cb();
+			if (app.data.latitude == null ||
+			    app.data.longitude == null ||
+			    app.data.zoom == null) {
+				if (app.config.wof_ids.length == 0) {
+					console.error('No WOF ID found in tiles.json');
+				} else {
+					var id = app.config.wof_ids[0];
+					$.get('/tiles/' + id + '.json').then(function(rsp) {
+						cb(rsp.place);
+					});
+				}
+			} else {
+				cb();
+			}
 		});
 	},
 
