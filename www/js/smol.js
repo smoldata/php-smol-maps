@@ -87,7 +87,7 @@ var app = {
 					app.setup_menu();
 				} else {
 					app.setup_map(wof);
-					//app.intro();
+					app.choose_map();
 				}
 			});
 			app.setup_map_details();
