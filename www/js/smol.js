@@ -303,12 +303,16 @@ var app = {
 				.data('venue-id');
 			if ($(e.target).hasClass('icon') ||
 			    $(e.target).closest('.icon').length > 0) {
-				app.edit_venue(venue_id);
+				if (app.config.feature_flag_edit) {
+					app.edit_venue(venue_id);
+				}
 				e.preventDefault();
 			} else if ($(e.target).hasClass('name') ||
 			           $(e.target).closest('.name').length > 0 &&
 			           ! $(e.target).closest('.leaflet-popup').hasClass('editing')) {
-				app.edit_name($(e.target).closest('.venue'));
+				if (app.config.feature_flag_edit) {
+					app.edit_name($(e.target).closest('.venue'));
+				}
 				e.preventDefault();
 			}
 		});
