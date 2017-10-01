@@ -535,6 +535,16 @@ body.search-disabled .leaflet-pelias-expanded a.leaflet-pelias-search-icon {
 	line-height: 1.66em;
 }
 
+.map-marker {
+	background: #ccc;
+	width: 10px;
+	height: 10px;
+	border-radius: 10px;
+	border: 2px solid rgba(0, 0, 0, 0.9);
+	margin-left: -5px;
+	margin-top: -5px;
+}
+
 @media (min-width: 321px) {
 	.leaflet-control-zoom a,
 	.leaflet-touch .leaflet-control-zoom a,
@@ -559,7 +569,9 @@ body.search-disabled .leaflet-pelias-expanded a.leaflet-pelias-search-icon {
 	.leaflet-control-add-venue a,
 	.leaflet-touch .leaflet-control-add-venue a,
 	.leaflet-control-add-venue a:first-child,
-	.leaflet-control-add-venue a:last-child {
+	.leaflet-control-add-venue a:last-child,
+	.leaflet-touch .leaflet-control-add-venue a:first-child,
+	.leaflet-touch .leaflet-control-add-venue a:last-child {
 		font-size: 28px;
 		border-radius: 30px;
 	}

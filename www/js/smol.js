@@ -4,13 +4,6 @@ var app = {
 	data: null,
 	//editing: false,
 
-	marker_style: {
-		fillOpacity: 0.7,
-		weight: 2,
-		opacity: 0.9,
-		radius: 5
-	},
-
 	config_defaults: {
 		feature_flag_edit: true,
 		feature_flag_search: true
@@ -58,6 +51,10 @@ var app = {
 		color: '#8442D5',
 		current: 1
 	},
+
+	map_marker_icon: L.divIcon({
+		className: 'map-marker'
+	}),
 
 	init: function() {
 		if (location.search.indexOf('print') !== -1) {
@@ -791,6 +788,9 @@ var app = {
 			if (layer.venue &&
 			    layer.venue.id == id) {
 				app.set_popup(layer, venue);
+				if (venue.name) {
+					layer.bindTooltip(venue.name);
+				}
 				console.log('updated layer', layer.venue);
 			}
 		});
@@ -931,13 +931,33 @@ var app = {
 
 	add_marker: function(venue) {
 		var ll = [venue.latitude, venue.longitude];
-		var style = L.extend(app.marker_style, {
-			color: venue.color,
-			fillColor: venue.color
+		var marker = new L.marker(ll, {
+			icon: app.map_marker_icon,
+			draggable: true,
+			riseOnHover: true
 		});
-		var marker = new L.CircleMarker(ll, style);
 		marker.addTo(app.map);
+		if (marker._icon) {
+			var rgb = app.hex2rgb(venue.color);
+			if (rgb) {
+				console.log(rgb);
+				marker._icon.style.backgroundColor = 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', 0.7)';
+			}
+		}
 		app.set_popup(marker, venue);
+		if (venue.name) {
+			marker.bindTooltip(venue.name);
+		}
+
+		marker.on('moveend', function() {
+			var latlng = this.getLatLng();
+			var data = {
+				id: venue.id,
+				latitude: latlng.lat,
+				longitude: latlng.lng
+			};
+			app.api_call('update_venue', data);
+		});
 		return marker;
 	},
 
@@ -1130,6 +1150,22 @@ var app = {
 				localforage.removeItem('cache-' + index[i]);
 			}
 		});
+	},
+
+	// from https://stackoverflow.com/a/5624139/937170
+	hex2rgb: function(hex) {
+		// Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+		var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+		hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+			return r + r + g + g + b + b;
+		});
+
+		var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+		return result ? {
+			r: parseInt(result[1], 16),
+			g: parseInt(result[2], 16),
+			b: parseInt(result[3], 16)
+		} : null;
 	}
 
 };
