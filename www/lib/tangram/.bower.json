@@ -1,7 +1,7 @@
 {
   "name": "tangram",
   "description": "WebGL for OpenStreetMap",
-  "version": "0.13.0",
+  "version": "0.13.3",
   "homepage": "http://mapzen.com/tangram",
   "keywords": [
     "maps",
@@ -37,14 +37,13 @@
     "watch.sh",
     "makefile"
   ],
-  "_release": "0.13.0",
+  "_release": "0.13.3",
   "_resolution": {
     "type": "version",
-    "tag": "v0.13.0",
-    "commit": "74a660b3680a3a28e680ab94c1060d78266391e9"
+    "tag": "v0.13.3",
+    "commit": "1943a2e76e11de2f0914898a4447a5860b39d92c"
   },
   "_source": "https://github.com/tangrams/tangram.git",
-  "_target": "^0.13.0",
-  "_originalSource": "tangram",
-  "_direct": true
+  "_target": "^0.13.3",
+  "_originalSource": "tangram"
 }

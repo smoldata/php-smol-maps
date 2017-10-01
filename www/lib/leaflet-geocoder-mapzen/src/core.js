@@ -19,7 +19,7 @@ var corslite = require('@mapbox/corslite');
 var throttle = require('./utils/throttle');
 var escapeRegExp = require('./utils/escapeRegExp');
 
-var VERSION = '1.9.2';
+var VERSION = '1.9.4';
 var MINIMUM_INPUT_LENGTH_FOR_AUTOCOMPLETE = 1;
 var FULL_WIDTH_MARGIN = 20; // in pixels
 var FULL_WIDTH_TOUCH_ADJUSTED_MARGIN = 4; // in pixels
@@ -174,7 +174,7 @@ var Geocoder = L.Control.extend({
     // If set to true, use map bounds
     // If it is a valid L.LatLngBounds object, get its values
     // If it is an array, try running it through L.LatLngBounds
-    if (bounds === true) {
+    if (bounds === true && this._map) {
       bounds = this._map.getBounds();
       params = makeParamsFromLeaflet(params, bounds);
     } else if (typeof bounds === 'object' && bounds.isValid && bounds.isValid()) {
@@ -213,7 +213,7 @@ var Geocoder = L.Control.extend({
       return params;
     }
 
-    if (focus === true) {
+    if (focus === true && this._map) {
       // If focus option is Boolean true, use current map center
       var mapCenter = this._map.getCenter();
       params['focus.point.lat'] = mapCenter.lat;
@@ -262,6 +262,41 @@ var Geocoder = L.Control.extend({
     }
 
     return params;
+  },
+
+  serialize: function (params) {
+    var data = '';
+
+    for (var key in params) {
+      if (params.hasOwnProperty(key)) {
+        var param = params[key];
+        var type = param.toString();
+        var value;
+
+        if (data.length) {
+          data += '&';
+        }
+
+        switch (type) {
+          case '[object Array]':
+            value = (param[0].toString() === '[object Object]') ? JSON.stringify(param) : param.join(',');
+            break;
+          case '[object Object]':
+            value = JSON.stringify(param);
+            break;
+          case '[object Date]':
+            value = param.valueOf();
+            break;
+          default:
+            value = param;
+            break;
+        }
+
+        data += encodeURIComponent(key) + '=' + encodeURIComponent(value);
+      }
+    }
+
+    return data;
   },
 
   search: function (input) {
@@ -316,42 +351,7 @@ var Geocoder = L.Control.extend({
     // Track when the request began
     var reqStartedAt = new Date().getTime();
 
-    function serialize (params) {
-      var data = '';
-
-      for (var key in params) {
-        if (params.hasOwnProperty(key)) {
-          var param = params[key];
-          var type = param.toString();
-          var value;
-
-          if (data.length) {
-            data += '&';
-          }
-
-          switch (type) {
-            case '[object Array]':
-              value = (param[0].toString() === '[object Object]') ? JSON.stringify(param) : param.join(',');
-              break;
-            case '[object Object]':
-              value = JSON.stringify(param);
-              break;
-            case '[object Date]':
-              value = param.valueOf();
-              break;
-            default:
-              value = param;
-              break;
-          }
-
-          data += encodeURIComponent(key) + '=' + encodeURIComponent(value);
-        }
-      }
-
-      return data;
-    }
-
-    var paramString = serialize(params);
+    var paramString = this.serialize(params);
     var url = endpoint + '?' + paramString;
     var self = this; // IE8 cannot .bind(this) without a polyfill.
     function handleResponse (err, response) {
@@ -1048,7 +1048,9 @@ var Geocoder = L.Control.extend({
   },
 
   onRemove: function (map) {
-    map.attributionControl.removeAttribution(this.options.attribution);
+    if (map.attributionControl) {
+      map.attributionControl.removeAttribution(this.options.attribution);
+    }
   }
 });
 

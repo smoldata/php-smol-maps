@@ -33,8 +33,8 @@ Get one from the [Mapzen developers portal](http://mapzen.com/developers/). It's
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.3/leaflet.js"></script>
 
 <!-- Load geocoding plugin after Leaflet -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geocoder-mapzen/1.9.2/leaflet-geocoder-mapzen.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geocoder-mapzen/1.9.2/leaflet-geocoder-mapzen.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geocoder-mapzen/1.9.4/leaflet-geocoder-mapzen.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-geocoder-mapzen/1.9.4/leaflet-geocoder-mapzen.js"></script>
 ```
 
 **Step 2:** In JavaScript, initialize your Leaflet map.
@@ -473,6 +473,10 @@ This project was renamed as of v1.3.0 to be more closely associated with [Mapzen
 ### Accessing other plugin internals
 
 Properties and methods used internally by the geocoder are also available on the returned object. These are purposefully not private or obscured, but they are also not publicly documented right now, since functionality may fluctuate without notice. Depending on usage and demand we will lock down and document internal properties and methods for general use. [Please let us know in the issues tracker](https://github.com/mapzen/leaflet-geocoder/issues) if you have feedback.
+
+### Do you support TypeScript?
+
+Not officially. There are [community-supplied type definitions at DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/leaflet-geocoder-mapzen).
 
 ## Projects using this plugin
 
