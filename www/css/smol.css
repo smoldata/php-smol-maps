@@ -437,6 +437,10 @@ select {
 	margin-left: 10px;
 }
 
+#edit-venue .edit-delete {
+	margin-left: 0;
+}
+
 .edit-rsp {
 	margin: 20px 0;
 }
