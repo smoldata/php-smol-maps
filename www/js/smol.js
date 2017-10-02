@@ -378,6 +378,15 @@ var app = {
 			var color = $('#edit-venue-color').val();
 			$('#edit-venue-icon-display').css('background-color', color);
 		});
+		$('#edit-venue-colors a').each(function(i, link) {
+			var color = $(link).data('color');
+			$(link).css('background-color', color);
+			$(link).click(function(e) {
+				e.preventDefault();
+				$('#edit-venue-color').val(color);
+				$('#edit-venue-icon-display').css('background-color', color);
+			});
+		});
 	},
 
 	setup_screengrab: function() {
@@ -714,7 +723,7 @@ var app = {
 				$(app.map.getPane('popupPane'))
 					.find('.venue')
 					.attr('data-venue-id', rsp.venue.id);
-				app.set_popup(marker, rsp.venue);
+				app.update_marker(marker, rsp.venue);
 			} else if (rsp.error) {
 				console.error(rsp.error);
 			} else {
@@ -787,11 +796,8 @@ var app = {
 		app.map.eachLayer(function(layer) {
 			if (layer.venue &&
 			    layer.venue.id == id) {
-				app.set_popup(layer, venue);
-				if (venue.name) {
-					layer.bindTooltip(venue.name);
-				}
-				console.log('updated layer', layer.venue);
+				console.log('update marker');
+				app.update_marker(layer, venue);
 			}
 		});
 
@@ -937,17 +943,17 @@ var app = {
 			riseOnHover: true
 		});
 		marker.addTo(app.map);
-		if (marker._icon) {
-			var rgb = app.hex2rgb(venue.color);
-			if (rgb) {
-				console.log(rgb);
-				marker._icon.style.backgroundColor = 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', 0.7)';
+		app.update_marker(marker, venue);
+
+		marker.on('popupopen', function() {
+			this.unbindTooltip();
+		});
+
+		marker.on('popupclose', function() {
+			if (this.venue.name) {
+				this.bindTooltip(this.venue.name);
 			}
-		}
-		app.set_popup(marker, venue);
-		if (venue.name) {
-			marker.bindTooltip(venue.name);
-		}
+		});
 
 		marker.on('moveend', function() {
 			var latlng = this.getLatLng();
@@ -961,7 +967,7 @@ var app = {
 		return marker;
 	},
 
-	set_popup: function(marker, venue) {
+	update_marker: function(marker, venue) {
 		marker.venue = venue;
 		var name = venue.name || (venue.latitude.toFixed(6) + ', ' + venue.longitude.toFixed(6));
 		var extra = '';
@@ -975,6 +981,17 @@ var app = {
 				'<div class="clear"></div>' +
 				'</form>';
 		marker.bindPopup(html);
+		if (venue.name) {
+			marker.bindTooltip(venue.name);
+		} else {
+			marker.unbindTooltip();
+		}
+		var rgb = app.hex2rgb(venue.color);
+		if (rgb && marker._icon) {
+			var rgba = [rgb.r, rgb.g, rgb.b, 0.7];
+			rgba = 'rgba(' + rgba.join(',') + ')';
+			marker._icon.style.backgroundColor = rgba;
+		}
 	},
 
 	show_venues: function(venues) {

@@ -545,6 +545,13 @@ body.search-disabled .leaflet-pelias-expanded a.leaflet-pelias-search-icon {
 	margin-top: -5px;
 }
 
+#edit-venue-colors a {
+	float: left;
+	height: 24px;
+	width: calc(9.0909% - 1px);
+	margin-right: 1px;
+}
+
 @media (min-width: 321px) {
 	.leaflet-control-zoom a,
 	.leaflet-touch .leaflet-control-zoom a,
