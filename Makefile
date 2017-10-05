@@ -1,22 +1,12 @@
-LON_MIN = 121.287414382
-LAT_MIN = 24.6810777859
-LON_MAX = 122.079844597
-LAT_MAX = 25.6354841
-MIN_ZOOM = 11
-MAX_ZOOM = 17
-
-REFILL_VERSION = 8.0.0
-WALKABOUT_VERSION = 5.2.0
-BUBBLE_WRAP_VERSION = 7.2.0
+REFILL_VERSION = 9.0.0
+WALKABOUT_VERSION = 6.0.0
+BUBBLE_WRAP_VERSION = 8.0.0
 
 all: deps styles tiles
 
 deps:
 	npm update
 	bower update
-
-deps_tilepacks:
-
 
 styles: style_refill style_walkabout style_bubble_wrap
 

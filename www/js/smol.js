@@ -372,11 +372,17 @@ var app = {
 		});
 		$('#edit-venue-icon').change(function() {
 			var icon = $('#edit-venue-icon').val();
-			$('#edit-venue-icon-display .fa')[0].className = 'fa fa-' + icon;
+			$('#edit-venue-icon-display .icon').css('background-image', 'url("/img/icons/' + icon + '.svg")');
 		});
 		$('#edit-venue-color').change(function() {
 			var color = $('#edit-venue-color').val();
 			$('#edit-venue-icon-display').css('background-color', color);
+			var hsl = app.hex2hsl(color);
+			if (hsl.l < 0.66) {
+				$('#edit-venue-icon-display .icon').addClass('inverted');
+			} else {
+				$('#edit-venue-icon-display .icon').removeClass('inverted');
+			}
 		});
 		$('#edit-venue-colors a').each(function(i, link) {
 			var color = $(link).data('color');
@@ -385,6 +391,12 @@ var app = {
 				e.preventDefault();
 				$('#edit-venue-color').val(color);
 				$('#edit-venue-icon-display').css('background-color', color);
+				var hsl = app.hex2hsl(color);
+				if (hsl.l < 0.66) {
+					$('#edit-venue-icon-display .icon').addClass('inverted');
+				} else {
+					$('#edit-venue-icon-display .icon').removeClass('inverted');
+				}
 			});
 		});
 	},
@@ -399,7 +411,11 @@ var app = {
 	},
 
 	setup_icons: function() {
-		app.load_cached('icons.html', function(icons) {
+		app.load_cached('/img/icons/icons.json', function(rsp) {
+			var icons = '';
+			$.each(rsp, function(i, icon) {
+				icons += '<option>' + icon + '</option>';
+			});
 			$('#edit-venue-icon').html(icons);
 		});
 	},
@@ -754,8 +770,15 @@ var app = {
 		$('#edit-venue-description').val(venue.description);
 		$('#edit-venue-icon').val(venue.icon);
 		$('#edit-venue-icon-display').css('background-color', venue.color);
-		$('#edit-venue-icon-display .fa')[0].className = 'fa fa-' + venue.icon;
+		$('#edit-venue-icon-display .icon').css('background-image', 'url("/img/icons/' + venue.icon + '.svg")');
 		$('#edit-venue-color').val(venue.color);
+
+		var hsl = app.hex2hsl(venue.color);
+		if (hsl.l < 0.66) {
+			$('#edit-venue-icon-display .icon').addClass('inverted');
+		} else {
+			$('#edit-venue-icon-display .icon').removeClass('inverted');
+		}
 
 		app.show_menu('edit-venue');
 	},
@@ -974,9 +997,11 @@ var app = {
 		extra = venue.address ? '<div class="extra">' + venue.address + '</div>' : extra;
 		extra = venue.tags ? '<div class="extra">' + venue.tags + '</div>' : extra;
 		var data_id = venue.id ? ' data-venue-id="' + venue.id + '"' : '';
+		var hsl = app.hex2hsl(venue.color);
+		var icon_inverted = (hsl.l < 0.66) ? ' inverted' : '';
 		var html = '<form action="/data.php" class="venue"' + data_id + ' onsubmit="app.edit_name_save(); return false;">' +
-				'<div class="icon" style="background-color: ' + venue.color + ';">' +
-				'<span class="fa fa-' + venue.icon + '"></span></div>' +
+				'<div class="icon-bg" style="background-color: ' + venue.color + ';">' +
+				'<div class="icon' + icon_inverted + '" style="background-image: url(/img/icons/' + venue.icon + '.svg);"></div></div>' +
 				'<div class="name"><span class="inner">' + name + '</span>' + extra + '</div>' +
 				'<div class="clear"></div>' +
 				'</form>';
@@ -1183,6 +1208,40 @@ var app = {
 			g: parseInt(result[2], 16),
 			b: parseInt(result[3], 16)
 		} : null;
+	},
+
+	// from https://gist.github.com/mjackson/5311256
+	rgb2hsl: function(rgb) {
+		var r = rgb.r;
+		var g = rgb.g;
+		var b = rgb.b;
+		r /= 255, g /= 255, b /= 255;
+		var max = Math.max(r, g, b), min = Math.min(r, g, b);
+		var h, s, l = (max + min) / 2;
+		if (max == min) {
+			h = s = 0; // achromatic
+		} else {
+			var d = max - min;
+			s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+			switch (max) {
+				case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+				case g: h = (b - r) / d + 2; break;
+				case b: h = (r - g) / d + 4; break;
+			}
+
+			h /= 6;
+		}
+		return {
+			h: h,
+			s: s,
+			l: l
+		};
+	},
+
+	hex2hsl: function(hex) {
+		var rgb = app.hex2rgb(hex);
+		return app.rgb2hsl(rgb);
 	}
 
 };
