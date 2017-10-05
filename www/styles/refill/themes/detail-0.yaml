@@ -1,5 +1,8 @@
 layers:
     earth:
+        continent:
+            enabled: false
+
         island:
             enabled: false
     water:
@@ -59,11 +62,7 @@ layers:
     places:
         enabled: false
 
-
     boundaries:
-        enabled: false
-
-    earth-labels:
         enabled: false
 
     landuse:

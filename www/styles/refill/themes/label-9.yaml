@@ -24,6 +24,7 @@ global:
     label_visible_station:          true
     icon_visible_station:           true                        #false on default, this needs work
     text_visible_station:           true
+    icon_visible_arrows:            true
     text_visible_highway:           true
     text_visible_trunk_primary:     true
     text_visible_secondary:         true
@@ -42,19 +43,19 @@ global:
 layers:
     pois:
         draw:
-            colorized-icons:
+            mapzen_icon_library:
                 buffer: 24px
 
         # new for this labels variant
         poi_labels-z17:
             filter: { $zoom: [17,18] }
             draw:
-                colorized-icons:
+                mapzen_icon_library:
                     buffer: 18px
 
         # new for this labels variant
         poi_labels-z19:
             filter: { $zoom: { min: 19 } }
             draw:
-                colorized-icons:
+                mapzen_icon_library:
                     buffer: 3px
