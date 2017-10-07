@@ -39,17 +39,15 @@
 					<label>
 						Map author(s)
 						<input type="text" name="author" id="edit-map-authors" value="">
-						<div class="help">your name (and your collaborators' names, if you have any)</div>
 					</label>
 					<label>
 						Map URL<br>
-						<div id="edit-map-slug-holder"><pre>https://map.smoldata.org/</pre><input type="text" name="slug" id="edit-map-slug" value=""></div>
-						<div class="help" id="edit-map-url-feedback">use letters, numbers, and hyphens (e.g., 8-nice-parks)</div>
+						<div id="edit-map-slug-holder"><pre id="edit-map-base-url"></pre><input type="text" name="slug" id="edit-map-slug" value=""></div>
+						<div class="help" id="edit-map-url-feedback">use letters, numbers, and hyphens</div>
 					</label>
 					<label>
 						Map description
 						<textarea name="description" id="edit-map-description" cols="60" rows="5"></textarea>
-						<div class="help">add some context for what your map shows</div>
 					</label>
 					<label class="column">
 						Default latitude
@@ -67,10 +65,10 @@
 					<div class="clear"></div>
 					<p><a href="#" id="edit-map-set-view">Use current map view as the default</a></p>
 					<div class="headroom">
-						<div class="column wide-column">
+						<div class="column column-edit-map-preview">
 							<img id="edit-map-preview" src="/img/preview-refill-black.jpg">
 						</div>
-						<div class="column">
+						<div class="column column-edit-map-controls">
 							<label class="no-headroom">
 								Base map
 								<select id="edit-map-base">
@@ -95,11 +93,11 @@
 										<option>gray-gold</option>
 										<option>high-contrast</option>
 										<option>inverted</option>
-										<option>inverted-blue</option>
 										<option>pink</option>
 										<option>pink-yellow</option>
 										<option>purple-green</option>
 										<option>sepia</option>
+										<option>zinc</option>
 									</select>
 								</label>
 								<label>

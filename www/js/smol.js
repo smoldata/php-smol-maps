@@ -328,6 +328,8 @@ var app = {
 			e.preventDefault();
 			app.edit_map_save();
 		});
+		var base_url = location.protocol + '//' + location.host + '/';
+		$('#edit-map-base-url').html(base_url);
 		$('#edit-map-set-view').click(function(e) {
 			e.preventDefault();
 			var ll = app.map.getCenter();

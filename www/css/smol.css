@@ -390,7 +390,7 @@ select {
 	margin-right: 20px;
 }
 
-.wide-column {
+.column-edit-map-preview {
 	width: 236px;
 }
 
@@ -623,5 +623,10 @@ body.search-disabled .leaflet-pelias-expanded a.leaflet-pelias-search-icon {
 		font-size: 15px;
 		margin-left: -2px;
 		margin-top: -3px;
+	}
+
+	.column-edit-map-controls {
+		width: 364px;
+		margin-right: 0;
 	}
 }
