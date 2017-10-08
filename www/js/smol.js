@@ -184,6 +184,8 @@ var app = {
 			$('#map').addClass('has-zoom-controls');
 		}
 
+		slippymap.crosshairs.init(map);
+
 		if (! $(document.body).hasClass('print')) {
 			L.control.locate({
 				position: 'bottomleft'
@@ -825,6 +827,8 @@ var app = {
 				app.update_marker(layer, venue);
 			}
 		});
+
+		app.data.options.default_icon = venue.icon;
 
 		localforage.setItem('map_' + app.data.id, app.data)
 			.then(function(rsp) {
