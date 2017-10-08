@@ -573,6 +573,18 @@ body.search-disabled .leaflet-pelias-expanded a.leaflet-pelias-search-icon {
 	margin-right: 1px;
 }
 
+.leaflet-control-locate .fa::before {
+	display: none;
+}
+
+.leaflet-control-locate .fa {
+	background-image: url(/img/geolocate.svg);
+	background-size: 25px 25px;
+	width: 25px;
+	height: 25px;
+	margin-top: 7px;
+}
+
 @media (min-width: 321px) {
 	.leaflet-control-zoom a,
 	.leaflet-touch .leaflet-control-zoom a,
