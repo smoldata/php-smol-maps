@@ -27,15 +27,21 @@
 		options: {
 			position: 'bottomright',
 			layer: undefined,
-			icon: 'fa fa-flag',
+			iconAttrs: {
+				'style': 'background-image: url(/img/icons/marker-stroked.svg);',
+				'class': 'icon inverted'
+			},
 			iconElementTag: 'span',
 			strings: {
 				title: 'Add a venue'
 			},
 			createButtonCallback: function (container, options) {
-				var link = L.DomUtil.create('a', 'leaflet-bar-part leaflet-bar-part-single', container);
+				var link = L.DomUtil.create('a', 'leaflet-bar-part leaflet-bar-part-single icon-bg', container);
 				link.title = options.strings.title;
-				var icon = L.DomUtil.create(options.iconElementTag, options.icon, link);
+				var icon = L.DomUtil.create(options.iconElementTag, '', link);
+				for (var attr in options.iconAttrs) {
+					icon.setAttribute(attr, options.iconAttrs[attr]);
+				}
 				return { link: link, icon: icon };
 			}
 		},

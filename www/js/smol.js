@@ -47,7 +47,7 @@ var app = {
 		tags: null,
 		url: null,
 		description: null,
-		icon: 'flag',
+		icon: 'marker-stroked',
 		color: '#8442D5',
 		current: 1
 	},
