@@ -185,10 +185,20 @@
 					</label>
 					<label for="edit-venue-icon">
 						Venue icon
-						<div class="help">icons from <a href="https://www.mapbox.com/maki-icons/" target="_blank">Maki</a> and <a href="https://github.com/ivanvotti/font-awesome-svg">FontAwesome</a></div>
 					</label>
-					<div id="edit-venue-icon-display" class="icon-bg"><div class="icon"></div></div>
-					<select name="icon" id="edit-venue-icon"></select>
+					<div id="edit-venue-icon-preview-holder">
+						<div id="edit-venue-icon-preview" class="icon-bg"><div class="icon"></div></div>
+						<small><a href="#" id="edit-venue-default-icon">set as default</a></small>
+					</div>
+					<div id="edit-venue-recent-icons">
+						<label>Choose an icon</label>
+						<div class="holder"></div>
+						<small><a href="#" id="edit-venue-show-icons">show all icons</a></small>
+					</div>
+					<div id="edit-venue-icons-holder">
+						<div id="edit-venue-icons" class="hidden"></div>
+					</div>
+					<input name="icon" type="hidden" id="edit-venue-icon">
 					<label>
 						Venue color
 						<input type="text" name="color" id="edit-venue-color" value="">

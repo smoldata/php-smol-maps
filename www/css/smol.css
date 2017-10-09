@@ -584,6 +584,43 @@ body.search-disabled .leaflet-pelias-expanded a.leaflet-pelias-search-icon {
 	margin-top: -5px;
 }
 
+#edit-venue-icon-preview-holder,
+#edit-venue-recent-icons {
+	margin-top: 0.5em;
+}
+
+#edit-venue-recent-icons .holder {
+	margin: 0.5em 0;
+	width: calc(100% + 10px);
+}
+
+#edit-venue-icons {
+	width: calc(100% + 10px);
+}
+
+#edit-venue-recent-icons .icon-bg,
+#edit-venue-icons .icon-bg {
+	background-color: #ccc;
+}
+
+#edit-venue-recent-icons .icon,
+#edit-venue-icons .icon {
+	opacity: 0.5;
+}
+
+#edit-venue-recent-icons .icon:hover,
+#edit-venue-icons .icon:hover {
+	opacity: 1;
+}
+
+#edit-venue-icons-holder {
+	margin-top: 0.5em;
+}
+
+#edit-venue-icons a {
+	margin-top: 10px;
+}
+
 #edit-venue-colors a {
 	float: left;
 	height: 24px;
