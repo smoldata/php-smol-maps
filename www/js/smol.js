@@ -324,6 +324,13 @@ var app = {
 			app.hide_menu();
 		});
 
+		$(window).keypress(function(e) {
+			if (e.keyCode == 27 && $('#menu').hasClass('active')) {
+				e.preventDefault();
+				app.hide_menu();
+			}
+		});
+
 		app.setup_edit_map_form();
 		app.setup_edit_venue_form();
 	},
@@ -474,6 +481,7 @@ var app = {
 					options: options
 				});
 				app.setup_add_venue();
+				$('#edit-venue-default-icon').html('default icon updated');
 			});
 		}
 
