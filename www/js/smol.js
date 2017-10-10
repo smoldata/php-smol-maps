@@ -792,11 +792,16 @@ var app = {
 	},
 
 	add_venue: function() {
+		var options = app.data.options;
+		var color = options.default_color || '#8442D5';
+		var icon = options.default_icon || 'marker-stroked';
 		var ll = app.map.getCenter();
 		var venue = L.extend(app.venue_defaults, {
 			map_id: app.data.id,
 			latitude: ll.lat,
-			longitude: ll.lng
+			longitude: ll.lng,
+			icon: icon,
+			color: color
 		});
 
 		var index = app.data.venues.length;
