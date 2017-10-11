@@ -162,8 +162,15 @@ function method_get_map() {
 	);
 }
 
-function method_add_map($slug = null) {
+function method_add_map() {
 	global $db, $defaults;
+
+	if (isset($_REQUEST['latitude'])) {
+		$latitude = $_REQUEST['latitude'];
+	}
+	if (isset($_REQUEST['longitude'])) {
+		$longitude = $_REQUEST['longitude'];
+	}
 
 	$query = $db->prepare("
 		INSERT INTO smol_map
@@ -181,8 +188,8 @@ function method_add_map($slug = null) {
 		$defaults['name'],
 		$slug,
 		$edit_slug,
-		$defaults['latitude'],
-		$defaults['longitude'],
+		$latitude,
+		$longitude,
 		$defaults['zoom'],
 		$defaults['base'],
 		json_encode($defaults['options']),
@@ -498,6 +505,19 @@ function method_get_venue_geojson() {
 	header('Content-Type: application/json');
 	echo json_encode($feature_collection);
 	exit;
+}
+
+function method_get_icons() {
+	$dh = opendir(__DIR__ . '/img/icons');
+	$icons = array();
+	while ($file = readdir($dh)) {
+		if (preg_match('/^([a-z0-9_-]+)\.svg$/i', $file, $matches)) {
+			$icons[] = $matches[1];
+		}
+	}
+	return array(
+		'icons' => $icons
+	);
 }
 
 function check_query($query) {

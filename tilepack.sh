@@ -25,12 +25,14 @@ elif [ `echo $1 | cut -c1` == "/" ] ; then
 else
 	TILES_DIR="$(pwd)/$1"
 fi
+TILES_DIR=${TILES_DIR%/}
 
 WHOAMI=`python -c 'import os, sys; print os.path.realpath(sys.argv[1])' $0`
 DIR=`dirname $WHOAMI`
 TILES_JSON="$TILES_DIR/tiles.json"
 TILEPACKS_URL="https://github.com/tilezen/tilepacks/archive/master.zip"
 FORMATS="mvt topojson terrain"
+WOF_EXTRAS="geom:,lbl:"
 
 mkdir -p $TILES_DIR
 
@@ -58,7 +60,7 @@ if [ ! -f "$TILES_JSON" ] ; then
 		WOF_JSON="$TILES_DIR/$WOF_ID.json"
 
 		if [ ! -f $WOF_JSON ] ; then
-			API_URL="https://whosonfirst-api.mapzen.com/?api_key=$MAPZEN_API_KEY&method=whosonfirst.places.getInfo&id=$WOF_ID&extras=geom:bbox"
+			API_URL="https://places.mapzen.com/v1?api_key=$MAPZEN_API_KEY&method=whosonfirst.places.getInfo&id=$WOF_ID&extras=$WOF_EXTRAS"
 			curl -s -o $WOF_JSON $API_URL
 		fi
 
@@ -151,20 +153,19 @@ if [ ! -f "$TILES_JSON" ] ; then
 	EOF
 fi
 
-if [ ! -d "tilepacks" ] ; then
-	cd $DIR
-	curl -o tilepacks.zip -Ls $TILEPACKS_URL
-	unzip -q tilepacks.zip
-	rm tilepacks.zip
-	mv tilepacks-master tilepacks
-	cd $DIR/tilepacks
-	virtualenv -p python3 env
-	source env/bin/activate
-	pip install -e .
-else
-	cd $DIR/tilepacks
-	source env/bin/activate
+if [ -d "tilepacks" ] ; then
+	mv tilepacks tilepacks.bak
 fi
+
+cd $DIR
+curl -o tilepacks.zip -Ls $TILEPACKS_URL
+unzip -q tilepacks.zip
+rm tilepacks.zip
+mv tilepacks-master tilepacks
+cd $DIR/tilepacks
+virtualenv -p python3 env
+source env/bin/activate
+pip install -e .
 
 export MAPZEN_API_KEY=`jq -r ".mapzen_api_key" $TILES_JSON`
 WOF_IDS=`jq -r ".wof_ids[]" $TILES_JSON`
@@ -174,7 +175,7 @@ for WOF_ID in $WOF_IDS ; do
 	WOF_JSON="$TILES_DIR/$WOF_ID.json"
 
 	if [ ! -f $WOF_JSON ] ; then
-		API_URL="https://whosonfirst-api.mapzen.com/?api_key=$MAPZEN_API_KEY&method=whosonfirst.places.getInfo&id=$WOF_ID&extras=geom:bbox"
+		API_URL="https://places.mapzen.com/api?api_key=$MAPZEN_API_KEY&method=whosonfirst.places.getInfo&id=$WOF_ID&extras=$WOF_EXTRAS"
 		curl -s -o $WOF_JSON $API_URL
 	fi
 
@@ -227,7 +228,13 @@ for WOF_ID in $WOF_IDS ; do
 	done
 done
 
+echo "Setting permissions to 755"
+chmod -R 755 $TILES_DIR
+
 echo "Deleting temp files"
 rm -rf $TILES_DIR/tmp
+
+echo "Deleting tilepacks"
+rm -rf tilepacks
 
 echo "All done!"
