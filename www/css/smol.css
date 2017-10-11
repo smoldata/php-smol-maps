@@ -501,6 +501,17 @@ select {
 	filter: invert(100%);
 }
 
+.icon-bg .icon-label {
+	position: absolute;
+	top: 64px;
+	left: 0;
+	width: 60px;
+	font-size: 11px;
+	line-height: 11px;
+	color: #000;
+	text-align: center;
+}
+
 #edit-map-preview {
 	width: 100%;
 	height: auto;
@@ -601,6 +612,7 @@ body.search-disabled .leaflet-pelias-expanded a.leaflet-pelias-search-icon {
 #edit-venue-recent-icons .icon-bg,
 #edit-venue-icons .icon-bg {
 	background-color: #ccc;
+	margin-bottom: 1em;
 }
 
 #edit-venue-recent-icons .icon,
@@ -608,8 +620,8 @@ body.search-disabled .leaflet-pelias-expanded a.leaflet-pelias-search-icon {
 	opacity: 0.5;
 }
 
-#edit-venue-recent-icons .icon:hover,
-#edit-venue-icons .icon:hover {
+#edit-venue-recent-icons .icon-bg:hover .icon,
+#edit-venue-icons .icon-bg:hover .icon {
 	opacity: 1;
 }
 

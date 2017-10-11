@@ -442,7 +442,7 @@ var app = {
 
 		var icons = [];
 		for (var i = 0; i < recent.length; i++) {
-			icons.push('<a href="#" class="icon-bg" data-icon="' + recent[i] + '"><span class="icon" style="background-image: url(/img/icons/' + recent[i] + '.svg);" title="' + recent[i] + '"></span></a>');
+			icons.push('<a href="#" class="icon-bg" data-icon="' + recent[i] + '"><span class="icon" style="background-image: url(/img/icons/' + recent[i] + '.svg);"></span><span class="icon-label">' + recent[i] + '</span></a>');
 			if (icons.length == 9) {
 				break;
 			}
@@ -455,8 +455,7 @@ var app = {
 			app.api_call('get_icons').then(function(rsp) {
 				var icons = '';
 				$.each(rsp.icons, function(i, icon) {
-					console.log(icon);
-					icons += '<a href="#" class="icon-bg" data-icon="' + icon + '"><span class="icon" style="background-image: url(/img/icons/' + icon + '.svg);" title="' + icon + '"></span></a>';
+					icons += '<a href="#" class="icon-bg" data-icon="' + icon + '"><span class="icon" style="background-image: url(/img/icons/' + icon + '.svg);" title="' + icon + '"></span><span class="icon-label">' + icon + '</span></a>';
 				});
 				$('#edit-venue-icons').html(icons);
 				$('#edit-venue-icons .icon-bg').click(app.venue_icon_click);

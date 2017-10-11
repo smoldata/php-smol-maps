@@ -515,6 +515,7 @@ function method_get_icons() {
 			$icons[] = $matches[1];
 		}
 	}
+	sort($icons);
 	return array(
 		'icons' => $icons
 	);
